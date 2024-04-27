@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AdminMenu from "../components/AdminMenu";
+// import AdminMenu from "../components/AdminMenu";
 import { toast } from "react-toastify";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+
+import ResidentForm from "../components/ResidentForm";
+import AdminForm from "../components/AdminForm";
 
 const AddAdmin = () => {
+  const [sidebaropen, setSidebaropen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
@@ -15,13 +21,15 @@ const AddAdmin = () => {
       navigate("/");
     }
   }, []);
-
+  // function for toggling sidebar
+  const sideBarToggle = () => {
+    setSidebaropen(!sidebaropen);
+  };
   return (
-    <div className="row">
-      <div className="col-md-2 vh-100 p-0" style={{ background: "#F5F5F5" }}>
-        <AdminMenu />
-      </div>
-      <div className="col-md-10">hi</div>
+    <div className="grid-container">
+      <Header openSideBar={sideBarToggle} />
+      <Sidebar sideBarToggle={sidebaropen} openSideBar={sideBarToggle} />
+      <AdminForm />
     </div>
   );
 };
