@@ -25,7 +25,7 @@ const ResidentTable = () => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `https://directory-management-api.vercel.app/resident/deleteResident/${id}`
+        `http://localhost:4000/api/v1/resident/deleteResident/${id}`
       );
       if (res.data.success) {
         toast.success(res.data.message);

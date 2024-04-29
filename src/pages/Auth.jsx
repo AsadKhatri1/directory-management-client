@@ -16,7 +16,7 @@ const Auth = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://directory-management-api.vercel.app/admin/login`,
+        `http://localhost:4000/api/v1//admin/login`,
         {
           Email,
           Password,

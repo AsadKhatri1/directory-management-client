@@ -19,7 +19,7 @@ const ResidentForm = () => {
 
     try {
       const response = await axios.post(
-        "https://directory-management-api.vercel.app/resident/add",
+        "http://localhost:4000/api/v1/resident/add",
         { FullName, Email, Phone, HouseNumber, CNIC }
       );
       if (response.data.success) {

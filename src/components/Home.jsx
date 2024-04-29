@@ -65,7 +65,7 @@ const Home = () => {
   //   calling residents to know total number
   const allResidents = async () => {
     const res = await axios.get(
-      "https://directory-management-api.vercel.app/resident/getResidents"
+      "http://localhost:4000/api/v1/resident/getResidents"
     );
     if (res?.data?.success) {
       setResidents(res.data.residents);
@@ -78,9 +78,7 @@ const Home = () => {
 
   //   calling admins to know total number
   const allAdmins = async () => {
-    const res = await axios.get(
-      "https://directory-management-api.vercel.app/admin/getAdmin"
-    );
+    const res = await axios.get("http://localhost:4000/api/v1/admin/getAdmin");
     if (res?.data?.success) {
       setAdmins(res.data.admins);
     }
