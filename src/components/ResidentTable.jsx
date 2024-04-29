@@ -38,9 +38,9 @@ const ResidentTable = () => {
     }
   };
   return (
-    <main className="main-container">
-      <h2 className="mx-5 mt-3 text-white">Resident Table</h2>
-      <div className="main-table w-100 table-responsive mt-4">
+    <main className="main-container text-center">
+      <h1 className="mx-5 mt-3 mb-2 text-white">Resident Table</h1>
+      <div className="main-table w-100 table-responsive mt-5">
         <table className="table table-dark table-bordered table-hover">
           <thead className="bg-light">
             <tr className="text-center">
@@ -48,6 +48,7 @@ const ResidentTable = () => {
               <th scope="col">Email</th>
               <th scope="col">Phone</th>
               <th scope="col">House Number</th>
+              <th scope="col">CNIC</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -58,6 +59,7 @@ const ResidentTable = () => {
                 <td>{r.Email}</td>
                 <td>{r.Phone}</td>
                 <td>{r.HouseNumber}</td>
+                <td>{r.CNIC}</td>
                 <td>
                   <button
                     className="btn btn-outline-danger m-1"

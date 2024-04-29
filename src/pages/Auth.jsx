@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import directory from "../assets/directory.png";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { IoMdEye } from "react-icons/io";
+import { IoEyeOffSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 const Auth = () => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [inputType, setInputType] = useState("password");
   const navigate = useNavigate();
   // -------------- submit form function ----------------------
 
@@ -30,6 +33,13 @@ const Auth = () => {
     }
   };
 
+  const passToggle = () => {
+    if (inputType === "password") {
+      setInputType("text");
+    } else {
+      setInputType("password");
+    }
+  };
   return (
     <div className="vh-100 vw-100 bg-dark d-flex flex-row align-items-center justify-content-center">
       <div
@@ -62,14 +72,29 @@ const Auth = () => {
               <label for="exampleInputPassword1" class="form-label">
                 Password
               </label>
-              <input
-                onChange={(e) => setPassword(e.target.value)}
-                value={Password}
-                style={{ boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px" }}
-                type="password"
-                className="form-control"
-                id="exampleInputPassword1"
-              />
+              <div className="pass d-flex align-items-center">
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  value={Password}
+                  style={{
+                    boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+                  }}
+                  type={inputType}
+                  className="form-control"
+                  id="exampleInputPassword1"
+                />
+                {inputType === "password" ? (
+                  <IoMdEye
+                    style={{ marginLeft: "-30px", cursor: "pointer" }}
+                    onClick={passToggle}
+                  />
+                ) : (
+                  <IoEyeOffSharp
+                    style={{ marginLeft: "-30px", cursor: "pointer" }}
+                    onClick={passToggle}
+                  />
+                )}
+              </div>
             </div>
 
             <button

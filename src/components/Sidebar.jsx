@@ -7,10 +7,12 @@ import { RiAdminFill } from "react-icons/ri";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Sidebar = ({ sideBarToggle, openSideBar }) => {
   const navigate = useNavigate();
   const logout = () => {
     localStorage.removeItem("token");
+    toast.success("Loggedout successfully");
     navigate("/");
   };
   return (
@@ -20,7 +22,6 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           <GoFileDirectoryFill className="icon-header" /> Directory Management
         </div>
         <span className="icon close-icon" onClick={openSideBar}>
-          {" "}
           X
         </span>
       </div>

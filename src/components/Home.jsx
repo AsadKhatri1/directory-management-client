@@ -16,6 +16,7 @@ import {
 import axios from "axios";
 const Home = () => {
   const [residents, setResidents] = useState([]);
+  const [admins, setAdmins] = useState([]);
   const data = [
     {
       name: "Page A",
@@ -74,8 +75,21 @@ const Home = () => {
       toast(err.response?.data?.message);
     }
   };
+
+  //   calling admins to know total number
+  const allAdmins = async () => {
+    const res = await axios.get("http://localhost:4000/api/v1/admin/getAdmin");
+    if (res?.data?.success) {
+      setAdmins(res.data.admins);
+    }
+    try {
+    } catch (err) {
+      toast(err.response?.data?.message);
+    }
+  };
   useEffect(() => {
     allResidents();
+    allAdmins();
   }, []);
   return (
     <main className="main-container">
@@ -96,7 +110,7 @@ const Home = () => {
             <h6>Admins</h6>
             <RiAdminFill className="card-icon" />
           </div>
-          <h1>03</h1>
+          <h1>{admins.length}</h1>
         </div>
         <div className="cards">
           <div className="card-inner">
