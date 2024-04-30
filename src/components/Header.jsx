@@ -13,7 +13,7 @@ const Header = ({ openSideBar }) => {
       <div className="menu-icon">
         <BsJustify className="icon" onClick={openSideBar} />
       </div>
-      <div className="header-left d-flex flex-row align-items-center justify-content-center w-50 ">
+      {/* <div className="header-left d-flex flex-row align-items-center justify-content-center w-50 ">
         <form
           action="post"
           className="mx-2 rounded w-100  d-flex flex-row align-items-center justify-content-center"
@@ -21,12 +21,12 @@ const Header = ({ openSideBar }) => {
           <input type="text" className="w-100 input mx-2" />
           <BsSearch className="icon" onClick={searchHandler} />
         </form>
-      </div>
-      {/* <div className="header-right">
+      </div> */}
+      <div className="header-right">
         <BsFillBellFill className="icon" />
         <BsFillEnvelopeFill className="icon" />
         <BsPersonCircle className="icon" />
-      </div> */}
+      </div>
     </header>
   );
 };

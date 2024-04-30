@@ -5,12 +5,17 @@ import Auth from "./pages/Auth.jsx";
 import Residents from "./pages/Residents.jsx";
 import NewResident from "./pages/NewResident.jsx";
 import AddAdmin from "./pages/AddAdmin.jsx";
+import ResidentDetail from "./pages/ResidentDetail.jsx";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Auth />}></Route>
+        <Route
+          path="/dashboard/resident/:id"
+          element={<ResidentDetail />}
+        ></Route>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/residents" element={<Residents />} />
         <Route path="/dashboard/newResident" element={<NewResident />} />

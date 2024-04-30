@@ -1,9 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const ResidentTable = () => {
+  const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
+  const [search, setSearch] = useState("");
+  console.log(search);
 
   const allResidents = async () => {
     const res = await axios.get(
@@ -37,8 +42,28 @@ const ResidentTable = () => {
       toast.error(err.response?.data?.message);
     }
   };
+  // search handler
+
+  const searchHandler = (e) => {
+    e.preventDefault();
+  };
   return (
     <main className="main-container text-center">
+      <div className="header-left d-flex   mb-4">
+        <form action="post" className="mx-2 rounded w-100  ">
+          <input
+            placeholder="Search for residents"
+            type="text"
+            className="w-50 input mx-2 py-2"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {/* <BsSearch
+            className="icon"
+            onClick={searchHandler}
+            style={{ cursor: "pointer" }}
+          /> */}
+        </form>
+      </div>
       <h1 className="mx-5 mt-3 mb-2 text-white">Resident Table</h1>
       <div className="main-table w-100 table-responsive mt-5">
         <table className="table table-dark table-bordered table-hover">
@@ -53,26 +78,39 @@ const ResidentTable = () => {
             </tr>
           </thead>
           <tbody>
-            {residents.map((r, i) => (
-              <tr key={r._id} className="text-center align-middle">
-                <td>{r.FullName}</td>
-                <td>{r.Email}</td>
-                <td>{r.Phone}</td>
-                <td>{r.HouseNumber}</td>
-                <td>{r.CNIC}</td>
-                <td>
-                  <button
-                    className="btn btn-outline-danger m-1"
-                    onClick={() => handleDelete(r._id)}
-                  >
-                    Delete
-                  </button>
-                  <button className="btn btn-outline-warning m-1">
-                    Update
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {residents
+              .filter((item) => {
+                return search.toLowerCase() === ""
+                  ? item
+                  : item.FullName.toLowerCase().includes(search) ||
+                      item.Email.toLowerCase().includes(search) ||
+                      item.Phone.toLowerCase().includes(search) ||
+                      item.HouseNumber.toLowerCase().includes(search) ||
+                      item.CNIC.toLowerCase().includes(search);
+              })
+              .map((r, i) => (
+                <tr key={r._id} className="text-center align-middle">
+                  <td>{r.FullName}</td>
+                  <td>{r.Email}</td>
+                  <td>{r.Phone}</td>
+                  <td>{r.HouseNumber}</td>
+                  <td>{r.CNIC}</td>
+                  <td>
+                    <button
+                      className="btn btn-outline-danger m-1"
+                      onClick={() => handleDelete(r._id)}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="btn btn-outline-info m-1"
+                      onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>

@@ -15,13 +15,10 @@ const Auth = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(
-        `http://localhost:4000/api/v1//admin/login`,
-        {
-          Email,
-          Password,
-        }
-      );
+      const res = await axios.post(`http://localhost:4000/api/v1/admin/login`, {
+        Email,
+        Password,
+      });
       if (res?.data?.success) {
         localStorage.setItem("token", res.data.token);
         toast.success(res.data.message);
