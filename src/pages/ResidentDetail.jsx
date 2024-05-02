@@ -8,6 +8,7 @@ const ResidentDetail = () => {
   const params = useParams();
   const [resident, setResident] = useState([]);
   const [sidebaropen, setSidebaropen] = useState(false);
+  const [vehicle, setVehicle] = useState([]);
   // fetching single resident
 
   const getResident = async () => {
@@ -17,6 +18,7 @@ const ResidentDetail = () => {
       );
       if (data.success) {
         setResident(data?.resident);
+        setVehicle(data?.resident?.vehicles);
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -29,7 +31,7 @@ const ResidentDetail = () => {
   const sideBarToggle = () => {
     setSidebaropen(!sidebaropen);
   };
-  console.log(resident);
+  console.log(vehicle);
   return (
     <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
@@ -37,16 +39,72 @@ const ResidentDetail = () => {
         sideBarToggle={sidebaropen}
         openSideBar={sideBarToggle}
       ></Sidebar>
-      <div className="main-container text-center">
+      <div className="main-container text-center mb-4">
         <h1 className="mb-5">RESIDENT DETAIL</h1>
         <div className="my-5">
           <h1>{resident.FullName}</h1>
           <h6>{resident.Email}</h6>
         </div>
 
-        <h3>Phone # {resident.Phone}</h3>
-        <h3>House # {resident.HouseNumber}</h3>
-        <h3>CNIC # {resident.CNIC}</h3>
+        <h5>Phone # {resident.Phone}</h5>
+        <h5>House # {resident.HouseNumber}</h5>
+        <h5>CNIC # {resident.CNIC}</h5>
+        <div className=" text-center">
+          <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
+          <div className="table-responsive">
+            {vehicle.length == 0 ? (
+              <h3 className="text-center text-info">
+                No vehicle details to show
+              </h3>
+            ) : (
+              <table className="table table-dark table-bordered table-hover">
+                <thead className="bg-light">
+                  <tr className="text-center">
+                    <th scope="col">TYPE</th>
+                    <th scope="col">MAKE</th>
+                    <th scope="col">MODEL</th>
+                    <th scope="col">MODEL YEAR</th>
+                    <th scope="col">REGISTERATION NUMBER</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vehicle.map((r, i) => (
+                    <tr key={r._id} className="text-center align-middle">
+                      <td>{r.type}</td>
+                      <td>{r.make}</td>
+                      <td>{r.model}</td>
+                      <td>{r.year}</td>
+                      <td>{r.registrationNumber}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {/* <table className="table table-dark table-bordered table-hover">
+              <thead className="bg-light">
+                <tr className="text-center">
+                  <th scope="col">TYPE</th>
+                  <th scope="col">MAKE</th>
+                  <th scope="col">MODEL</th>
+                  <th scope="col">MODEL YEAR</th>
+                  <th scope="col">REGISTERATION NUMBER</th>
+                </tr>
+              </thead>
+              <tbody>
+               
+                {vehicle.map((r, i) => (
+                  <tr key={r._id} className="text-center align-middle">
+                    <td>{r.type}</td>
+                    <td>{r.make}</td>
+                    <td>{r.model}</td>
+                    <td>{r.year}</td>
+                    <td>{r.registrationNumber}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table> */}
+          </div>
+        </div>
       </div>
     </div>
   );

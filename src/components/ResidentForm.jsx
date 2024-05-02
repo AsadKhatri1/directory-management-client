@@ -9,7 +9,9 @@ const ResidentForm = () => {
   const [Phone, setPhone] = useState("");
   const [HouseNumber, setHouseNumber] = useState("");
   const [CNIC, setCNIC] = useState("");
-
+  const [vehicles, setVehicles] = useState([
+    { type: "", make: "", model: "", year: "", registrationNumber: "" },
+  ]);
   const navigate = useNavigate();
 
   //--------------------- function for submitting form ----------------------
@@ -20,7 +22,7 @@ const ResidentForm = () => {
     try {
       const response = await axios.post(
         "http://localhost:4000/api/v1/resident/add",
-        { FullName, Email, Phone, HouseNumber, CNIC }
+        { FullName, Email, Phone, HouseNumber, CNIC, vehicles }
       );
       if (response.data.success) {
         console.log(response.data);
@@ -36,6 +38,20 @@ const ResidentForm = () => {
       toast.error(err?.response?.data.message);
     }
   };
+
+  const handleVehicleChange = (index, event) => {
+    const updatedVehicles = [...vehicles];
+    updatedVehicles[index][event.target.name] = event.target.value;
+    setVehicles(updatedVehicles);
+  };
+
+  const addVehicleField = () => {
+    setVehicles([
+      ...vehicles,
+      { type: "", make: "", model: "", year: "", registrationNumber: "" },
+    ]);
+  };
+
   return (
     <main className="main-container text-center mt-5">
       <h1>Add A New Resident</h1>
@@ -130,9 +146,106 @@ const ResidentForm = () => {
           }}
         />
         <br />
+        <div className="text-center">
+          <span className="blockquote-footer my-2 ">Enter vehicle details</span>
+          {/* Vehicle Fields */}
+          {vehicles.map((vehicle, index) => (
+            <div key={index}>
+              {/* selection */}
+              <input
+                value={vehicle.type}
+                onChange={(e) => handleVehicleChange(index, e)}
+                type="text"
+                name="type"
+                placeholder="Vehicle Type | Car or Motorcycle"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+
+              <input
+                value={vehicle.make}
+                onChange={(e) => handleVehicleChange(index, e)}
+                type="text"
+                name="make"
+                placeholder="Vehicle Make"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <input
+                value={vehicle.model}
+                onChange={(e) => handleVehicleChange(index, e)}
+                type="text"
+                name="model"
+                placeholder="Vehicle Model Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <input
+                value={vehicle.year}
+                onChange={(e) => handleVehicleChange(index, e)}
+                type="text"
+                name="year"
+                placeholder="Vehicle Year"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <input
+                value={vehicle.registrationNumber}
+                onChange={(e) => handleVehicleChange(index, e)}
+                type="text"
+                name="registrationNumber"
+                placeholder="Vehicle Registration Number"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addVehicleField}
+            className="btn btn-primary m-5"
+          >
+            Add More
+          </button>
+        </div>
         <button
           type="submit"
-          className="btn btn-success w-75 mt-5"
+          className="btn btn-success w-75 mt-1"
           style={{ borderRadius: "12px" }}
         >
           SUBMIT
