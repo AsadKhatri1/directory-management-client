@@ -87,10 +87,15 @@ const Home = () => {
       toast(err.response?.data?.message);
     }
   };
+  let cars = 0;
   useEffect(() => {
     allResidents();
     allAdmins();
   }, []);
+  residents.map((item, i) => {
+    cars = cars + item.vehicles.length;
+    console.log(cars);
+  });
   return (
     <main className="main-container">
       <div className="main-title">
@@ -114,10 +119,10 @@ const Home = () => {
         </div>
         <div className="cards">
           <div className="card-inner">
-            <h6>Cars</h6>
+            <h6>Vehicles</h6>
             <IoCarSport className="card-icon" />
           </div>
-          <h1>230</h1>
+          <h1>{cars}</h1>
         </div>
       </div>
 
