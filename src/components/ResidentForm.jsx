@@ -146,8 +146,10 @@ const ResidentForm = () => {
           }}
         />
         <br />
-        <div className="text-center">
-          <span className="blockquote-footer my-2 ">Enter vehicle details</span>
+        <div className="text-center mt-3">
+          <span className="blockquote-footer my-3 fw-bold fs-6">
+            Enter vehicle details
+          </span>
           {/* Vehicle Fields */}
           {vehicles.map((vehicle, index) => (
             <div key={index}>
