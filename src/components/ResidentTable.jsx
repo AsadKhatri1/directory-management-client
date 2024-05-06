@@ -8,7 +8,7 @@ const ResidentTable = () => {
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
-  console.log(search);
+  const [numberOfMonths, setNumberOfMonths] = useState(1);
 
   const allResidents = async () => {
     const res = await axios.get(
@@ -44,9 +44,44 @@ const ResidentTable = () => {
   };
   // search handler
 
-  const searchHandler = (e) => {
-    e.preventDefault();
+  // const searchHandler = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // Function to handle fee slip generation
+  const generateFeeSlip = async (residentId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:4000/api/v1/resident/generateSlip/${residentId}`,
+        { numberOfMonths: numberOfMonths }
+      );
+      if (response.data.success) {
+        console.log(
+          `Fee slip generated successfully for ${numberOfMonths}:`,
+          response.data.totalFee,
+          response.data.resident
+        );
+        localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
+        localStorage.setItem(
+          "resident",
+          JSON.stringify(response.data.resident)
+        );
+        localStorage.setItem(
+          "months",
+          JSON.stringify(response.data.numberOfMonths)
+        );
+        navigate("/dashboard/resident/invoice");
+        // Optionally, show a success message or perform other actions
+      } else {
+        console.error("Failed to generate fee slip:", response.data.message);
+        // Show an error message or handle the error in a suitable way
+      }
+    } catch (error) {
+      console.error("Error generating fee slip:", error);
+      // Show an error message or handle the error in a suitable way
+    }
   };
+
   return (
     <main className="main-container text-center">
       <div className="header-left d-flex   mb-4">
@@ -74,6 +109,7 @@ const ResidentTable = () => {
               <th scope="col">Phone</th>
               <th scope="col">House Number</th>
               <th scope="col">CNIC</th>
+              <th scope="col">Payment Slip</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
@@ -95,6 +131,26 @@ const ResidentTable = () => {
                   <td>{r.Phone}</td>
                   <td>{r.HouseNumber}</td>
                   <td>{r.CNIC}</td>
+                  <td>
+                    <select
+                      value={numberOfMonths}
+                      onChange={(e) => setNumberOfMonths(e.target.value)}
+                      className="form-select my-1"
+                    >
+                      <option value="1">1 Month</option>
+                      <option value="2">2 Months</option>
+                      <option value="6">6 Months</option>
+                      <option value="12">1 year</option>
+                      {/* Add more options for different durations if needed */}
+                    </select>
+                    <button
+                      className="btn btn-outline-info m-1"
+                      onClick={() => generateFeeSlip(r._id)}
+                    >
+                      Generate Fee Slip
+                    </button>
+                    {/* Other action buttons */}
+                  </td>
                   <td>
                     <button
                       className="btn btn-outline-danger m-1"

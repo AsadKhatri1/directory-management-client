@@ -154,6 +154,7 @@ const ResidentForm = () => {
           {vehicles.map((vehicle, index) => (
             <div key={index}>
               {/* selection */}
+
               <input
                 value={vehicle.type}
                 onChange={(e) => handleVehicleChange(index, e)}

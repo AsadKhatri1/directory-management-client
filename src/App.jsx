@@ -6,6 +6,7 @@ import Residents from "./pages/Residents.jsx";
 import NewResident from "./pages/NewResident.jsx";
 import AddAdmin from "./pages/AddAdmin.jsx";
 import ResidentDetail from "./pages/ResidentDetail.jsx";
+import Invoice from "./pages/Invoice.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/dashboard/residents" element={<Residents />} />
         <Route path="/dashboard/newResident" element={<NewResident />} />
         <Route path="/dashboard/addAdmin" element={<AddAdmin />} />
+        <Route path="/dashboard/resident/invoice" element={<Invoice />} />
       </Routes>
     </Router>
   );
