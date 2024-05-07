@@ -21,7 +21,7 @@ const ResidentForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/resident/add",
+        "https://directory-management.onrender.com/api/v1/resident/add",
         { FullName, Email, Phone, HouseNumber, CNIC, vehicles }
       );
       if (response.data.success) {

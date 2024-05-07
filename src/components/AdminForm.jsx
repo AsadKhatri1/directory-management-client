@@ -14,12 +14,15 @@ const AdminForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:4000/api/v1/admin/add", {
-        FullName,
-        Email,
-        Phone,
-        Password,
-      });
+      const res = await axios.post(
+        "https://directory-management.onrender.com/api/v1/admin/add",
+        {
+          FullName,
+          Email,
+          Phone,
+          Password,
+        }
+      );
       if (res.data.success) {
         toast.success(res.data.message);
         setEmail("");

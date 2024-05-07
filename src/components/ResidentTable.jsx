@@ -12,7 +12,7 @@ const ResidentTable = () => {
 
   const allResidents = async () => {
     const res = await axios.get(
-      "http://localhost:4000/api/v1/resident/getResidents"
+      "https://directory-management.onrender.com/api/v1/resident/getResidents"
     );
     if (res?.data?.success) {
       setResidents(res.data.residents);
@@ -30,7 +30,7 @@ const ResidentTable = () => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `http://localhost:4000/api/v1/resident/deleteResident/${id}`
+        `https://directory-management.onrender.com/api/v1/resident/deleteResident/${id}`
       );
       if (res.data.success) {
         toast.success(res.data.message);
@@ -52,7 +52,7 @@ const ResidentTable = () => {
   const generateFeeSlip = async (residentId) => {
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/v1/resident/generateSlip/${residentId}`,
+        `https://directory-management.onrender.com/api/v1/resident/generateSlip/${residentId}`,
         { numberOfMonths: numberOfMonths }
       );
       if (response.data.success) {
