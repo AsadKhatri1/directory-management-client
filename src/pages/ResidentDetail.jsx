@@ -48,7 +48,7 @@ const ResidentDetail = () => {
           <h6>{resident?.Email}</h6>
         </div>
         <div className="fam my-3 row">
-          <h3>Family Members</h3>
+          {members && <h3>Family Members</h3>}
           {members.map((m, i) => (
             <div className="col-12">
               <span>
