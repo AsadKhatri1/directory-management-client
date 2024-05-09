@@ -32,6 +32,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             Dashboard
           </Link>
         </li>
+
         <li className="sidebar-item">
           {" "}
           <Link to="/dashboard/residents">
