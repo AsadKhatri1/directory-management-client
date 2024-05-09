@@ -25,14 +25,14 @@ const ResidentForm = () => {
     try {
       const response = await axios.post(
         "https://directory-management.onrender.com/api/v1/resident/add",
-        { FullName, Email, Phone, HouseNumber, CNIC, vehicles, relatives },
-        {
-          headers: {
-            "Access-Control-Allow-Origin":
-              "https://directory--sigma.vercel.app",
-            // Add other custom headers if needed
-          },
-        }
+        { FullName, Email, Phone, HouseNumber, CNIC, vehicles, relatives }
+        // {
+        //   headers: {
+        //     "Access-Control-Allow-Origin":
+        //       "https://directory--sigma.vercel.app",
+        //     // Add other custom headers if needed
+        //   },
+        // }
       );
       if (response.data.success) {
         console.log(response.data);
