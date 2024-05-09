@@ -53,7 +53,7 @@ const ResidentDetail = () => {
         <h5>CNIC # {resident?.CNIC}</h5>
         <div className="text-center">
           <div className="my-5">
-            <h2>Family Members</h2>
+            <h2 className=" my-5 text-secondary">Family Members</h2>
             <div className="table-responsive">
               {members.length == 0 ? (
                 <h3 className="text-center text-info">
