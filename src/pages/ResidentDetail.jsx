@@ -47,13 +47,15 @@ const ResidentDetail = () => {
           <h1>{resident?.FullName}</h1>
           <h6>{resident?.Email}</h6>
         </div>
-        <div className="fam">
+        <div className="fam my-3 row">
           <h3>Family Members</h3>
           {members.map((m, i) => (
-            <>
-              <h5>{m.name}</h5>
-              <h5>{m.relation}</h5>
-            </>
+            <div className="col-12">
+              <span>
+                <h5>{m.name}</h5>
+                <h5>{m.relation}</h5>
+              </span>
+            </div>
           ))}
         </div>
 
