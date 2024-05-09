@@ -268,7 +268,7 @@ const ResidentForm = () => {
           <button
             type="button"
             onClick={addRelativeField}
-            className="btn btn-primary m-5"
+            className="btn btn-outline-primary m-5"
           >
             Add More Members
           </button>
@@ -368,7 +368,7 @@ const ResidentForm = () => {
           <button
             type="button"
             onClick={addVehicleField}
-            className="btn btn-primary m-5"
+            className="btn btn-outline-primary m-5"
           >
             Add More Vehicles
           </button>
