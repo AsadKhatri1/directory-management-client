@@ -9,6 +9,7 @@ const ResidentDetail = () => {
   const [resident, setResident] = useState([]);
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
+  const [members, setMembers] = useState([]);
   // fetching single resident
 
   const getResident = async () => {
@@ -19,6 +20,7 @@ const ResidentDetail = () => {
       if (data.success) {
         setResident(data?.resident);
         setVehicle(data?.resident?.vehicles);
+        setMembers(data?.resident?.relatives);
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -42,13 +44,22 @@ const ResidentDetail = () => {
       <div className="main-container text-center mb-4">
         <h1 className="mb-5">RESIDENT DETAIL</h1>
         <div className="my-5">
-          <h1>{resident.FullName}</h1>
-          <h6>{resident.Email}</h6>
+          <h1>{resident?.FullName}</h1>
+          <h6>{resident?.Email}</h6>
+        </div>
+        <div className="fam">
+          <h3>Family Members</h3>
+          {members.map((m, i) => (
+            <>
+              <h5>{m.name}</h5>
+              <h5>{m.relation}</h5>
+            </>
+          ))}
         </div>
 
-        <h5>Phone # {resident.Phone}</h5>
-        <h5>House # {resident.HouseNumber}</h5>
-        <h5>CNIC # {resident.CNIC}</h5>
+        <h5>Phone # {resident?.Phone}</h5>
+        <h5>House # {resident?.HouseNumber}</h5>
+        <h5>CNIC # {resident?.CNIC}</h5>
         <div className=" text-center">
           <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
           <div className="table-responsive">
@@ -70,11 +81,11 @@ const ResidentDetail = () => {
                 <tbody>
                   {vehicle.map((r, i) => (
                     <tr key={r._id} className="text-center align-middle">
-                      <td>{r.type}</td>
-                      <td>{r.make}</td>
-                      <td>{r.model}</td>
-                      <td>{r.year}</td>
-                      <td>{r.registrationNumber}</td>
+                      <td>{r?.type}</td>
+                      <td>{r?.make}</td>
+                      <td>{r?.model}</td>
+                      <td>{r?.year}</td>
+                      <td>{r?.registrationNumber}</td>
                     </tr>
                   ))}
                 </tbody>
