@@ -12,6 +12,9 @@ const ResidentForm = () => {
   const [vehicles, setVehicles] = useState([
     { type: "", make: "", model: "", year: "", registrationNumber: "" },
   ]);
+  // const [Relation, setRelation] = useState("");
+  // const [RelativeName, setRelativeName] = useState(""); // New state for relative name
+  const [relatives, setRelatives] = useState([{ name: "", relation: "" }]); // Array to hold relative information
   const navigate = useNavigate();
 
   //--------------------- function for submitting form ----------------------
@@ -22,8 +25,9 @@ const ResidentForm = () => {
     try {
       const response = await axios.post(
         "https://directory-management.onrender.com/api/v1/resident/add",
-        { FullName, Email, Phone, HouseNumber, CNIC, vehicles }
+        { FullName, Email, Phone, HouseNumber, CNIC, vehicles, relatives }
       );
+
       if (response.data.success) {
         console.log(response.data);
         toast.success(response.data.message);
@@ -50,6 +54,16 @@ const ResidentForm = () => {
       ...vehicles,
       { type: "", make: "", model: "", year: "", registrationNumber: "" },
     ]);
+  };
+
+  const handleRelativeChange = (index, name, event) => {
+    const { value } = event.target;
+    const updatedRelatives = [...relatives];
+    updatedRelatives[index][name] = value;
+    setRelatives(updatedRelatives);
+  };
+  const addRelativeField = () => {
+    setRelatives([...relatives, { name: "", relation: "" }]);
   };
 
   return (
@@ -146,6 +160,120 @@ const ResidentForm = () => {
           }}
         />
         <br />
+        <div className="mt-3">
+          <span className="blockquote-footer my-3 fw-bold fs-6">
+            Enter Family Members
+          </span>
+
+          {/* Relative Fields */}
+          {relatives.map((relative, index) => (
+            <div key={index}>
+              <input
+                value={relative.name}
+                onChange={(e) => handleRelativeChange(index, "name", e)}
+                type="text"
+                name="name"
+                placeholder="Faily Member Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <select
+                value={relative.relation}
+                onChange={(e) => handleRelativeChange(index, "relation", e)}
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                <option
+                  value=""
+                  style={{
+                    background: "black",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  Select Relation
+                </option>
+                <option
+                  style={{
+                    background: "black",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                  value="Father"
+                >
+                  Father
+                </option>
+                <option
+                  value="Mother"
+                  style={{
+                    background: "black",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  Mother
+                </option>
+                <option
+                  value="Husband/Wife"
+                  style={{
+                    background: "black",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  Husband/Wife
+                </option>
+                <option
+                  value="Child"
+                  style={{
+                    background: "black",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  Child
+                </option>
+                {/* Add other relation options */}
+              </select>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addRelativeField}
+            className="btn btn-primary m-5"
+          >
+            Add More Members
+          </button>
+        </div>
         <div className="text-center mt-3">
           <span className="blockquote-footer my-3 fw-bold fs-6">
             Enter vehicle details
@@ -243,7 +371,7 @@ const ResidentForm = () => {
             onClick={addVehicleField}
             className="btn btn-primary m-5"
           >
-            Add More
+            Add More Vehicles
           </button>
         </div>
         <button
