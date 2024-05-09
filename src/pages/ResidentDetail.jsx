@@ -47,21 +47,40 @@ const ResidentDetail = () => {
           <h1>{resident?.FullName}</h1>
           <h6>{resident?.Email}</h6>
         </div>
-        <div className="fam my-3 row">
-          {members && <h3>Family Members</h3>}
-          {members.map((m, i) => (
-            <div className="col-12">
-              <span>
-                <h5>{m.name}</h5>
-                <h5>{m.relation}</h5>
-              </span>
-            </div>
-          ))}
-        </div>
 
         <h5>Phone # {resident?.Phone}</h5>
         <h5>House # {resident?.HouseNumber}</h5>
         <h5>CNIC # {resident?.CNIC}</h5>
+        <div className="text-center">
+          <div className="my-5">
+            <h2>Family Members</h2>
+            <div className="table-responsive">
+              {members.length == 0 ? (
+                <h3 className="text-center text-info">
+                  No family members to show
+                </h3>
+              ) : (
+                <table className="table table-dark table-bordered table-hover">
+                  <thead className="bg-light">
+                    <tr className="text-center">
+                      <th scope="col">NAME</th>
+                      <th scope="col">RELATION</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members.map((r, i) => (
+                      <tr key={r._id} className="text-center align-middle">
+                        <td>{r?.name}</td>
+                        <td>{r?.relation}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+
         <div className=" text-center">
           <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
           <div className="table-responsive">
@@ -93,29 +112,6 @@ const ResidentDetail = () => {
                 </tbody>
               </table>
             )}
-            {/* <table className="table table-dark table-bordered table-hover">
-              <thead className="bg-light">
-                <tr className="text-center">
-                  <th scope="col">TYPE</th>
-                  <th scope="col">MAKE</th>
-                  <th scope="col">MODEL</th>
-                  <th scope="col">MODEL YEAR</th>
-                  <th scope="col">REGISTERATION NUMBER</th>
-                </tr>
-              </thead>
-              <tbody>
-               
-                {vehicle.map((r, i) => (
-                  <tr key={r._id} className="text-center align-middle">
-                    <td>{r.type}</td>
-                    <td>{r.make}</td>
-                    <td>{r.model}</td>
-                    <td>{r.year}</td>
-                    <td>{r.registrationNumber}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table> */}
           </div>
         </div>
       </div>
