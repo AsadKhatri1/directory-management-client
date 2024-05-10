@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Audio } from "react-loader-spinner";
 import axios from "axios";
 const ResidentDetail = () => {
   const params = useParams();
@@ -10,6 +11,7 @@ const ResidentDetail = () => {
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
+  const [timer, setTimer] = useState(0);
   // fetching single resident
 
   const getResident = async () => {
@@ -33,7 +35,17 @@ const ResidentDetail = () => {
   const sideBarToggle = () => {
     setSidebaropen(!sidebaropen);
   };
-  console.log(vehicle);
+
+  // timer for loader
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setTimer(timer + 4);
+    }, 4000);
+
+    // Clean up the timer to avoid memory leaks
+    return () => clearTimeout(timerId);
+  }, []);
+  console.log(timer);
   return (
     <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
@@ -55,17 +67,31 @@ const ResidentDetail = () => {
           <div className="my-5">
             <h2 className=" my-5 text-secondary">Family Members</h2>
             <div className="table-responsive">
-              {members.length == 0 ? (
-                <h3 className="text-center text-info">
-                  No family members to show
-                </h3>
+              {members.length == 0 && timer < 4 ? (
+                <div className="text-center d-flex align-items-center justify-content-center">
+                  <Audio
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="rgba(255, 255, 255, 0.2)"
+                    ariaLabel="loading"
+                    wrapperStyle
+                    wrapperClass
+                  />
+                </div>
               ) : (
                 <table className="table table-dark table-bordered table-hover">
                   <thead className="bg-light">
-                    <tr className="text-center">
-                      <th scope="col">NAME</th>
-                      <th scope="col">RELATION</th>
-                    </tr>
+                    {members.length > 0 ? (
+                      <tr className="text-center">
+                        <th scope="col">NAME</th>
+                        <th scope="col">RELATION</th>
+                      </tr>
+                    ) : (
+                      <span>
+                        <h3 className="text-info">No Family Members To Show</h3>
+                      </span>
+                    )}
                   </thead>
                   <tbody>
                     {members.map((r, i) => (
@@ -85,19 +111,33 @@ const ResidentDetail = () => {
           <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
           <div className="table-responsive">
             {vehicle.length == 0 ? (
-              <h3 className="text-center text-info">
-                No vehicle details to show
-              </h3>
+              <div className="text-center d-flex align-items-center justify-content-center">
+                <Audio
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color="rgba(255, 255, 255, 0.2)"
+                  ariaLabel="loading"
+                  wrapperStyle
+                  wrapperClass
+                />
+              </div>
             ) : (
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light">
-                  <tr className="text-center">
-                    <th scope="col">TYPE</th>
-                    <th scope="col">MAKE</th>
-                    <th scope="col">MODEL</th>
-                    <th scope="col">MODEL YEAR</th>
-                    <th scope="col">REGISTERATION NUMBER</th>
-                  </tr>
+                  {vehicle.length > 0 ? (
+                    <tr className="text-center">
+                      <th scope="col">TYPE</th>
+                      <th scope="col">MAKE</th>
+                      <th scope="col">MODEL</th>
+                      <th scope="col">MODEL YEAR</th>
+                      <th scope="col">REGISTERATION NUMBER</th>
+                    </tr>
+                  ) : (
+                    <span>
+                      <h3 className="text-info">No Vehicle Details To Show</h3>
+                    </span>
+                  )}
                 </thead>
                 <tbody>
                   {vehicle.map((r, i) => (

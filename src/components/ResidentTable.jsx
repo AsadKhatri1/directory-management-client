@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import { Audio } from "react-loader-spinner";
 const ResidentTable = () => {
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
@@ -113,6 +113,19 @@ const ResidentTable = () => {
               <th scope="col">Action</th>
             </tr>
           </thead>
+          {residents.length < 1 && (
+            <div className="text-center d-flex align-items-center justify-content-center">
+              <Audio
+                height="80"
+                width="80"
+                radius="9"
+                color="rgba(255, 255, 255, 0.2)"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            </div>
+          )}
           <tbody>
             {residents
               .filter((item) => {
