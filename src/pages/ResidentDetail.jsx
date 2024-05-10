@@ -4,8 +4,11 @@ import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
+
 import axios from "axios";
 const ResidentDetail = () => {
+  // redirect on refresh
+
   const params = useParams();
   const [resident, setResident] = useState([]);
   const [sidebaropen, setSidebaropen] = useState(false);
@@ -47,7 +50,7 @@ const ResidentDetail = () => {
   }, []);
   console.log(timer);
   return (
-    <div className="grid-container">
+    <div className="grid-container ">
       <Header openSideBar={sideBarToggle}></Header>
       <Sidebar
         sideBarToggle={sidebaropen}

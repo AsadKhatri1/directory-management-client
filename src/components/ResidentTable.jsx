@@ -85,11 +85,11 @@ const ResidentTable = () => {
   return (
     <main className="main-container text-center">
       <div className="header-left d-flex   mb-4">
-        <form action="post" className="mx-2 rounded w-100  ">
+        <form action="post" className="mx-2 rounded w-100 ">
           <input
             placeholder="Search for residents"
             type="text"
-            className="w-50 input mx-2 py-2"
+            className=" input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
           />
           {/* <BsSearch
@@ -114,17 +114,15 @@ const ResidentTable = () => {
             </tr>
           </thead>
           {residents.length < 1 && (
-            <div className="text-center w-100 border d-flex align-items-center justify-content-center">
-              <Audio
-                height="80"
-                width="80"
-                radius="9"
-                color="rgba(255, 255, 255, 0.2)"
-                ariaLabel="loading"
-                wrapperStyle
-                wrapperClass
-              />
-            </div>
+            <Audio
+              height="60"
+              width="50"
+              radius="9"
+              color="rgba(255, 255, 255, 0.2)"
+              ariaLabel="loading"
+              wrapperStyle
+              wrapperClass
+            />
           )}
           <tbody>
             {residents
