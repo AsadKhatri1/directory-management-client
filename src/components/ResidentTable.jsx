@@ -109,6 +109,7 @@ const ResidentTable = () => {
               <th scope="col">Phone</th>
               <th scope="col">House Number</th>
               <th scope="col">CNIC</th>
+              <th scope="col">Payment Status</th>
               <th scope="col">Payment Slip</th>
               <th scope="col">Action</th>
             </tr>
@@ -142,6 +143,9 @@ const ResidentTable = () => {
                   <td>{r.Phone}</td>
                   <td>{r.HouseNumber}</td>
                   <td>{r.CNIC}</td>
+                  <td style={{ color: r.paid ? "green" : "red" }}>
+                    {r.paid ? "Paid" : "Unpaid"}
+                  </td>
                   <td>
                     <select
                       value={numberOfMonths}
