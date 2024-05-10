@@ -19,7 +19,12 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
     <aside id="sidebar" className={sideBarToggle ? "sidebar-responsive" : ""}>
       <div className="sidebar-title">
         <div className="sidebar-brand">
-          <GoFileDirectoryFill className="icon-header" /> Directory Management
+          <Link
+            to="/dashboard"
+            style={{ textDecoration: "none", color: "#9e9ea4" }}
+          >
+            <GoFileDirectoryFill className="icon-header" /> Directory Management
+          </Link>
         </div>
         <span className="icon close-icon" onClick={openSideBar}>
           X
