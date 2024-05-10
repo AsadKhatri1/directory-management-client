@@ -89,7 +89,9 @@ const ResidentDetail = () => {
                       </tr>
                     ) : (
                       <span>
-                        <h3 className="text-info">No Family Members To Show</h3>
+                        <h3 className="text-light">
+                          No Family Members To Show
+                        </h3>
                       </span>
                     )}
                   </thead>
@@ -135,7 +137,7 @@ const ResidentDetail = () => {
                     </tr>
                   ) : (
                     <span>
-                      <h3 className="text-info">No Vehicle Details To Show</h3>
+                      <h3 className="text-light">No Vehicle Details To Show</h3>
                     </span>
                   )}
                 </thead>

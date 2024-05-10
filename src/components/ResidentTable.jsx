@@ -114,7 +114,7 @@ const ResidentTable = () => {
             </tr>
           </thead>
           {residents.length < 1 && (
-            <div className="text-center d-flex align-items-center justify-content-center">
+            <div className="text-center w-100 border d-flex align-items-center justify-content-center">
               <Audio
                 height="80"
                 width="80"
