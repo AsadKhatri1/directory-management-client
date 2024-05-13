@@ -152,6 +152,7 @@ const ResidentTable = () => {
                       onChange={(e) => setNumberOfMonths(e.target.value)}
                       className="form-select my-1"
                     >
+                      <option>Select months</option>
                       <option value="1">1 Month</option>
                       <option value="2">2 Months</option>
                       <option value="6">6 Months</option>
