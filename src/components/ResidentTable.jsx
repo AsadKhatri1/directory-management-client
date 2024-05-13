@@ -144,7 +144,7 @@ const ResidentTable = () => {
                   <td>{r.HouseNumber}</td>
                   <td>{r.CNIC}</td>
                   <td style={{ color: r.paid ? "green" : "red" }}>
-                    {r.paid ? "Paid" : "Unpaid"}
+                    {r.paid ? "paid" : "Unpaid"}
                   </td>
                   <td>
                     <select

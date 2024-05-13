@@ -1,6 +1,8 @@
 import React, { PureComponent, useEffect, useState } from "react";
 import { FaHouseUser } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
+
+import { Audio } from "react-loader-spinner";
 import { IoCarSport } from "react-icons/io5";
 import {
   BarChart,
@@ -61,7 +63,6 @@ const Home = () => {
       amt: 2100,
     },
   ];
-
   //   calling residents to know total number
   const allResidents = async () => {
     const res = await axios.get(
@@ -110,21 +111,63 @@ const Home = () => {
             <h6>RESIDENTS</h6>
             <FaHouseUser className="card-icon" />
           </div>
-          <h1>{residents.length}</h1>
+          <h1>
+            {residents.length < 1 ? (
+              <Audio
+                height="50"
+                width="50"
+                radius="9"
+                color="white"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              residents.length
+            )}
+          </h1>
         </div>
         <div className="cards">
           <div className="card-inner">
             <h6>Admins</h6>
             <RiAdminFill className="card-icon" />
           </div>
-          <h1>{admins.length}</h1>
+          <h1>
+            {admins.length < 1 ? (
+              <Audio
+                height="50"
+                width="50"
+                radius="9"
+                color="white"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              admins.length
+            )}
+          </h1>
         </div>
         <div className="cards">
           <div className="card-inner">
             <h6>Vehicles</h6>
             <IoCarSport className="card-icon" />
           </div>
-          <h1>{cars}</h1>
+          <h1>
+            {cars < 1 ? (
+              <Audio
+                height="50"
+                width="50"
+                radius="9"
+                color="white"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              cars
+            )}
+          </h1>
         </div>
       </div>
 
