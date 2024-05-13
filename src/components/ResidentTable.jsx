@@ -162,7 +162,7 @@ const ResidentTable = () => {
                       className={
                         !r.paid
                           ? "btn btn-outline-info m-1"
-                          : "btn btn-outline-info m-1 disabled"
+                          : "btn btn-outline-secondary m-1 disabled"
                       }
                       onClick={() => generateFeeSlip(r._id)}
                     >
