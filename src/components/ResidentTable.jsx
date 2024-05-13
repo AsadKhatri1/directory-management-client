@@ -159,7 +159,11 @@ const ResidentTable = () => {
                       {/* Add more options for different durations if needed */}
                     </select>
                     <button
-                      className="btn btn-outline-info m-1"
+                      className={
+                        !r.paid
+                          ? "btn btn-outline-info m-1"
+                          : "btn btn-outline-info m-1 disabled"
+                      }
                       onClick={() => generateFeeSlip(r._id)}
                     >
                       Generate Fee Slip

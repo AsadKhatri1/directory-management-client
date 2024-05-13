@@ -7,6 +7,7 @@ import NewResident from "./pages/NewResident.jsx";
 import AddAdmin from "./pages/AddAdmin.jsx";
 import ResidentDetail from "./pages/ResidentDetail.jsx";
 import Invoice from "./pages/Invoice.jsx";
+import { useEffect } from "react";
 
 function App() {
   return (
