@@ -148,7 +148,7 @@ const ResidentTable = () => {
                   </td>
                   <td>
                     <select
-                      value={numberOfMonths}
+                      // value={numberOfMonths}
                       onChange={(e) => setNumberOfMonths(e.target.value)}
                       className="form-select my-1"
                     >

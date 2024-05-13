@@ -42,8 +42,8 @@ const ResidentDetail = () => {
   // timer for loader
   useEffect(() => {
     const timerId = setTimeout(() => {
-      setTimer(timer + 4);
-    }, 4000);
+      setTimer(timer + 3);
+    }, 3000);
 
     // Clean up the timer to avoid memory leaks
     return () => clearTimeout(timerId);
@@ -70,7 +70,7 @@ const ResidentDetail = () => {
           <div className="my-5">
             <h2 className=" my-5 text-secondary">Family Members</h2>
             <div className="table-responsive">
-              {members.length == 0 && timer < 4 ? (
+              {members.length == 0 && timer < 3 ? (
                 <div className="text-center d-flex align-items-center justify-content-center">
                   <Audio
                     height="80"
