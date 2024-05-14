@@ -48,7 +48,10 @@ const ResidentDetail = () => {
     // Clean up the timer to avoid memory leaks
     return () => clearTimeout(timerId);
   }, []);
-  console.log(timer);
+  const birthDate = new Date(resident?.DOB);
+  const month = birthDate.getMonth();
+  const date = birthDate.getDate();
+  const year = birthDate.getFullYear();
   return (
     <div className="grid-container ">
       <Header openSideBar={sideBarToggle}></Header>
@@ -65,6 +68,10 @@ const ResidentDetail = () => {
 
         <h5>Phone # {resident?.Phone}</h5>
         <h5>House # {resident?.HouseNumber}</h5>
+        <h5>DOB : {date + "/" + month + "/" + year}</h5>
+        <h5>CNIC # {resident?.CNIC}</h5>
+        <h5>NOC # {resident?.NocNo}</h5>
+        <h5>CNIC # {resident?.CNIC}</h5>
         <h5>CNIC # {resident?.CNIC}</h5>
         <div className="text-center">
           <div className="my-5">

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
 
 const ResidentForm = () => {
   const [FullName, setFullName] = useState("");
@@ -17,6 +18,7 @@ const ResidentForm = () => {
   const [NOCNo, setNOCNo] = useState("");
   const [DOB, setDOB] = useState("");
   const [CNIC, setCNIC] = useState("");
+  const [Photo, setPhoto] = useState("");
   const [vehicles, setVehicles] = useState([
     { type: "", make: "", model: "", year: "", registrationNumber: "" },
   ]);
@@ -34,6 +36,7 @@ const ResidentForm = () => {
       const response = await axios.post(
         "https://directory-management.onrender.com/api/v1/resident/add",
         {
+          Photo,
           FullName,
           Email,
           Phone,
@@ -96,8 +99,51 @@ const ResidentForm = () => {
       <h1>Add A New Resident</h1>
 
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
-        <div className="row">
+        <div className="row text-center justify-content-center pt-2 ">
           <div className="col-md-6">
+            <label
+              htmlFor="Photo"
+              className="btn btn-outline-secondary w-75 "
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {Photo ? Photo.name : "Upload image"}
+              <input
+                placeholder="Resident Image"
+                type="file"
+                accept=".jpg,.jpeg,.png,.gif,.pdf"
+                name="Photo"
+                id="Photo"
+                hidden
+                onChange={(e) => setPhoto(e.target.files[0])}
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+            </label>
+            <br />
+            {/* image preview */}
+            {Photo && (
+              <img
+                src={URL.createObjectURL(Photo)}
+                alt="photo"
+                className="mt-3 rounded"
+                style={{ height: "150px", width: "150px" }}
+              />
+            )}
+            <br />
             <input
               value={FullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -224,6 +270,25 @@ const ResidentForm = () => {
               }}
             />
             <br />
+            <label htmlFor="date">Date Of Birth</label> <br />
+            <input
+              value={DOB}
+              onChange={(e) => setDOB(e.target.value)}
+              type="date"
+              name="date"
+              id="date"
+              placeholder="Date Of Birth"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
             <div className="mt-3">
               <span className="blockquote-footer my-3 fw-bold fs-6">
                 Enter Family Members
@@ -333,32 +398,13 @@ const ResidentForm = () => {
               <button
                 type="button"
                 onClick={addRelativeField}
-                className="btn btn-outline-primary m-5"
+                className="btn btn-outline-primary m-5 mt-2"
               >
-                Add More Members
+                <FaPlus /> Members
               </button>
             </div>
           </div>
           <div className="col-md-6">
-            <label htmlFor="date">Date Of Birth</label> <br />
-            <input
-              value={DOB}
-              onChange={(e) => setDOB(e.target.value)}
-              type="date"
-              name="date"
-              id="date"
-              placeholder="Date Of Birth"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
             <input
               value={officeTel}
               onChange={(e) => setOfficeTel(e.target.value)}
@@ -375,7 +421,7 @@ const ResidentForm = () => {
                 textIndent: "12px",
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               }}
-            />{" "}
+            />
             <br />
             <textarea
               value={bAddress}
@@ -545,9 +591,9 @@ const ResidentForm = () => {
               <button
                 type="button"
                 onClick={addVehicleField}
-                className="btn btn-outline-primary m-5"
+                className="btn btn-outline-primary m-5 mt-2"
               >
-                Add More Vehicles
+                <FaPlus /> Vehicles
               </button>
             </div>
           </div>
