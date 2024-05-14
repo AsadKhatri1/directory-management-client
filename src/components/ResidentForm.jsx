@@ -33,26 +33,27 @@ const ResidentForm = () => {
     e.preventDefault();
 
     try {
+      const formData = new FormData();
+      // Append values to FormData
+      formData.append("FullName", FullName);
+      formData.append("Email", Email);
+      formData.append("Phone", Phone);
+      formData.append("HouseNumber", HouseNumber);
+      formData.append("CNIC", CNIC);
+      formData.append("Profession", Profession);
+      formData.append("Qualification", Qualification);
+      formData.append("DOB", DOB);
+      formData.append("NOCHolder", NOCHolder);
+      formData.append("bAddress", bAddress);
+      formData.append("officeTel", officeTel);
+      formData.append("NOCIssue", NOCIssue);
+      formData.append("NOCNo", NOCNo);
+      formData.append("vehicles", vehicles);
+      formData.append("relatives", relatives);
+      formData.append("Photo", Photo);
       const response = await axios.post(
         "https://directory-management.onrender.com/api/v1/resident/add",
-        {
-          Photo,
-          FullName,
-          Email,
-          Phone,
-          HouseNumber,
-          CNIC,
-          Profession,
-          Qualification,
-          DOB,
-          NOCHolder,
-          bAddress,
-          officeTel,
-          NOCIssue,
-          NOCNo,
-          vehicles,
-          relatives,
-        }
+        formData
       );
       if (response.data.success) {
         console.log(response.data);
@@ -119,6 +120,7 @@ const ResidentForm = () => {
                 type="file"
                 accept=".jpg,.jpeg,.png,.gif,.pdf"
                 name="Photo"
+                value={Photo}
                 id="Photo"
                 hidden
                 onChange={(e) => setPhoto(e.target.files[0])}
