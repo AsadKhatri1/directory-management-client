@@ -120,7 +120,6 @@ const ResidentForm = () => {
                 type="file"
                 accept=".jpg,.jpeg,.png,.gif,.pdf"
                 name="Photo"
-                value={Photo}
                 id="Photo"
                 hidden
                 onChange={(e) => setPhoto(e.target.files[0])}
