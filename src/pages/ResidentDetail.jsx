@@ -77,6 +77,7 @@ const ResidentDetail = () => {
         <h5>NOC # {resident?.NOCNo}</h5>
         <h5>Profession : {resident?.Profession}</h5>
         <h5>Qualification : {resident?.Qualification}</h5>
+        <h5>Business Address : {resident?.bAddress}</h5>
 
         {/* family members */}
 
