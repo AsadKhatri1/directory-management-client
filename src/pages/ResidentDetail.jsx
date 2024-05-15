@@ -14,6 +14,7 @@ const ResidentDetail = () => {
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
+  const [maids, setMaids] = useState([]);
   const [timer, setTimer] = useState(0);
   const [showM, setShowM] = useState(false);
   const [showV, setShowV] = useState(false);
@@ -28,6 +29,7 @@ const ResidentDetail = () => {
         setResident(data?.resident);
         setVehicle(data?.resident?.vehicles);
         setMembers(data?.resident?.relatives);
+        setMaids(data?.resident?.maids);
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -75,6 +77,9 @@ const ResidentDetail = () => {
         <h5>NOC # {resident?.NOCNo}</h5>
         <h5>Profession : {resident?.Profession}</h5>
         <h5>Qualification : {resident?.Qualification}</h5>
+
+        {/* family members */}
+
         <div className="text-center">
           <div className="my-5">
             <h2 className=" my-5 text-secondary">Family Members</h2>
@@ -124,7 +129,62 @@ const ResidentDetail = () => {
             </div>
           </div>
         </div>
+        {/* maid details */}
+        <div className="text-center">
+          <div className="my-5">
+            <h2 className=" my-5 text-secondary">
+              Maids/Drivers/Gardeners Details
+            </h2>
+            <div className="table-responsive">
+              {maids.length == 0 && timer < 3 ? (
+                <div className="text-center d-flex align-items-center justify-content-center">
+                  <Audio
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="rgba(255, 255, 255, 0.2)"
+                    ariaLabel="loading"
+                    wrapperStyle
+                    wrapperClass
+                  />
+                </div>
+              ) : (
+                <table className="table table-dark table-bordered table-hover">
+                  <thead className="bg-light">
+                    {maids.length > 0 ? (
+                      <tr className="text-center">
+                        <th scope="col">NAME</th>
+                        <th scope="col">DATE OF BIRTH</th>
+                        <th scope="col">MOBILE NUMBER</th>
+                        <th scope="col">CNIC</th>
+                        <th scope="col">ADDRESS</th>
+                        <th scope="col">GUARDIAN'S NAME</th>
+                      </tr>
+                    ) : (
+                      <span>
+                        <h3 className="text-light">No Maids Detail To Show</h3>
+                      </span>
+                    )}
+                  </thead>
+                  <tbody>
+                    {maids.map((r, i) => (
+                      <tr key={r._id} className="text-center align-middle">
+                        <td>{r?.name}</td>
+                        <td>{r?.dob}</td>
+                        <td>{r?.number}</td>
+                        <td>{r?.cnic}</td>
+                        <td>{r?.address}</td>
+                        <td>{r?.guardian}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
 
+        {/* vehicle details */}
         <div className=" text-center">
           <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
           <div className="table-responsive">
