@@ -15,6 +15,8 @@ const ResidentDetail = () => {
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
   const [timer, setTimer] = useState(0);
+  const [showM, setShowM] = useState(false);
+  const [showV, setShowV] = useState(false);
   // fetching single resident
 
   const getResident = async () => {
@@ -70,9 +72,9 @@ const ResidentDetail = () => {
         <h5>House # {resident?.HouseNumber}</h5>
         <h5>DOB : {date + "/" + month + "/" + year}</h5>
         <h5>CNIC # {resident?.CNIC}</h5>
-        <h5>NOC # {resident?.NocNo}</h5>
-        <h5>CNIC # {resident?.CNIC}</h5>
-        <h5>CNIC # {resident?.CNIC}</h5>
+        <h5>NOC # {resident?.NOCNo}</h5>
+        <h5>Profession : {resident?.Profession}</h5>
+        <h5>Qualification : {resident?.Qualification}</h5>
         <div className="text-center">
           <div className="my-5">
             <h2 className=" my-5 text-secondary">Family Members</h2>
@@ -96,6 +98,8 @@ const ResidentDetail = () => {
                       <tr className="text-center">
                         <th scope="col">NAME</th>
                         <th scope="col">RELATION</th>
+                        <th scope="col">MOBILE NUMBER</th>
+                        <th scope="col">CNIC</th>
                       </tr>
                     ) : (
                       <span>
@@ -110,6 +114,8 @@ const ResidentDetail = () => {
                       <tr key={r._id} className="text-center align-middle">
                         <td>{r?.name}</td>
                         <td>{r?.relation}</td>
+                        <td>{r?.number}</td>
+                        <td>{r?.cnic}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -143,7 +149,9 @@ const ResidentDetail = () => {
                       <th scope="col">MAKE</th>
                       <th scope="col">MODEL</th>
                       <th scope="col">MODEL YEAR</th>
+                      <th scope="col">COLOUR</th>
                       <th scope="col">REGISTERATION NUMBER</th>
+                      <th scope="col">STICKER NUMBER</th>
                     </tr>
                   ) : (
                     <span>
@@ -158,7 +166,9 @@ const ResidentDetail = () => {
                       <td>{r?.make}</td>
                       <td>{r?.model}</td>
                       <td>{r?.year}</td>
+                      <td>{r?.colour}</td>
                       <td>{r?.registrationNumber}</td>
+                      <td>{r?.stickerNumber}</td>
                     </tr>
                   ))}
                 </tbody>
