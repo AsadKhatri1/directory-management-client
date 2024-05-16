@@ -16,8 +16,7 @@ const ResidentDetail = () => {
   const [members, setMembers] = useState([]);
   const [maids, setMaids] = useState([]);
   const [timer, setTimer] = useState(0);
-  const [showM, setShowM] = useState(false);
-  const [showV, setShowV] = useState(false);
+
   // fetching single resident
 
   const getResident = async () => {
@@ -66,6 +65,11 @@ const ResidentDetail = () => {
       <div className="main-container text-center mb-4">
         <h1 className="mb-5">RESIDENT DETAIL</h1>
         <div className="my-5">
+          <img
+            src={resident?.Photo}
+            alt="image"
+            style={{ borderRadius: "100%", height: "200px", width: "200px" }}
+          />
           <h1>{resident?.FullName}</h1>
           <h6>{resident?.Email}</h6>
         </div>

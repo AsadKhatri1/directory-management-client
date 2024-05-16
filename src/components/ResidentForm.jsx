@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
+import { Audio } from "react-loader-spinner";
+// Configure Cloudinary with your credentials
 
 const ResidentForm = () => {
   const [FullName, setFullName] = useState("");
@@ -18,6 +20,13 @@ const ResidentForm = () => {
   const [NOCNo, setNOCNo] = useState("");
   const [DOB, setDOB] = useState("");
   const [CNIC, setCNIC] = useState("");
+  const [Photo, setPhoto] = useState("");
+  const [cnicFile, setCnicFile] = useState("");
+  const [nocFile, setNocFile] = useState("");
+  const [cantPass, setCantPass] = useState("");
+  const [policeV, setPoliceV] = useState("");
+  const [lisence, setLisence] = useState("");
+  const [loader, setLoader] = useState(false);
 
   const [vehicles, setVehicles] = useState([
     {
@@ -58,8 +67,123 @@ const ResidentForm = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
+    setLoader(true);
     try {
+      // uploading image
+      const formData = new FormData();
+      formData.append("file", Photo);
+      formData.append("upload_preset", "images_preset");
+      // Upload photo to Cloudinary
+      const cloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      let photoUrl;
+      if (cloudinaryResponse.ok) {
+        const cloudinaryData = await cloudinaryResponse.json();
+        photoUrl = cloudinaryData.secure_url; // Extract the photo URL from the Cloudinary response
+      }
+
+      // Upload CNIC
+
+      formData.set("file", cnicFile);
+      // formData.append('upload_preset', 'images_preset');
+
+      const cnicResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      let cnicUrl;
+      if (cnicResponse.ok) {
+        const cnicData = await cnicResponse.json();
+        cnicUrl = cnicData.secure_url;
+      } else {
+        throw new Error("Failed to upload CNIC");
+      }
+
+      // Upload NOC
+
+      formData.set("file", nocFile);
+      const nocResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      let nocUrl;
+      if (nocResponse.ok) {
+        const nocData = await nocResponse.json();
+        nocUrl = nocData.secure_url;
+      } else {
+        throw new Error("Failed to upload NOC");
+      }
+
+      // Upload Cant Pass
+
+      formData.set("file", cantPass);
+      const cantResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      let cantUrl;
+      if (cantResponse.ok) {
+        const cantData = await cantResponse.json();
+        cantUrl = cantData.secure_url;
+      } else {
+        throw new Error("Failed to upload Cant Pass");
+      }
+
+      // Upload Police v
+
+      formData.set("file", policeV);
+      const polResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      let polUrl;
+      if (polResponse.ok) {
+        const polData = await polResponse.json();
+        polUrl = polData.secure_url;
+      } else {
+        throw new Error("Failed to upload Cant Pass");
+      }
+
+      // Upload Lisence
+
+      formData.set("file", lisence);
+      const lResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      let lUrl;
+      if (lResponse.ok) {
+        const lData = await lResponse.json();
+        lUrl = lData.secure_url;
+      } else {
+        throw new Error("Failed to upload Cant Pass");
+      }
+
       const response = await axios.post(
         "https://directory-management.onrender.com/api/v1/resident/add",
         {
@@ -79,6 +203,12 @@ const ResidentForm = () => {
           vehicles,
           relatives,
           maids,
+          Photo: photoUrl,
+          CnicFile: cnicUrl,
+          NocFile: nocUrl,
+          CantFile: cantUrl,
+          VerificationFile: polUrl,
+          LisenceFile: lUrl,
         }
       );
       if (response.data.success) {
@@ -140,7 +270,7 @@ const ResidentForm = () => {
         <div className="row text-center justify-content-center pt-2 ">
           <div className="col-md-6">
             {/* <div className="mb-5 w-75"> */}
-            {/* <label
+            <label
               className="w-75 my-3 text-white py-2"
               style={{
                 background: "transparent",
@@ -159,24 +289,107 @@ const ResidentForm = () => {
                 onChange={(e) => setPhoto(e.target.files[0])}
                 hidden
               />
-            </label> */}
-            {/* <div>
-              {Photo && (
-                <div>
-                  <h3>Preview</h3>
-                  <img
-                    style={{
-                      maxHeight: "200px",
-                      maxWidth: "200px",
-                      margin: "5px",
-                    }}
-                    src={URL.createObjectURL(Photo)}
-                    alt="preview image"
-                    className="img img-responsive"
-                  />
-                </div>
-              )}
-            </div> */}
+            </label>
+            <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {cnicFile ? cnicFile.name : "Upload CNIC image"}
+              <input
+                type="file"
+                name="cnicFile"
+                accept="image/*"
+                onChange={(e) => setCnicFile(e.target.files[0])}
+                hidden
+              />
+            </label>
+            <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {nocFile ? nocFile.name : "Upload NOC image"}
+              <input
+                type="file"
+                name="nocFile"
+                accept="image/*"
+                onChange={(e) => setNocFile(e.target.files[0])}
+                hidden
+              />
+            </label>
+            <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {cantPass ? cantPass.name : "Upload Cant Pass"}
+              <input
+                type="file"
+                name="nocFile"
+                accept="image/*"
+                onChange={(e) => setCantPass(e.target.files[0])}
+                hidden
+              />
+            </label>
+            <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {policeV ? policeV.name : "Upload Police Verification"}
+              <input
+                type="file"
+                name="nocFile"
+                accept="image/*"
+                onChange={(e) => setPoliceV(e.target.files[0])}
+                hidden
+              />
+            </label>
+            <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {lisence ? lisence.name : "Upload Driving Lisence"}
+              <input
+                type="file"
+                name="nocFile"
+                accept="image/*"
+                onChange={(e) => setLisence(e.target.files[0])}
+                hidden
+              />
+            </label>
             {/* </div> */}
             <input
               value={FullName}
@@ -864,6 +1077,22 @@ const ResidentForm = () => {
           >
             SUBMIT
           </button>
+
+          {loader ? (
+            <div className="text-center d-flex align-items-center my-3 justify-content-center">
+              <Audio
+                height="80"
+                width="80"
+                radius="9"
+                color="rgba(255, 255, 255, 0.2)"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
       </form>
     </main>
