@@ -130,6 +130,7 @@ const ResidentDetail = () => {
             </div>
           </div>
         </div>
+
         {/* maid details */}
         <div className="text-center">
           <div className="my-5">

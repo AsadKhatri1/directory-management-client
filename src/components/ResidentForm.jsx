@@ -139,7 +139,45 @@ const ResidentForm = () => {
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
         <div className="row text-center justify-content-center pt-2 ">
           <div className="col-md-6">
-            <br />
+            {/* <div className="mb-5 w-75"> */}
+            {/* <label
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            >
+              {Photo ? Photo.name : "Upload image"}
+              <input
+                type="file"
+                name="photo"
+                accept="image/*"
+                onChange={(e) => setPhoto(e.target.files[0])}
+                hidden
+              />
+            </label> */}
+            {/* <div>
+              {Photo && (
+                <div>
+                  <h3>Preview</h3>
+                  <img
+                    style={{
+                      maxHeight: "200px",
+                      maxWidth: "200px",
+                      margin: "5px",
+                    }}
+                    src={URL.createObjectURL(Photo)}
+                    alt="preview image"
+                    className="img img-responsive"
+                  />
+                </div>
+              )}
+            </div> */}
+            {/* </div> */}
             <input
               value={FullName}
               onChange={(e) => setFullName(e.target.value)}
