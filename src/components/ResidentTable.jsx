@@ -9,6 +9,17 @@ const ResidentTable = () => {
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
   const [numberOfMonths, setNumberOfMonths] = useState(1);
+  // Function to execute after 4 seconds
+  const timerCallback = () => {
+    console.log("Timer finished after 4 seconds!");
+    // Add any actions you want to perform after the timer finishes
+  };
+
+  // Start the timer
+  const timerId = setTimeout(timerCallback, 4000); // 4000 milliseconds = 4 seconds
+
+  // Optional: You can clear the timer if needed before it finishes
+  // clearTimeout(timerId);
 
   const allResidents = async () => {
     const res = await axios.get(
