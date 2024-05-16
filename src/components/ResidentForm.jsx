@@ -91,6 +91,7 @@ const ResidentForm = () => {
 
       formData.set("file", cnicFile);
       // formData.append('upload_preset', 'images_preset');
+      formData.set("Content-Type", cnicFile.type);
 
       const cnicResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
@@ -111,6 +112,7 @@ const ResidentForm = () => {
       // Upload NOC
 
       formData.set("file", nocFile);
+      formData.set("Content-Type", nocFile.type);
       const nocResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -130,6 +132,7 @@ const ResidentForm = () => {
       // Upload Cant Pass
 
       formData.set("file", cantPass);
+      formData.set("Content-Type", cantPass.type);
       const cantResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -149,6 +152,7 @@ const ResidentForm = () => {
       // Upload Police v
 
       formData.set("file", policeV);
+      formData.set("Content-Type", policeV.type);
       const polResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -168,6 +172,7 @@ const ResidentForm = () => {
       // Upload Lisence
 
       formData.set("file", lisence);
+      formData.set("Content-Type", lisence.type);
       const lResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -286,7 +291,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="photo"
-                accept="image/*, .pdf"
+                accept="image/*"
                 onChange={(e) => setPhoto(e.target.files[0])}
                 hidden
               />
