@@ -68,126 +68,59 @@ const ResidentForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoader(true);
-    try {
-      // uploading image
+    const uploadFileToCloudinary = async (file) => {
       const formData = new FormData();
-      formData.append("file", Photo);
+      formData.append("file", file);
       formData.append("upload_preset", "images_preset");
-      // Upload photo to Cloudinary
-      const cloudinaryResponse = await fetch(
+
+      const response = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
           method: "POST",
           body: formData,
         }
       );
+
+      if (response.ok) {
+        const data = await response.json();
+        return data.secure_url;
+      } else {
+        throw new Error(`Failed to upload file: ${file.name}`);
+      }
+    };
+    try {
+      // Upload photo to Cloudinary
       let photoUrl;
-      if (cloudinaryResponse.ok) {
-        const cloudinaryData = await cloudinaryResponse.json();
-        photoUrl = cloudinaryData.secure_url; // Extract the photo URL from the Cloudinary response
+      if (Photo) {
+        photoUrl = await uploadFileToCloudinary(Photo);
       }
 
       // Upload CNIC
-
-      formData.set("file", cnicFile);
-      // formData.append('upload_preset', 'images_preset');
-      formData.set("Content-Type", cnicFile.type);
-      const cnicResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
       let cnicUrl;
-      if (cnicResponse.ok) {
-        const cnicData = await cnicResponse.json();
-        cnicUrl = cnicData.secure_url;
-      } else {
-        throw new Error("Failed to upload CNIC");
+      if (cnicFile) {
+        cnicUrl = await uploadFileToCloudinary(cnicFile);
       }
 
       // Upload NOC
-
-      formData.set("file", nocFile);
-      formData.set("Content-Type", nocFile.type);
-      const nocResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
       let nocUrl;
-      if (nocResponse.ok) {
-        const nocData = await nocResponse.json();
-        nocUrl = nocData.secure_url;
-      } else {
-        throw new Error("Failed to upload NOC");
+      if (nocFile) {
+        nocUrl = await uploadFileToCloudinary(nocFile);
       }
 
-      // Upload Cant Pass
-
-      formData.set("file", cantPass);
-      formData.set("Content-Type", cantPass.type);
-
-      const cantResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
+      // Upload cant Pass
       let cantUrl;
-      if (cantResponse.ok) {
-        const cantData = await cantResponse.json();
-        cantUrl = cantData.secure_url;
-      } else {
-        throw new Error("Failed to upload Cant Pass");
+      if (cantPass) {
+        cantUrl = await uploadFileToCloudinary(cantPass);
       }
-
-      // Upload Police v
-
-      formData.set("file", policeV);
-      formData.set("Content-Type", policeV.type);
-      const polResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
+      // Upload pol veri
       let polUrl;
-      if (polResponse.ok) {
-        const polData = await polResponse.json();
-        polUrl = polData.secure_url;
-      } else {
-        throw new Error("Failed to upload Cant Pass");
+      if (policeV) {
+        polUrl = await uploadFileToCloudinary(policeV);
       }
-
-      // Upload Lisence
-
-      formData.set("file", lisence);
-      formData.set("Content-Type", lisence.type);
-
-      const lResponse = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
+      // Upload lisence
       let lUrl;
-      if (lResponse.ok) {
-        const lData = await lResponse.json();
-        lUrl = lData.secure_url;
-      } else {
-        throw new Error("Failed to upload Cant Pass");
+      if (lisence) {
+        lUrl = await uploadFileToCloudinary(lisence);
       }
 
       const response = await axios.post(
