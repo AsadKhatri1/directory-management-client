@@ -138,9 +138,7 @@ const ResidentDetail = () => {
         {/* maid details */}
         <div className="text-center">
           <div className="my-5">
-            <h2 className=" my-5 text-secondary">
-              Maids/Drivers/Gardeners Details
-            </h2>
+            <h2 className=" my-5 text-secondary">Servant Details</h2>
             <div className="table-responsive">
               {maids.length == 0 && timer < 3 ? (
                 <div className="text-center d-flex align-items-center justify-content-center">
@@ -168,7 +166,9 @@ const ResidentDetail = () => {
                       </tr>
                     ) : (
                       <span>
-                        <h3 className="text-light">No Maids Detail To Show</h3>
+                        <h3 className="text-light">
+                          No Servant Details To Show
+                        </h3>
                       </span>
                     )}
                   </thead>

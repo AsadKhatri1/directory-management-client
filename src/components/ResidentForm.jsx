@@ -286,7 +286,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="photo"
-                accept="image/*"
+                accept="image/*, .pdf"
                 onChange={(e) => setPhoto(e.target.files[0])}
                 hidden
               />
@@ -306,7 +306,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="cnicFile"
-                accept="image/*"
+                accept="image/*, .pdf"
                 onChange={(e) => setCnicFile(e.target.files[0])}
                 hidden
               />
@@ -326,7 +326,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*"
+                accept="image/*, .pdf"
                 onChange={(e) => setNocFile(e.target.files[0])}
                 hidden
               />
@@ -346,7 +346,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*"
+                accept="image/*, .pdf"
                 onChange={(e) => setCantPass(e.target.files[0])}
                 hidden
               />
@@ -366,7 +366,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*"
+                accept="image/*,.pdf"
                 onChange={(e) => setPoliceV(e.target.files[0])}
                 hidden
               />
@@ -386,7 +386,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*"
+                accept="image/*, .pdf"
                 onChange={(e) => setLisence(e.target.files[0])}
                 hidden
               />
@@ -815,7 +815,7 @@ const ResidentForm = () => {
           <div className="col-md-6">
             <div className="text-center my-3">
               <span className="blockquote-footer my-3 fw-bold fs-6">
-                Enter maids/drivers/gardeners details
+                Enter servant details
               </span>
               {maids.map((maid, index) => (
                 <div key={index}>
@@ -935,7 +935,7 @@ const ResidentForm = () => {
                 onClick={addMaidField}
                 className="btn btn-outline-primary m-5 mt-2"
               >
-                <FaPlus /> Maids
+                <FaPlus /> Servants
               </button>
             </div>
             <div className="text-center mt-3">
