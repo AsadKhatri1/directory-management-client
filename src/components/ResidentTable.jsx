@@ -103,11 +103,6 @@ const ResidentTable = () => {
             className=" input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
           />
-          {/* <BsSearch
-            className="icon"
-            onClick={searchHandler}
-            style={{ cursor: "pointer" }}
-          /> */}
         </form>
       </div>
       <h1 className="mx-5 mt-3 mb-2 text-white">Resident Table</h1>
