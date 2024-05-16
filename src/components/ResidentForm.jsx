@@ -225,6 +225,7 @@ const ResidentForm = () => {
       }
     } catch (err) {
       toast.error(err?.response?.data.message);
+      setLoader(false);
     }
   };
 
