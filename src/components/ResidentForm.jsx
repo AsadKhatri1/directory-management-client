@@ -92,7 +92,6 @@ const ResidentForm = () => {
       formData.set("file", cnicFile);
       // formData.append('upload_preset', 'images_preset');
       formData.set("Content-Type", cnicFile.type);
-
       const cnicResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -133,6 +132,7 @@ const ResidentForm = () => {
 
       formData.set("file", cantPass);
       formData.set("Content-Type", cantPass.type);
+
       const cantResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -173,6 +173,7 @@ const ResidentForm = () => {
 
       formData.set("file", lisence);
       formData.set("Content-Type", lisence.type);
+
       const lResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
         {
@@ -307,7 +308,7 @@ const ResidentForm = () => {
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               }}
             >
-              {cnicFile ? cnicFile.name : "Upload CNIC image"}
+              {cnicFile ? cnicFile.name : "Upload CNIC"}
               <input
                 type="file"
                 name="cnicFile"
@@ -327,7 +328,7 @@ const ResidentForm = () => {
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               }}
             >
-              {nocFile ? nocFile.name : "Upload NOC image"}
+              {nocFile ? nocFile.name : "Upload NOC "}
               <input
                 type="file"
                 name="nocFile"
@@ -351,7 +352,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*, .pdf"
+                accept="image/* ,.pdf"
                 onChange={(e) => setCantPass(e.target.files[0])}
                 hidden
               />
@@ -391,7 +392,7 @@ const ResidentForm = () => {
               <input
                 type="file"
                 name="nocFile"
-                accept="image/*, .pdf"
+                accept="image/*,.pdf"
                 onChange={(e) => setLisence(e.target.files[0])}
                 hidden
               />
@@ -1076,13 +1077,6 @@ const ResidentForm = () => {
               </button>
             </div>
           </div>
-          <button
-            type="submit"
-            className="btn btn-success w-75 mt-1"
-            style={{ borderRadius: "12px" }}
-          >
-            SUBMIT
-          </button>
 
           {loader ? (
             <div className="text-center d-flex align-items-center my-3 justify-content-center">
@@ -1099,6 +1093,13 @@ const ResidentForm = () => {
           ) : (
             <></>
           )}
+          <button
+            type="submit"
+            className="btn btn-success w-75 mt-1"
+            style={{ borderRadius: "12px" }}
+          >
+            SUBMIT
+          </button>
         </div>
       </form>
     </main>
