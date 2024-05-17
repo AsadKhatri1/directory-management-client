@@ -37,11 +37,21 @@ const ResidentForm = () => {
       colour: "",
       stickerNumber: "",
       registrationNumber: "",
+      paperDocument: "",
     },
   ]);
 
   const [maids, setMaids] = useState([
-    { name: "", dob: "", address: "", guardian: "", number: "", cnic: "" },
+    {
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
+    },
   ]);
 
   const handleMaidChange = (index, name, event) => {
@@ -54,40 +64,51 @@ const ResidentForm = () => {
   const addMaidField = () => {
     setMaids([
       ...maids,
-      { name: "", dob: "", address: "", guardian: "", number: "", cnic: "" },
+      {
+        name: "",
+        dob: "",
+        address: "",
+        guardian: "",
+        number: "",
+        cnic: "",
+        cnicUrl: "",
+        cantPassUrl: "",
+      },
     ]);
   };
   // const [RelativeName, setRelativeName] = useState(""); // New state for relative name
-  const [relatives, setRelatives] = useState([
-    { name: "", relation: "", dob: "", occupation: "", cnic: "", number: "" },
-  ]); // Array to hold relative information
+
   const navigate = useNavigate();
 
-  //--------------------- function for submitting form ----------------------
+  // upload single files to cloudinary
+  const uploadFileToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "images_preset");
 
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.secure_url;
+    } else {
+      throw new Error(`Failed to upload file: ${file.name}`);
+    }
+  };
+
+  //--------------------- function for submitting form ----------------------
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoader(true);
-    const uploadFileToCloudinary = async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "images_preset");
 
-      const response = await fetch(
-        "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+    // function for uploading paper document of cars
 
-      if (response.ok) {
-        const data = await response.json();
-        return data.secure_url;
-      } else {
-        throw new Error(`Failed to upload file: ${file.name}`);
-      }
-    };
     try {
       // Upload photo to Cloudinary
       let photoUrl;
@@ -168,6 +189,136 @@ const ResidentForm = () => {
     }
   };
 
+  // uploading car papers to cloudinary
+  const handlePaperDocumentUpload = async (event, index) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return; // No file selected, do nothing
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload image to Cloudinary if it's an image (optional):
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update vehicle array with uploaded URL
+      setVehicles((prevVehicles) => {
+        const updatedVehicles = [...prevVehicles];
+        updatedVehicles[index].paperDocument = uploadedUrl;
+        return updatedVehicles;
+      });
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      alert("Error uploading document. Please try again."); // Inform the user
+    }
+  };
+
+  // uploading relative cnic and photo
+  const handleRelativePhotoUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setRelatives((prevRelatives) => {
+        const updatedRelatives = [...prevRelatives];
+        updatedRelatives[index].photoUrl = uploadedUrl;
+        return updatedRelatives;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+  const handleRelativeCnicUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setRelatives((prevRelatives) => {
+        const updatedRelatives = [...prevRelatives];
+        updatedRelatives[index].cnicUrl = uploadedUrl;
+        return updatedRelatives;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+
+  const handleMaidCantPassUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update maids array with uploaded photo URL
+      setMaids((prevMaids) => {
+        const updatedMaids = [...prevMaids];
+        updatedMaids[index].cantPassUrl = uploadedUrl;
+        return updatedMaids;
+      });
+    } catch (error) {
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+  const handleMaidCnicUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update maids array with uploaded photo URL
+      setMaids((prevMaids) => {
+        const updatedMaids = [...prevMaids];
+        updatedMaids[index].cnicUrl = uploadedUrl;
+        return updatedMaids;
+      });
+    } catch (error) {
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+
   const handleVehicleChange = (index, event) => {
     const updatedVehicles = [...vehicles];
     updatedVehicles[index][event.target.name] = event.target.value;
@@ -185,9 +336,23 @@ const ResidentForm = () => {
         colour: "",
         stickerNumber: "",
         registrationNumber: "",
+        paperDocument: "",
       },
     ]);
   };
+
+  const [relatives, setRelatives] = useState([
+    {
+      name: "",
+      relation: "",
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+    },
+  ]);
 
   const handleRelativeChange = (index, name, event) => {
     const { value } = event.target;
@@ -198,7 +363,16 @@ const ResidentForm = () => {
   const addRelativeField = () => {
     setRelatives([
       ...relatives,
-      { name: "", relation: "", dob: "", occupation: "", cnic: "", number: "" },
+      {
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
+      },
     ]);
   };
 
@@ -458,114 +632,7 @@ const ResidentForm = () => {
               }}
             />
             <br />
-            <label htmlFor="date">Date Of Birth</label> <br />
-            <input
-              value={DOB}
-              onChange={(e) => setDOB(e.target.value)}
-              type="date"
-              name="date"
-              id="date"
-              placeholder="Date Of Birth"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <input
-              value={officeTel}
-              onChange={(e) => setOfficeTel(e.target.value)}
-              type="tel"
-              name="officeTel"
-              id="office tel"
-              placeholder="Tel (office)"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <textarea
-              value={bAddress}
-              onChange={(e) => setBAddress(e.target.value)}
-              type="text"
-              name="business address"
-              id="business address"
-              placeholder="Business/Office Address"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCHolder}
-              onChange={(e) => setNOCHolder(e.target.value)}
-              type="text"
-              name="noc"
-              id="noc"
-              placeholder="NOC Holder's Name"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
-            <input
-              value={NOCIssue}
-              onChange={(e) => setNOCIssue(e.target.value)}
-              type="date"
-              name="nocIssue"
-              id="nocIssue"
-              placeholder="NOC Issueance Date"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCNo}
-              onChange={(e) => setNOCNo(e.target.value)}
-              type="text"
-              name="nocno"
-              id="nocno"
-              placeholder="NOC Number"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
+            {/* --------------------------------------------------- */}
             <br />
             <div className="mt-3">
               <span className="blockquote-footer my-3 fw-bold fs-6">
@@ -740,6 +807,52 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {relative.photoUrl
+                      ? relative.photoUrl.name
+                      : "Upload Photo"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/* ,.pdf"
+                      onChange={(event) =>
+                        handleRelativePhotoUpload(index, event)
+                      }
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/* ,.pdf"
+                      onChange={(event) =>
+                        handleRelativeCnicUpload(index, event)
+                      }
+                      hidden
+                    />
+                  </label>
                 </div>
               ))}
               <button
@@ -752,6 +865,114 @@ const ResidentForm = () => {
             </div>
           </div>
           <div className="col-md-6">
+            <label htmlFor="date">Date Of Birth</label> <br />
+            <input
+              value={DOB}
+              onChange={(e) => setDOB(e.target.value)}
+              type="date"
+              name="date"
+              id="date"
+              placeholder="Date Of Birth"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <input
+              value={officeTel}
+              onChange={(e) => setOfficeTel(e.target.value)}
+              type="tel"
+              name="officeTel"
+              id="office tel"
+              placeholder="Tel (office)"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />
+            <br />
+            <textarea
+              value={bAddress}
+              onChange={(e) => setBAddress(e.target.value)}
+              type="text"
+              name="business address"
+              id="business address"
+              placeholder="Business/Office Address"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <input
+              value={NOCHolder}
+              onChange={(e) => setNOCHolder(e.target.value)}
+              type="text"
+              name="noc"
+              id="noc"
+              placeholder="NOC Holder's Name"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
+            <input
+              value={NOCIssue}
+              onChange={(e) => setNOCIssue(e.target.value)}
+              type="date"
+              name="nocIssue"
+              id="nocIssue"
+              placeholder="NOC Issueance Date"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <input
+              value={NOCNo}
+              onChange={(e) => setNOCNo(e.target.value)}
+              type="text"
+              name="nocno"
+              id="nocno"
+              placeholder="NOC Number"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
             <div className="text-center my-3">
               <span className="blockquote-footer my-3 fw-bold fs-6">
                 Enter servant details
@@ -854,7 +1075,7 @@ const ResidentForm = () => {
                     onChange={(e) => handleMaidChange(index, "cnic", e)}
                     type="text"
                     name="cnic"
-                    placeholder="CNIC"
+                    placeholder="CNIC Number"
                     // Add your styling here
                     className="w-75 my-3 text-white py-2"
                     style={{
@@ -867,6 +1088,50 @@ const ResidentForm = () => {
                     }}
                   />
                   <br />
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {maid.cnicUrl ? maid.cnicUrl.name : "Upload CNIC"}
+                    <input
+                      type="file"
+                      name="cnicFile"
+                      accept="image/* ,.pdf"
+                      onChange={(event) => handleMaidCnicUpload(index, event)}
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {maid.cantPassUrl
+                      ? maid.cantPassUrl.name
+                      : "Upload Cant Pass"}
+                    <input
+                      type="file"
+                      name="cantPassFile"
+                      accept="image/* ,.pdf"
+                      onChange={(event) =>
+                        handleMaidCantPassUpload(index, event)
+                      }
+                      hidden
+                    />
+                  </label>
                 </div>
               ))}
               <button
@@ -999,6 +1264,30 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {vehicle.paperDocument
+                      ? vehicle.paperDocument.name
+                      : "Upload Document"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/*,.pdf"
+                      onChange={(event) =>
+                        handlePaperDocumentUpload(event, index)
+                      }
+                      hidden
+                    />
+                  </label>
                 </div>
               ))}
               <button
