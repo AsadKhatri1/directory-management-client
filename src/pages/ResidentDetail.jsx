@@ -157,6 +157,8 @@ const ResidentDetail = () => {
                             <th scope="col">NAME</th>
                             <th scope="col">RELATION</th>
                             <th scope="col">MOBILE NUMBER</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">OCCUPATION</th>
                             <th scope="col">CNIC</th>
                           </tr>
                         ) : (
@@ -182,6 +184,8 @@ const ResidentDetail = () => {
                             <td>{r?.name}</td>
                             <td>{r?.relation}</td>
                             <td>{r?.number}</td>
+                            <td>{r?.dob}</td>
+                            <td>{r?.occupation}</td>
                             <td>{r?.cnic}</td>
                           </tr>
                         ))}
