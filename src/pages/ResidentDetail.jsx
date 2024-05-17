@@ -252,7 +252,11 @@ const ResidentDetail = () => {
                           <td>{r?.registrationNumber}</td>
                           <td>{r?.stickerNumber}</td>
                           <td>
-                            <img src={r?.paperDocument} alt="Document" />
+                            <img
+                              src={r?.paperDocument}
+                              alt="Document"
+                              style={{ width: "50px", height: "50px" }}
+                            />
                           </td>
                         </tr>
                       ))}
