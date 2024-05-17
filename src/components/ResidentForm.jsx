@@ -41,43 +41,6 @@ const ResidentForm = () => {
     },
   ]);
 
-  const [maids, setMaids] = useState([
-    {
-      name: "",
-      dob: "",
-      address: "",
-      guardian: "",
-      number: "",
-      cnic: "",
-      cnicUrl: "",
-      cantPassUrl: "",
-    },
-  ]);
-
-  const handleMaidChange = (index, name, event) => {
-    const { value } = event.target;
-    const updatedMaids = [...maids];
-    updatedMaids[index][name] = value;
-    setMaids(updatedMaids);
-  };
-
-  const addMaidField = () => {
-    setMaids([
-      ...maids,
-      {
-        name: "",
-        dob: "",
-        address: "",
-        guardian: "",
-        number: "",
-        cnic: "",
-        cnicUrl: "",
-        cantPassUrl: "",
-      },
-    ]);
-  };
-  // const [RelativeName, setRelativeName] = useState(""); // New state for relative name
-
   const navigate = useNavigate();
 
   // upload single files to cloudinary
@@ -106,8 +69,6 @@ const ResidentForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoader(true);
-
-    // function for uploading paper document of cars
 
     try {
       // Upload photo to Cloudinary
@@ -372,6 +333,41 @@ const ResidentForm = () => {
         number: "",
         photoUrl: "",
         cnicUrl: "",
+      },
+    ]);
+  };
+  const [maids, setMaids] = useState([
+    {
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
+    },
+  ]);
+
+  const handleMaidChange = (index, name, event) => {
+    const { value } = event.target;
+    const updatedMaids = [...maids];
+    updatedMaids[index][name] = value;
+    setMaids(updatedMaids);
+  };
+
+  const addMaidField = () => {
+    setMaids([
+      ...maids,
+      {
+        name: "",
+        dob: "",
+        address: "",
+        guardian: "",
+        number: "",
+        cnic: "",
+        cnicUrl: "",
+        cantPassUrl: "",
       },
     ]);
   };
@@ -824,7 +820,7 @@ const ResidentForm = () => {
                     <input
                       type="file"
                       name="nocFile"
-                      accept="image/* ,.pdf"
+                      accept="image/*"
                       onChange={(event) =>
                         handleRelativePhotoUpload(index, event)
                       }
@@ -846,7 +842,7 @@ const ResidentForm = () => {
                     <input
                       type="file"
                       name="nocFile"
-                      accept="image/* ,.pdf"
+                      accept="image/* "
                       onChange={(event) =>
                         handleRelativeCnicUpload(index, event)
                       }
@@ -985,7 +981,7 @@ const ResidentForm = () => {
                     type="text"
                     name="name"
                     className="w-75 my-3 text-white py-2"
-                    placeholder="Maid's Name"
+                    placeholder="Servant's Name"
                     // Add your styling here
                     style={{
                       background: "transparent",
@@ -1103,7 +1099,7 @@ const ResidentForm = () => {
                     <input
                       type="file"
                       name="cnicFile"
-                      accept="image/* ,.pdf"
+                      accept="image/* "
                       onChange={(event) => handleMaidCnicUpload(index, event)}
                       hidden
                     />
@@ -1125,7 +1121,7 @@ const ResidentForm = () => {
                     <input
                       type="file"
                       name="cantPassFile"
-                      accept="image/* ,.pdf"
+                      accept="image/*"
                       onChange={(event) =>
                         handleMaidCantPassUpload(index, event)
                       }
@@ -1281,7 +1277,7 @@ const ResidentForm = () => {
                     <input
                       type="file"
                       name="nocFile"
-                      accept="image/*,.pdf"
+                      accept="image/*"
                       onChange={(event) =>
                         handlePaperDocumentUpload(event, index)
                       }
