@@ -136,11 +136,13 @@ const ResidentDetail = () => {
                         {members.map((r, i) => (
                           <tr key={r._id} className="text-center align-middle">
                             <td>
-                              <img
-                                src={r?.photoUrl}
-                                alt="Member photo"
-                                style={{ width: "50px", height: "50px" }}
-                              />
+                              {r.photoUrl ? (
+                                <img
+                                  src={r?.photoUrl}
+                                  alt="Member photo"
+                                  style={{ width: "50px", height: "50px" }}
+                                />
+                              ) : null}
                             </td>
                             <td>{r?.name}</td>
                             <td>{r?.relation}</td>
@@ -180,6 +182,7 @@ const ResidentDetail = () => {
                             <th scope="col">CNIC</th>
                             <th scope="col">ADDRESS</th>
                             <th scope="col">GUARDIAN'S NAME</th>
+                            <th scope="col">CNIC</th>
                           </tr>
                         ) : (
                           <span>
@@ -198,6 +201,15 @@ const ResidentDetail = () => {
                             <td>{r?.cnic}</td>
                             <td>{r?.address}</td>
                             <td>{r?.guardian}</td>
+                            <td>
+                              {r?.cnicUrl ? (
+                                <img
+                                  src={r?.cnicUrl}
+                                  alt="Document"
+                                  style={{ width: "50px", height: "50px" }}
+                                />
+                              ) : null}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -252,11 +264,13 @@ const ResidentDetail = () => {
                           <td>{r?.registrationNumber}</td>
                           <td>{r?.stickerNumber}</td>
                           <td>
-                            <img
-                              src={r?.paperDocument}
-                              alt="Document"
-                              style={{ width: "50px", height: "50px" }}
-                            />
+                            {r?.paperDocument ? (
+                              <img
+                                src={r?.paperDocument}
+                                alt="Document"
+                                style={{ width: "50px", height: "50px" }}
+                              />
+                            ) : null}
                           </td>
                         </tr>
                       ))}

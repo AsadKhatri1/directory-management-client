@@ -40,6 +40,18 @@ const ResidentForm = () => {
       paperDocument: "",
     },
   ]);
+  const [maids, setMaids] = useState([
+    {
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
+    },
+  ]);
 
   const navigate = useNavigate();
 
@@ -336,18 +348,6 @@ const ResidentForm = () => {
       },
     ]);
   };
-  const [maids, setMaids] = useState([
-    {
-      name: "",
-      dob: "",
-      address: "",
-      guardian: "",
-      number: "",
-      cnic: "",
-      cnicUrl: "",
-      cantPassUrl: "",
-    },
-  ]);
 
   const handleMaidChange = (index, name, event) => {
     const { value } = event.target;

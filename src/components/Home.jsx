@@ -95,9 +95,9 @@ const Home = () => {
     allResidents();
     allAdmins();
   }, []);
+
   residents.map((item, i) => {
     cars = cars + item.vehicles.length;
-    console.log(cars);
   });
   return (
     <main className="main-container">
