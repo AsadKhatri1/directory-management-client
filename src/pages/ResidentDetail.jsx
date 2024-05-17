@@ -84,7 +84,7 @@ const ResidentDetail = () => {
               <h1>{resident?.FullName}</h1>
               <div className="row border my-3 py-3">
                 <div className="col-md-6  ">
-                  <h6>{resident?.Email}</h6>
+                  <h5>EMAIL : {resident?.Email}</h5>
                   <h5>Phone # {resident?.Phone}</h5>
                   <h5>House # {resident?.HouseNumber}</h5>
                   <h5>DOB : {date + "/" + month + "/" + year}</h5>
@@ -98,7 +98,6 @@ const ResidentDetail = () => {
                   <h5>Business Address : {resident?.bAddress}</h5>
                   <h5>NOC Holder : {resident?.NOCHolder}</h5>
                   <h5>NOC Issue Date : {resident?.NOCIssue}</h5>
-                  <h5>NOC Number : {resident?.NOCNo}</h5>
                 </div>
               </div>
             </div>
