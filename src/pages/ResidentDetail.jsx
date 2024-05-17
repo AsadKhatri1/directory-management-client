@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
-
+import moment from "moment";
 import axios from "axios";
 const ResidentDetail = () => {
   // redirect on refresh
@@ -44,10 +44,9 @@ const ResidentDetail = () => {
     setSidebaropen(!sidebaropen);
   };
 
-  const birthDate = new Date(resident?.DOB);
-  const month = birthDate.getMonth();
-  const date = birthDate.getDate();
-  const year = birthDate.getFullYear();
+  const birthDate = moment(resident?.DOB).format("MMMM Do, YYYY");
+
+  const nocdate = moment(resident?.NOCIssue).format("MMMM Do, YYYY");
   return (
     <div className="grid-container ">
       <Header openSideBar={sideBarToggle}></Header>
@@ -87,7 +86,7 @@ const ResidentDetail = () => {
                   <h5>EMAIL : {resident?.Email}</h5>
                   <h5>Phone # {resident?.Phone}</h5>
                   <h5>House # {resident?.HouseNumber}</h5>
-                  <h5>DOB : {date + "/" + month + "/" + year}</h5>
+                  <h5>DOB : {birthDate}</h5>
                   <h5>CNIC # {resident?.CNIC}</h5>
                   <h5>NOC # {resident?.NOCNo}</h5>
                 </div>
@@ -97,7 +96,7 @@ const ResidentDetail = () => {
                   <h5>Qualification : {resident?.Qualification}</h5>
                   <h5>Business Address : {resident?.bAddress}</h5>
                   <h5>NOC Holder : {resident?.NOCHolder}</h5>
-                  <h5>NOC Issue Date : {resident?.NOCIssue}</h5>
+                  <h5>NOC Issue Date : {nocdate}</h5>
                 </div>
               </div>
             </div>
@@ -184,7 +183,7 @@ const ResidentDetail = () => {
                             <td>{r?.name}</td>
                             <td>{r?.relation}</td>
                             <td>{r?.number}</td>
-                            <td>{r?.dob}</td>
+                            <td>{moment(r?.dob).format("MMMM Do, YYYY")}</td>
                             <td>{r?.occupation}</td>
                             <td>{r?.cnic}</td>
                           </tr>
@@ -229,7 +228,7 @@ const ResidentDetail = () => {
                         {maids.map((r, i) => (
                           <tr key={r._id} className="text-center align-middle">
                             <td>{r?.name}</td>
-                            <td>{r?.dob}</td>
+                            <td>{moment(r?.dob).format("MMMM Do, YYYY")}</td>
                             <td>{r?.number}</td>
                             <td>{r?.cnic}</td>
                             <td>{r?.address}</td>
