@@ -142,6 +142,11 @@ const ResidentForm = () => {
           CantFile: cantUrl,
           VerificationFile: polUrl,
           LisenceFile: lUrl,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(token)}`, // Include 'Bearer' prefix for most token types
+          },
         }
       );
       if (response.data.success) {

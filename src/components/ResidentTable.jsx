@@ -41,7 +41,12 @@ const ResidentTable = () => {
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
-        `https://directory-management.onrender.com/api/v1/resident/deleteResident/${id}`
+        `https://directory-management.onrender.com/api/v1/resident/deleteResident/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(token)}`,
+          },
+        }
       );
       if (res.data.success) {
         toast.success(res.data.message);
@@ -64,7 +69,12 @@ const ResidentTable = () => {
     try {
       const response = await axios.post(
         `https://directory-management.onrender.com/api/v1/resident/generateSlip/${residentId}`,
-        { numberOfMonths: numberOfMonths }
+        { numberOfMonths: numberOfMonths },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem(token)}`,
+          },
+        }
       );
       if (response.data.success) {
         console.log(
