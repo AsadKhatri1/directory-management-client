@@ -100,6 +100,29 @@ const ResidentTable = () => {
     }
   };
 
+  // pagination work below
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = residents.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(residents.length / recordsPerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  const prevPage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const nextPage = () => {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const changeCPage = (id) => {
+    setCurrentPage(id);
+  };
+
   return (
     <main className="main-container text-center">
       <div className="header-left d-flex   mb-4">
@@ -139,7 +162,7 @@ const ResidentTable = () => {
             />
           )}
           <tbody>
-            {residents
+            {records
               .filter((item) => {
                 return search.toLowerCase() === ""
                   ? item
@@ -202,6 +225,34 @@ const ResidentTable = () => {
               ))}
           </tbody>
         </table>
+        <nav>
+          <ul className="pagination">
+            <li className="page-item">
+              <a className="page-link" href="#" onClick={prevPage}>
+                Prev
+              </a>
+            </li>
+            {numbers.map((n, i) => (
+              <li
+                className={`page-item ${currentPage === n ? "active" : ""}`}
+                key={i}
+              >
+                <a
+                  href="#"
+                  className="page-link"
+                  onClick={() => changeCPage(n)}
+                >
+                  {n}
+                </a>
+              </li>
+            ))}
+            <li className="page-item">
+              <a className="page-link" href="#" onClick={nextPage}>
+                Next
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </main>
   );
