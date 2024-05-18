@@ -234,7 +234,9 @@ const ResidentTable = () => {
             </li>
             {numbers.map((n, i) => (
               <li
-                className={`page-item ${currentPage === n ? "active" : ""}`}
+                className={`page-item-dark ${
+                  currentPage === n ? "active" : ""
+                }`}
                 key={i}
               >
                 <a
