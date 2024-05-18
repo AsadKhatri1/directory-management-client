@@ -5,18 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 const ResidentTable = () => {
+  let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
   const [numberOfMonths, setNumberOfMonths] = useState(1);
   // Function to execute after 4 seconds
-  const timerCallback = () => {
-    console.log("Timer finished after 4 seconds!");
-    // Add any actions you want to perform after the timer finishes
-  };
 
   // Start the timer
-  const timerId = setTimeout(timerCallback, 4000); // 4000 milliseconds = 4 seconds
 
   // Optional: You can clear the timer if needed before it finishes
   // clearTimeout(timerId);
@@ -44,7 +40,7 @@ const ResidentTable = () => {
         `https://directory-management.onrender.com/api/v1/resident/deleteResident/${id}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(token)}`,
+            authorization: `Bearer ${token}`,
           },
         }
       );
@@ -65,6 +61,7 @@ const ResidentTable = () => {
   // };
 
   // Function to handle fee slip generation
+
   const generateFeeSlip = async (residentId) => {
     try {
       const response = await axios.post(
@@ -72,7 +69,7 @@ const ResidentTable = () => {
         { numberOfMonths: numberOfMonths },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(token)}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

@@ -108,7 +108,7 @@ const Home = () => {
       <div className="main-cards">
         <div className="cards">
           <div className="card-inner">
-            <h6>RESIDENTS</h6>
+            <h6 className="fw-bold">HOMES</h6>
             <FaHouseUser className="card-icon" />
           </div>
           <h1>
@@ -129,7 +129,7 @@ const Home = () => {
         </div>
         <div className="cards">
           <div className="card-inner">
-            <h6>Admins</h6>
+            <h6 className="fw-bold">Admins</h6>
             <RiAdminFill className="card-icon" />
           </div>
           <h1>
@@ -150,7 +150,7 @@ const Home = () => {
         </div>
         <div className="cards">
           <div className="card-inner">
-            <h6>Vehicles</h6>
+            <h6 className="fw-bold">Vehicles</h6>
             <IoCarSport className="card-icon" />
           </div>
           <h1>

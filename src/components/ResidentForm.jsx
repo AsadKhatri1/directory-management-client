@@ -145,7 +145,7 @@ const ResidentForm = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem(token)}`, // Include 'Bearer' prefix for most token types
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
           },
         }
       );
