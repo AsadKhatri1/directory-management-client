@@ -245,6 +245,82 @@ const ResidentForm = () => {
       alert("Error uploading photo. Please try again.");
     }
   };
+  // uploading tanent cnic and photo
+  const handleTanentPhotoUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setTanents((prevTanents) => {
+        const updatedTanents = [...prevTanents];
+        updatedTanents[index].photoUrl = uploadedUrl;
+        return updatedTanents;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+  const handleTanentCnicUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setTanents((prevTanents) => {
+        const updatedTanents = [...prevTanents];
+        updatedTanents[index].cnicUrl = uploadedUrl;
+        return updatedTanents;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+  const handleTanentNocUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setTanents((prevTanents) => {
+        const updatedTanents = [...prevTanents];
+        updatedTanents[index].nocUrl = uploadedUrl;
+        return updatedTanents;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
 
   const handleMaidCantPassUpload = async (index, event) => {
     const file = event.target.files[0];
@@ -318,7 +394,7 @@ const ResidentForm = () => {
       },
     ]);
   };
-
+  // family members
   const [relatives, setRelatives] = useState([
     {
       name: "",
@@ -354,6 +430,7 @@ const ResidentForm = () => {
     ]);
   };
 
+  // servants field
   const handleMaidChange = (index, name, event) => {
     const { value } = event.target;
     const updatedMaids = [...maids];
@@ -373,6 +450,49 @@ const ResidentForm = () => {
         cnic: "",
         cnicUrl: "",
         cantPassUrl: "",
+      },
+    ]);
+  };
+
+  // tanents fields
+
+  const [tanents, setTanents] = useState([
+    {
+      name: "",
+
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      NOCIssue: "",
+      nocNo: "",
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+      nocUrl: "",
+    },
+  ]);
+
+  const handleTanentChange = (index, name, event) => {
+    const { value } = event.target;
+    const updatedTanents = [...tanents];
+    updatedTanents[index][name] = value;
+    setTanents(updatedTanents);
+  };
+  const addTanentField = () => {
+    setTanents([
+      ...tanents,
+      {
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        NOCIssue: "",
+        nocNo: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
+        nocUrl: "",
       },
     ]);
   };
@@ -862,6 +982,205 @@ const ResidentForm = () => {
                 className="btn btn-outline-primary m-5 mt-2"
               >
                 <FaPlus /> Members
+              </button>
+            </div>
+            {/* ----------------- tanents fields ------------------ */}
+            <br />
+            <div className="mt-3">
+              <span className="blockquote-footer my-3 fw-bold fs-6">
+                Enter Tanent Details
+              </span>
+
+              {tanents.map((tanent, index) => (
+                <div key={index}>
+                  <input
+                    value={tanent.name}
+                    onChange={(e) => handleTanentChange(index, "name", e)}
+                    type="text"
+                    name="name"
+                    placeholder="Tanent Name"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.cnic}
+                    onChange={(e) => handleTanentChange(index, "cnic", e)}
+                    type="text"
+                    name="cnic"
+                    placeholder="CNIC"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.occupation}
+                    onChange={(e) => handleTanentChange(index, "occupation", e)}
+                    type="text"
+                    name="occupation"
+                    placeholder="Occupation"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.number}
+                    onChange={(e) => handleTanentChange(index, "number", e)}
+                    type="tel"
+                    name="number"
+                    placeholder="Phone No"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <br />
+                  <label htmlFor="date">Date Of Birth</label>
+                  <br />
+                  <input
+                    value={tanent.dob}
+                    onChange={(e) => handleTanentChange(index, "dob", e)}
+                    type="date"
+                    name="dob"
+                    placeholder="Date Of Birth"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.NOCIssue}
+                    onChange={(e) => handleTanentChange(index, "nocIssue", e)}
+                    type="date"
+                    name="nocIssue"
+                    id="nocIssue"
+                    placeholder="NOC Issueance Date"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />{" "}
+                  <br />
+                  <input
+                    value={tanent.nocNo}
+                    onChange={(e) => handleTanentChange(index, "nocNo", e)}
+                    type="text"
+                    name="nocNo"
+                    id="nocno"
+                    placeholder="NOC Number"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/*"
+                      onChange={(event) =>
+                        handleTanentPhotoUpload(index, event)
+                      }
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
+                    <input
+                      type="file"
+                      name="cnicFile"
+                      accept="image/* "
+                      onChange={(event) => handleTanentCnicUpload(index, event)}
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/* "
+                      onChange={(event) => handleTanentNocUpload(index, event)}
+                      hidden
+                    />
+                  </label>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addTanentField}
+                className="btn btn-outline-primary m-5 mt-2"
+              >
+                <FaPlus /> Tanents
               </button>
             </div>
           </div>
