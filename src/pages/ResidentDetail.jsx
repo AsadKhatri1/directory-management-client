@@ -56,6 +56,45 @@ const ResidentDetail = () => {
       ></Sidebar>
       <div className="main-container text-center mb-4">
         <h1 className="mb-5">RESIDENT DETAILS</h1>
+        <div className="row my-1">
+          <div className="col-md-4">
+            <button
+              className="btn mt-2 mb-2 border"
+              style={{
+                backgroundColor: "#263043",
+                color: "white",
+                transition: "all 0.5s",
+              }}
+              onClick={(e) => {
+                setShowM(!showM), setShowS(false), setShowV(false);
+              }}
+            >
+              {!showM ? "View Family Members" : "Hide Family Members"}
+            </button>
+          </div>
+          <div className="col-md-4">
+            <button
+              className="btn mt-2 mb-2 border"
+              style={{ backgroundColor: "#263043", color: "white" }}
+              onClick={(e) => {
+                setShowS(!showS), setShowM(false), setShowV(false);
+              }}
+            >
+              {!showS ? "View Servant Details" : "Hide Servant details"}
+            </button>
+          </div>
+          <div className="col-md-4">
+            <button
+              className="btn mt-2 mb-2 border"
+              style={{ backgroundColor: "#263043", color: "white" }}
+              onClick={(e) => {
+                setShowV(!showV), setShowM(false), setShowS(false);
+              }}
+            >
+              {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
+            </button>
+          </div>
+        </div>
         {resident.length < 1 ? (
           <div className=" d-flex align-items-center justify-content-center">
             <Audio
@@ -70,78 +109,6 @@ const ResidentDetail = () => {
           </div>
         ) : (
           <>
-            <div className="my-5">
-              <img
-                src={resident?.Photo}
-                alt="image"
-                style={{
-                  borderRadius: "100%",
-                  height: "200px",
-                  width: "200px",
-                }}
-              />
-              <h1>{resident?.FullName}</h1>
-              <div className="row border my-3 py-3">
-                <div className="col-md-6  ">
-                  <h5>EMAIL : {resident?.Email}</h5>
-                  <h5>Phone # {resident?.Phone}</h5>
-                  <h5>House # {resident?.HouseNumber}</h5>
-                  <h5>DOB : {birthDate}</h5>
-                  <h5>CNIC # {resident?.CNIC}</h5>
-                  <h5>NOC # {resident?.NOCNo}</h5>
-                </div>
-
-                <div className="col-md-6 ">
-                  <h5>Profession : {resident?.Profession}</h5>
-                  <h5>Qualification : {resident?.Qualification}</h5>
-                  <h5>Business Address : {resident?.bAddress}</h5>
-                  <h5>NOC Holder : {resident?.NOCHolder}</h5>
-                  <h5>NOC Issue Date : {nocdate}</h5>
-                </div>
-              </div>
-            </div>
-
-            <div className="row my-1">
-              <div className="col-md-4">
-                <button
-                  className="btn mt-2 mb-2 border"
-                  style={{
-                    backgroundColor: "#263043",
-                    color: "white",
-                    transition: "all 0.5s",
-                  }}
-                  onClick={(e) => {
-                    setShowM(!showM), setShowS(false), setShowV(false);
-                  }}
-                >
-                  {!showM ? "View Family Members" : "Hide Family Members"}
-                </button>
-              </div>
-              <div className="col-md-4">
-                <button
-                  className="btn mt-2 mb-2 border"
-                  style={{ backgroundColor: "#263043", color: "white" }}
-                  onClick={(e) => {
-                    setShowS(!showS), setShowM(false), setShowV(false);
-                  }}
-                >
-                  {!showS ? "View Servant Details" : "Hide Servant details"}
-                </button>
-              </div>
-              <div className="col-md-4">
-                <button
-                  className="btn mt-2 mb-2 border"
-                  style={{ backgroundColor: "#263043", color: "white" }}
-                  onClick={(e) => {
-                    setShowV(!showV), setShowM(false), setShowS(false);
-                  }}
-                >
-                  {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
-                </button>
-              </div>
-            </div>
-            {/* family members */}
-
             <br />
             {showM ? (
               <div className="text-center">
@@ -197,7 +164,6 @@ const ResidentDetail = () => {
               <></>
             )}
             {/* maid details */}
-
             <br />
             {showS ? (
               <div className="text-center">
@@ -253,7 +219,6 @@ const ResidentDetail = () => {
               <></>
             )}
             {/* vehicle details */}
-
             {showV ? (
               <div className=" text-center">
                 <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
@@ -307,6 +272,36 @@ const ResidentDetail = () => {
             ) : (
               <></>
             )}
+            <div className="my-5">
+              <img
+                src={resident?.Photo}
+                alt="image"
+                style={{
+                  borderRadius: "100%",
+                  height: "200px",
+                  width: "200px",
+                }}
+              />
+              <h1>{resident?.FullName}</h1>
+              <div className="row border my-3 py-3">
+                <div className="col-md-6  ">
+                  <h5>EMAIL : {resident?.Email}</h5>
+                  <h5>Phone # {resident?.Phone}</h5>
+                  <h5>House # {resident?.HouseNumber}</h5>
+                  <h5>DOB : {birthDate}</h5>
+                  <h5>CNIC # {resident?.CNIC}</h5>
+                  <h5>NOC # {resident?.NOCNo}</h5>
+                </div>
+
+                <div className="col-md-6 ">
+                  <h5>Profession : {resident?.Profession}</h5>
+                  <h5>Qualification : {resident?.Qualification}</h5>
+                  <h5>Business Address : {resident?.bAddress}</h5>
+                  <h5>NOC Holder : {resident?.NOCHolder}</h5>
+                  <h5>NOC Issue Date : {nocdate}</h5>
+                </div>
+              </div>
+            </div>
           </>
         )}
       </div>

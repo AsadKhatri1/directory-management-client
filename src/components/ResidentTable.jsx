@@ -135,7 +135,7 @@ const ResidentTable = () => {
           />
         </form>
       </div>
-      <h1 className="mx-5 mt-3 mb-2 text-white">Resident Table</h1>
+      <h1 className="mx-5 mt-4 mb-2 ">Resident Table</h1>
       <div className="main-table w-100 table-responsive mt-5">
         <table className="table table-dark table-bordered table-hover">
           <thead className="bg-light">

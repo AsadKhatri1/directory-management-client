@@ -76,6 +76,13 @@ body {
   display: none;
 }
 
+.text-white {
+  border: 1px solid white !important;
+  text-align: left !important;
+}
+::placeholder {
+  color: #ffffff !important;
+}
 .sidebar-brand {
   margin-top: 15px;
   font-size: 20px;
