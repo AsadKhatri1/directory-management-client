@@ -14,10 +14,12 @@ const ResidentDetail = () => {
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
+  const [tanents, setTanents] = useState([]);
   const [maids, setMaids] = useState([]);
   const [showM, setShowM] = useState(false);
   const [showV, setShowV] = useState(false);
   const [showS, setShowS] = useState(false);
+  const [showT, setShowT] = useState(false);
 
   // fetching single resident
 
@@ -31,6 +33,7 @@ const ResidentDetail = () => {
         setVehicle(data?.resident?.vehicles);
         setMembers(data?.resident?.relatives);
         setMaids(data?.resident?.maids);
+        setTanents(data?.resident?.tanents);
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -57,7 +60,7 @@ const ResidentDetail = () => {
       <div className="main-container text-center mb-4">
         <h1 className="mb-5">RESIDENT DETAILS</h1>
         <div className="row my-1">
-          <div className="col-md-4">
+          <div className="col-md-3">
             <button
               className="btn mt-2 mb-2 border"
               style={{
@@ -66,32 +69,55 @@ const ResidentDetail = () => {
                 transition: "all 0.5s",
               }}
               onClick={(e) => {
-                setShowM(!showM), setShowS(false), setShowV(false);
+                setShowM(!showM),
+                  setShowS(false),
+                  setShowV(false),
+                  setShowT(false);
               }}
             >
               {!showM ? "View Family Members" : "Hide Family Members"}
             </button>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3">
             <button
               className="btn mt-2 mb-2 border"
               style={{ backgroundColor: "#263043", color: "white" }}
               onClick={(e) => {
-                setShowS(!showS), setShowM(false), setShowV(false);
+                setShowS(!showS),
+                  setShowM(false),
+                  setShowV(false),
+                  setShowT(false);
               }}
             >
               {!showS ? "View Servant Details" : "Hide Servant details"}
             </button>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-3">
             <button
               className="btn mt-2 mb-2 border"
               style={{ backgroundColor: "#263043", color: "white" }}
               onClick={(e) => {
-                setShowV(!showV), setShowM(false), setShowS(false);
+                setShowV(!showV),
+                  setShowM(false),
+                  setShowS(false),
+                  setShowT(false);
               }}
             >
               {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
+            </button>
+          </div>
+          <div className="col-md-3">
+            <button
+              className="btn mt-2 mb-2 border"
+              style={{ backgroundColor: "#263043", color: "white" }}
+              onClick={(e) => {
+                setShowT(!showT),
+                  setShowM(false),
+                  setShowS(false),
+                  setShowV(false);
+              }}
+            >
+              {!showT ? "View Tanent Details" : "Hide Tanent details"}
             </button>
           </div>
         </div>
@@ -150,7 +176,9 @@ const ResidentDetail = () => {
                             <td>{r?.name}</td>
                             <td>{r?.relation}</td>
                             <td>{r?.number}</td>
-                            <td>{moment(r?.dob).format("MMMM Do, YYYY")}</td>
+                            <td>
+                              {r.dob && moment(r?.dob).format("MMMM Do, YYYY")}
+                            </td>
                             <td>{r?.occupation}</td>
                             <td>{r?.cnic}</td>
                           </tr>
@@ -194,7 +222,9 @@ const ResidentDetail = () => {
                         {maids.map((r, i) => (
                           <tr key={r._id} className="text-center align-middle">
                             <td>{r?.name}</td>
-                            <td>{moment(r?.dob).format("MMMM Do, YYYY")}</td>
+                            <td>
+                              {r.dob && moment(r?.dob).format("MMMM Do, YYYY")}
+                            </td>
                             <td>{r?.number}</td>
                             <td>{r?.cnic}</td>
                             <td>{r?.address}</td>
@@ -272,7 +302,66 @@ const ResidentDetail = () => {
             ) : (
               <></>
             )}
-            <div className="my-5">
+            {showT ? (
+              <div className="text-center">
+                <div className="my-5">
+                  <h2 className=" my-5 text-secondary">TANENT DETAILS</h2>
+                  <div className="table-responsive">
+                    <table className="table table-dark table-bordered table-hover">
+                      <thead className="bg-light">
+                        {tanents.length > 0 ? (
+                          <tr className="text-center">
+                            <th scope="col">PHOTO</th>
+                            <th scope="col">NAME</th>
+                            <th scope="col">NOC NUMBER</th>
+                            <th scope="col">NOC ISSUE DATE</th>
+                            <th scope="col">MOBILE NUMBER</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">OCCUPATION</th>
+                            <th scope="col">CNIC</th>
+                          </tr>
+                        ) : (
+                          <span>
+                            <h3 className="text-light">No Tanents To Show</h3>
+                          </span>
+                        )}
+                      </thead>
+                      <tbody>
+                        {tanents.map((r, i) => (
+                          <tr key={r._id} className="text-center align-middle">
+                            <td>
+                              {r.photoUrl ? (
+                                <img
+                                  src={r?.photoUrl}
+                                  alt="tanents photo"
+                                  style={{ width: "50px", height: "50px" }}
+                                />
+                              ) : null}
+                            </td>
+                            <td>{r?.name}</td>
+                            <td>{r?.nocNo}</td>
+                            <td>
+                              {r.nocIssue &&
+                                moment(r?.nocIssue).format("MMMM Do, YYYY")}
+                            </td>
+                            <td>{r?.number}</td>
+                            <td>
+                              {r.dob && moment(r?.dob).format("MMMM Do, YYYY")}
+                            </td>
+                            <td>{r?.occupation}</td>
+                            <td>{r?.cnic}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <></>
+            )}
+
+            <div className="mt-2 mb-5">
               <img
                 src={resident?.Photo}
                 alt="image"

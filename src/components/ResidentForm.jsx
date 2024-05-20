@@ -135,6 +135,7 @@ const ResidentForm = () => {
           NOCNo,
           vehicles,
           relatives,
+          tanents,
           maids,
           Photo: photoUrl,
           CnicFile: cnicUrl,
@@ -463,7 +464,7 @@ const ResidentForm = () => {
       dob: "",
       occupation: "",
       cnic: "", // Existing CNIC property
-      NOCIssue: "",
+      nocIssue: "",
       nocNo: "",
       number: "",
       photoUrl: "", // New property for photo URL
@@ -487,7 +488,7 @@ const ResidentForm = () => {
         dob: "",
         occupation: "",
         cnic: "",
-        NOCIssue: "",
+        nocIssue: "",
         nocNo: "",
         number: "",
         photoUrl: "",
@@ -1076,6 +1077,9 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                  <br />
+                  <label htmlFor="nocIssue">Date Of NOC Issuance</label>
+                  <br />
                   <input
                     value={tanent.NOCIssue}
                     onChange={(e) => handleTanentChange(index, "nocIssue", e)}
