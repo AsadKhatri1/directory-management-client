@@ -47,9 +47,11 @@ const ResidentDetail = () => {
     setSidebaropen(!sidebaropen);
   };
 
-  const birthDate = moment(resident?.DOB).format("MMMM Do, YYYY");
+  const birthDate =
+    resident.DOB && moment(resident?.DOB).format("MMMM Do, YYYY");
 
-  const nocdate = moment(resident?.NOCIssue).format("MMMM Do, YYYY");
+  const nocdate =
+    resident.NOCIssue && moment(resident?.NOCIssue).format("MMMM Do, YYYY");
   return (
     <div className="grid-container ">
       <Header openSideBar={sideBarToggle}></Header>
