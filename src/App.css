@@ -83,6 +83,12 @@ body {
 ::placeholder {
   color: #ffffff !important;
 }
+.form-check-input-no:checked {
+  background-color: red;
+}
+.form-check-input-yes:checked {
+  background-color: rgb(3, 145, 10);
+}
 .sidebar-brand {
   margin-top: 15px;
   font-size: 20px;
