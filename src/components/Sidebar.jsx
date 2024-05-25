@@ -8,6 +8,7 @@ import { BsFillHouseAddFill } from "react-icons/bs";
 import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import logo from "../assets/logo.png";
 const Sidebar = ({ sideBarToggle, openSideBar }) => {
   const navigate = useNavigate();
   const logout = () => {
@@ -23,7 +24,12 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             to="/dashboard"
             style={{ textDecoration: "none", color: "#9e9ea4" }}
           >
-            <GoFileDirectoryFill className="icon-header" /> Directory Management
+            <img
+              src={logo}
+              className="icon-header"
+              style={{ height: "150px", width: "120px" }}
+            />{" "}
+            Directory Management
           </Link>
         </div>
         <span className="icon close-icon" onClick={openSideBar}>
