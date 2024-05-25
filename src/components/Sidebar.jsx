@@ -27,7 +27,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             <img
               src={logo}
               className="icon-header"
-              style={{ height: "150px", width: "120px" }}
+              style={{ height: "200px", width: "160px" }}
             />{" "}
             Directory Management
           </Link>
