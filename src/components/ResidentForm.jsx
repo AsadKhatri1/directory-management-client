@@ -757,9 +757,8 @@ const ResidentForm = () => {
             {/* --------------------------------------------------- */}
             <br />
             <div className="mt-3">
-              <span className="blockquote-footer my-3 fw-bold fs-6">
-                Enter Family Members
-              </span>
+              <hr />
+              <h3 className="my-3 fw-bold fs-6">Enter Family Members</h3>
 
               {/* Relative Fields */}
               {relatives.map((relative, index) => (
@@ -988,9 +987,8 @@ const ResidentForm = () => {
             {/* ----------------- tanents fields ------------------ */}
             <br />
             <div className="mt-3">
-              <span className="blockquote-footer my-3 fw-bold fs-6">
-                Enter Tanent Details
-              </span>
+              <hr />
+              <h3 className="my-3 fw-bold fs-6">Enter Tanent Details</h3>
 
               {tanents.map((tanent, index) => (
                 <div key={index}>
@@ -1186,6 +1184,7 @@ const ResidentForm = () => {
               >
                 <FaPlus /> Tanents
               </button>
+              <hr />
             </div>
           </div>
           <div className="col-md-6">
@@ -1298,9 +1297,8 @@ const ResidentForm = () => {
               }}
             />{" "}
             <div className="text-center my-3">
-              <span className="blockquote-footer my-3 fw-bold fs-6">
-                Enter servant details
-              </span>
+              <hr />
+              <h3 className="my-3 fw-bold fs-6">Enter servant details</h3>
               {maids.map((maid, index) => (
                 <div key={index}>
                   <input
@@ -1467,9 +1465,8 @@ const ResidentForm = () => {
               </button>
             </div>
             <div className="text-center mt-3">
-              <span className="blockquote-footer my-3 fw-bold fs-6">
-                Enter vehicle details
-              </span>
+              <hr />
+              <h3 className="my-3 fw-bold fs-6">Enter vehicle details</h3>
               {/* Vehicle Fields */}
               {vehicles.map((vehicle, index) => (
                 <div key={index}>
@@ -1621,6 +1618,7 @@ const ResidentForm = () => {
               >
                 <FaPlus /> Vehicles
               </button>
+              <hr />
             </div>
           </div>
 
