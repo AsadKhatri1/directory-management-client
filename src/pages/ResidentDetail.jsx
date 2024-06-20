@@ -28,7 +28,7 @@ const ResidentDetail = () => {
   const getResident = async () => {
     try {
       const { data } = await axios.get(
-        `https://directory-management.onrender.com/api/v1/resident/getResident/${params.id}`
+        `https://directory-management-g8gf.onrender.com/api/v1/resident/getResident/${params.id}`
       );
       if (data.success) {
         setResident(data?.resident);
