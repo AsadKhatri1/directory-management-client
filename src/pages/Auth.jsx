@@ -16,7 +16,7 @@ const Auth = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://directory-management.onrender.com/api/v1/admin/login`,
+        `https://directory-management-g8gf.onrender.com/api/v1/admin/login`,
         {
           Email,
           Password,

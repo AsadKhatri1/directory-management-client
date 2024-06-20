@@ -15,7 +15,7 @@ const AdminForm = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://directory-management.onrender.com/api/v1/admin/add",
+        "https://directory-management-g8gf.onrender.com/api/v1/admin/add",
         {
           FullName,
           Email,
