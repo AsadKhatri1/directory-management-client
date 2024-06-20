@@ -61,7 +61,7 @@ const ResidentDetail = () => {
     e.preventDefault();
     try {
       const { data } = await axios.put(
-        `https://directory-management.onrender.com/api/v1/resident/updateResident/${params.id}`,
+        `https://directory-management-g8gf.onrender.com/api/v1/resident/updateResident/${params.id}`,
         { paid: paid },
         {
           headers: {
