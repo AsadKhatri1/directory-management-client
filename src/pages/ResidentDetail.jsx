@@ -486,7 +486,7 @@ const ResidentDetail = () => {
               </label>
             </div>
             <button type="submit" className="btn btn-outline-success mt-2">
-              Submit
+              Save Changes
             </button>
           </div>
         </form>
