@@ -1,9 +1,9 @@
-import React, { PureComponent, useEffect, useState } from "react";
+import React, { PureComponent, useContext, useEffect, useState } from "react";
 import { FaHouseUser } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
-
+import { rec, masjid } from "../App";
 import { Audio } from "react-loader-spinner";
-import { IoCarSport } from "react-icons/io5";
+import { IoIosWallet } from "react-icons/io";
 import {
   BarChart,
   Bar,
@@ -17,6 +17,8 @@ import {
 } from "recharts";
 import axios from "axios";
 const Home = () => {
+  const [recBalance, setRecBalance] = useContext(rec);
+  const [masjidBalance, setMasjidBalance] = useContext(masjid);
   const [residents, setResidents] = useState([]);
   const [admins, setAdmins] = useState([]);
   const data = [
@@ -64,20 +66,20 @@ const Home = () => {
     },
   ];
   //   calling residents to know total number
-  const allResidents = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
-    );
-    if (res?.data?.success) {
-      setResidents(res.data.residents);
-    }
-    try {
-    } catch (err) {
-      toast(err.response?.data?.message);
-    }
-  };
+  // const allResidents = async () => {
+  //   const res = await axios.get(
+  //     "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
+  //   );
+  //   if (res?.data?.success) {
+  //     setResidents(res.data.residents);
+  //   }
+  //   try {
+  //   } catch (err) {
+  //     toast(err.response?.data?.message);
+  //   }
+  // };
 
-  //   calling admins to know total number
+  // calling admins to know total number
   const allAdmins = async () => {
     const res = await axios.get(
       "https://directory-management-g8gf.onrender.com/api/v1/admin/getAdmin"
@@ -92,7 +94,7 @@ const Home = () => {
   };
   let cars = 0;
   useEffect(() => {
-    allResidents();
+    // allResidents();
     allAdmins();
   }, []);
 
@@ -108,11 +110,19 @@ const Home = () => {
       <div className="main-cards">
         <div className="cards">
           <div className="card-inner">
-            <h6 className="fw-bold">HOMES</h6>
-            <FaHouseUser className="card-icon" />
+            <h6 className="fw-bold">REC Account Balance</h6>
+            <IoIosWallet className="card-icon" />
           </div>
-          <h1>
-            {residents.length < 1 ? (
+          <h3>RS. {recBalance}</h3>
+        </div>
+
+        <div className="cards">
+          <div className="card-inner">
+            <h6 className="fw-bold">Masjid Account Balance</h6>
+            <IoIosWallet className="card-icon" />
+          </div>
+          <h2>
+            {/* {cars < 1 ? (
               <Audio
                 height="50"
                 width="50"
@@ -123,9 +133,10 @@ const Home = () => {
                 wrapperClass
               />
             ) : (
-              residents.length
-            )}
-          </h1>
+              cars
+            )} */}
+            RS. {masjidBalance}
+          </h2>
         </div>
         <div className="cards">
           <div className="card-inner">
@@ -145,27 +156,6 @@ const Home = () => {
               />
             ) : (
               admins.length
-            )}
-          </h1>
-        </div>
-        <div className="cards">
-          <div className="card-inner">
-            <h6 className="fw-bold">Vehicles</h6>
-            <IoCarSport className="card-icon" />
-          </div>
-          <h1>
-            {cars < 1 ? (
-              <Audio
-                height="50"
-                width="50"
-                radius="9"
-                color="white"
-                ariaLabel="loading"
-                wrapperStyle
-                wrapperClass
-              />
-            ) : (
-              cars
             )}
           </h1>
         </div>

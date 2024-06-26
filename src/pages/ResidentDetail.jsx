@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,8 +6,11 @@ import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import moment from "moment";
 import axios from "axios";
+import { rec, masjid } from "../App";
 
 const ResidentDetail = () => {
+  const [recBalance, setRecBalance] = useContext(rec);
+  const [masjidBalance, setMasjidBalance] = useContext(masjid);
   // redirect on refresh
   const [paid, setPaid] = useState(false);
   const params = useParams();
@@ -21,6 +24,8 @@ const ResidentDetail = () => {
   const [showV, setShowV] = useState(false);
   const [showS, setShowS] = useState(false);
   const [showT, setShowT] = useState(false);
+  const [showAmountInput, setShowAmountInput] = useState(false);
+  const [feeAmount, setFeeAmount] = useState("");
   const navigate = useNavigate();
 
   // fetching single resident
@@ -60,6 +65,36 @@ const ResidentDetail = () => {
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
+      if (feeAmount) {
+        // Ensure feeAmount is parsed as a number
+        const feeAmountNumber = parseFloat(feeAmount);
+
+        // Check if feeAmount is a valid number
+        if (isNaN(feeAmountNumber)) {
+          toast.error("Please enter a valid amount");
+          return;
+        }
+
+        const recAmount = feeAmountNumber / 2;
+        const masjidAmount = feeAmountNumber / 2;
+
+        // Retrieve the existing balances from local storage
+        const prevRecBalance =
+          JSON.parse(localStorage.getItem("recBalance")) || 0;
+        const prevMasjidBalance =
+          JSON.parse(localStorage.getItem("masjidBalance")) || 0;
+
+        // Update the balances
+        const newRecBalance = recAmount + prevRecBalance;
+        const newMasjidBalance = masjidAmount + prevMasjidBalance;
+
+        // Set the new balances in local storage
+        // localStorage.setItem("recBalance", JSON.stringify(newRecBalance));
+        // localStorage.setItem("masjidBalance", JSON.stringify(newMasjidBalance));
+        setRecBalance(newRecBalance);
+        setMasjidBalance(newMasjidBalance);
+      }
+      // Perform the API call
       const { data } = await axios.put(
         `https://directory-management-g8gf.onrender.com/api/v1/resident/updateResident/${params.id}`,
         { paid: paid },
@@ -69,6 +104,7 @@ const ResidentDetail = () => {
           },
         }
       );
+
       if (data.success) {
         toast.success(data.message);
         setPaid(false);
@@ -444,14 +480,6 @@ const ResidentDetail = () => {
         </div>
         <form action="PUT" onSubmit={updateHandler}>
           <div className="form-check">
-            {/* <input
-              className="form-check-input "
-              type="checkbox"
-              id="flexCheckIndeterminate"
-              onClick={(e) => {
-                setPaid(true);
-              }}
-            /> */}
             <div className="form-check form-switch">
               <input
                 className="form-check-input form-check-input-yes"
@@ -460,6 +488,7 @@ const ResidentDetail = () => {
                 id="flexSwitchCheckDefault"
                 onClick={(e) => {
                   setPaid(true);
+                  setShowAmountInput(true);
                 }}
               />
               <label
@@ -468,6 +497,28 @@ const ResidentDetail = () => {
               >
                 Payment Received?
               </label>
+              <br />
+              {showAmountInput ? (
+                <input
+                  value={feeAmount}
+                  onChange={(e) => setFeeAmount(e.target.value)}
+                  type="number"
+                  name="Fee Amount"
+                  id="FeeAmount"
+                  placeholder="Received Amount"
+                  className="w-50 my-3 text-white py-2"
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                />
+              ) : (
+                <></>
+              )}
               <br />
               <input
                 className="form-check-input form-check-input-no"

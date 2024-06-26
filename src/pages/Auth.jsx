@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import directory from "../assets/directory.png";
+import logo from "../assets/logo.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { IoMdEye } from "react-icons/io";
@@ -120,7 +121,7 @@ const Auth = () => {
               background: ` #3C5B6F`,
             }}
           >
-            <img className="w-100 h-100" src={directory} alt="logo" />
+            <img className="w-100 h-100" src={logo} alt="logo" />
           </div>
         </div>
       </div>

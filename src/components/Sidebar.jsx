@@ -9,6 +9,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import logo from "../assets/logo.png";
+import { GiExpense } from "react-icons/gi";
 const Sidebar = ({ sideBarToggle, openSideBar }) => {
   const navigate = useNavigate();
   const logout = () => {
@@ -27,7 +28,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             <img
               src={logo}
               className="icon-header"
-              style={{ height: "200px", width: "160px" }}
+              style={{ height: "150px", width: "120px" }}
             />{" "}
             Directory Management
           </Link>
@@ -60,6 +61,12 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           <Link to="/dashboard/addAdmin">
             <RiAdminFill className="mx-2" />
             Add Admin
+          </Link>
+        </li>
+        <li className="sidebar-item">
+          <Link to="/dashboard/expense">
+            <GiExpense className="mx-2" />
+            Add Expense
           </Link>
         </li>
         <li className="sidebar-item bg-danger text-white" onClick={logout}>
