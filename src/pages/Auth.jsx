@@ -1,20 +1,24 @@
 import React, { useState } from "react";
-import directory from "../assets/directory.png";
+
 import logo from "../assets/logo.png";
+
 import { toast } from "react-toastify";
 import axios from "axios";
 import { IoMdEye } from "react-icons/io";
 import { IoEyeOffSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { Audio } from "react-loader-spinner";
 const Auth = () => {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [showLoader, setShowLoader] = useState(false);
   const [inputType, setInputType] = useState("password");
   const navigate = useNavigate();
   // -------------- submit form function ----------------------
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setShowLoader(true);
     try {
       const res = await axios.post(
         `https://directory-management-g8gf.onrender.com/api/v1/admin/login`,
@@ -109,6 +113,21 @@ const Auth = () => {
               Login
             </button>
           </form>
+          <div className="row text-center mt-3">
+            {showLoader ? (
+              <Audio
+                height="60"
+                width="50"
+                radius="9"
+                color=" #3C5B6F"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         <div
           className="col-md-6 text-light rounded-end d-flex flex-column align-items-center justify-content-center"
