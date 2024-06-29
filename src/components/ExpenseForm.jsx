@@ -10,6 +10,18 @@ const ExpenseForm = () => {
   const [Amount, setAmount] = useState("");
   const [Account, setAccount] = useState("");
   const [expenseList, setExpenseList] = useState([]);
+  // filter for current month expenses
+
+  // Get the current month and year
+  const currentMonth = moment().month(); // 0-based index, so January is 0
+  const currentYear = moment().year();
+
+  const filteredExpenseList = expenseList.filter((e) => {
+    const expenseDate = moment(e?.createdAt);
+    return (
+      expenseDate.month() === currentMonth && expenseDate.year() === currentYear
+    );
+  });
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -178,6 +190,7 @@ const ExpenseForm = () => {
           <></>
         )}
         <div className="my-3 table-responsive mt-5">
+          <h2 className="my-3">Expenses This Month</h2>
           <table className="table table-dark table-bordered table-hover">
             <thead className="bg-light">
               <tr className="text-center">
@@ -189,7 +202,7 @@ const ExpenseForm = () => {
               </tr>
             </thead>
             <tbody>
-              {expenseList.map((e, i) => (
+              {filteredExpenseList.map((e, i) => (
                 <tr key={i} className="text-center align-middle">
                   <td>{i + 1}</td>
                   <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
