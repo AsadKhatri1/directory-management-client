@@ -6,11 +6,8 @@ import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import moment from "moment";
 import axios from "axios";
-import { rec, masjid } from "../App";
 
 const ResidentDetail = () => {
-  const [recBalance, setRecBalance] = useContext(rec);
-  const [masjidBalance, setMasjidBalance] = useContext(masjid);
   // redirect on refresh
   const [paid, setPaid] = useState(false);
   const params = useParams();
@@ -78,21 +75,24 @@ const ResidentDetail = () => {
         const recAmount = feeAmountNumber / 2;
         const masjidAmount = feeAmountNumber / 2;
 
-        // Retrieve the existing balances from local storage
-        const prevRecBalance =
-          JSON.parse(localStorage.getItem("recBalance")) || 0;
-        const prevMasjidBalance =
-          JSON.parse(localStorage.getItem("masjidBalance")) || 0;
-
         // Update the balances
-        const newRecBalance = recAmount + prevRecBalance;
-        const newMasjidBalance = masjidAmount + prevMasjidBalance;
-
-        // Set the new balances in local storage
-        // localStorage.setItem("recBalance", JSON.stringify(newRecBalance));
-        // localStorage.setItem("masjidBalance", JSON.stringify(newMasjidBalance));
-        setRecBalance(newRecBalance);
-        setMasjidBalance(newMasjidBalance);
+        const re1 = await axios.get(
+          `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+        );
+        const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
+        const res = await axios.put(
+          "http://localhost:4000/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+          { Balance: finalRecBalance }
+        );
+        const re = await axios.get(
+          `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+        );
+        const finalMasjidBalance =
+          JSON.parse(re.data.acc.Balance) + masjidAmount;
+        const res1 = await axios.put(
+          "http://localhost:4000/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+          { Balance: finalMasjidBalance }
+        );
       }
       // Perform the API call
       const { data } = await axios.put(

@@ -1,7 +1,7 @@
 import React, { PureComponent, useContext, useEffect, useState } from "react";
 import { FaHouseUser } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
-import { rec, masjid } from "../App";
+
 import { Audio } from "react-loader-spinner";
 import { IoIosWallet } from "react-icons/io";
 import {
@@ -17,8 +17,31 @@ import {
 } from "recharts";
 import axios from "axios";
 const Home = () => {
-  const [recBalance, setRecBalance] = useContext(rec);
-  const [masjidBalance, setMasjidBalance] = useContext(masjid);
+  // getting masjid & rec balance
+  const getMasjidBalance = async () => {
+    const res = await axios.get(
+      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+    );
+    if (res.data.success) {
+      setMasjidBalance(res.data.acc.Balance);
+    }
+  };
+  const getRecBalance = async () => {
+    const res = await axios.get(
+      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+    );
+    if (res.data.success) {
+      setRecBalance(res.data.acc.Balance);
+    }
+  };
+
+  useEffect(() => {
+    getMasjidBalance();
+    getRecBalance();
+  }, []);
+
+  const [recBalance, setRecBalance] = useState(0);
+  const [masjidBalance, setMasjidBalance] = useState(0);
   const [residents, setResidents] = useState([]);
   const [admins, setAdmins] = useState([]);
   const data = [

@@ -1,12 +1,10 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { rec, masjid } from "../App";
+
 import { ImCross } from "react-icons/im";
 import moment from "moment";
 const ExpenseForm = () => {
-  const [recBalance, setRecBalance] = useContext(rec);
-  const [masjidBalance, setMasjidBalance] = useContext(masjid);
   const [Title, setTitle] = useState("");
   const [show, setShow] = useState(false);
   const [Amount, setAmount] = useState("");
@@ -37,18 +35,14 @@ const ExpenseForm = () => {
             toast.error("Please enter a valid amount");
             return;
           }
-
-          // Retrieve the existing balances from local storage
-          const prevRecBalance =
-            JSON.parse(localStorage.getItem("recBalance")) || 0;
-
-          // Update the balances
-          const newRecBalance = prevRecBalance - Amount;
-
-          // Set the new balances in local storage
-          // localStorage.setItem("recBalance", JSON.stringify(newRecBalance));
-          // localStorage.setItem("masjidBalance", JSON.stringify(newMasjidBalance));
-          setRecBalance(newRecBalance);
+          const re1 = await axios.get(
+            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance = JSON.parse(re1.data.acc.Balance) - Amount;
+          const res = await axios.put(
+            "http://localhost:4000/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+            { Balance: finalRecBalance }
+          );
         }
         if (Account === "masjid") {
           // Ensure feeAmount is parsed as a number
@@ -59,18 +53,14 @@ const ExpenseForm = () => {
             toast.error("Please enter a valid amount");
             return;
           }
-
-          // Retrieve the existing balances from local storage
-          const prevMasjidBalance =
-            JSON.parse(localStorage.getItem("masjidBalance")) || 0;
-
-          // Update the balances
-          const newMasjidBalance = prevMasjidBalance - Amount;
-
-          // Set the new balances in local storage
-          // localStorage.setItem("recBalance", JSON.stringify(newRecBalance));
-          // localStorage.setItem("masjidBalance", JSON.stringify(newMasjidBalance));
-          setMasjidBalance(newMasjidBalance);
+          const re = await axios.get(
+            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance = JSON.parse(re.data.acc.Balance) - Amount;
+          const res1 = await axios.put(
+            "http://localhost:4000/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+            { Balance: finalMasjidBalance }
+          );
         }
         setShow(false);
         allExpenses();
