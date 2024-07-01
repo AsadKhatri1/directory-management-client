@@ -81,9 +81,10 @@ const ResidentDetail = () => {
         );
         const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
         const res = await axios.put(
-          "http://localhost:4000/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+          "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
           { Balance: finalRecBalance }
         );
+
         const re = await axios.get(
           `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
         );

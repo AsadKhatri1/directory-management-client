@@ -52,7 +52,7 @@ const ExpenseForm = () => {
           );
           const finalRecBalance = JSON.parse(re1.data.acc.Balance) - Amount;
           const res = await axios.put(
-            "http://localhost:4000/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
             { Balance: finalRecBalance }
           );
         }
@@ -70,7 +70,7 @@ const ExpenseForm = () => {
           );
           const finalMasjidBalance = JSON.parse(re.data.acc.Balance) - Amount;
           const res1 = await axios.put(
-            "http://localhost:4000/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
             { Balance: finalMasjidBalance }
           );
         }
@@ -83,7 +83,7 @@ const ExpenseForm = () => {
   };
   const allExpenses = async () => {
     const res = await axios.get(
-      "http://localhost:4000/api/v1/expense/expenses"
+      "https://directory-management-g8gf.onrender.com/api/v1/expense/expenses"
     );
     if (res.data.success) {
       setExpenseList(res.data.expenseList);

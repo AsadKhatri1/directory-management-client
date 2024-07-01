@@ -23,9 +23,7 @@ const Header = ({ openSideBar }) => {
         </form>
       </div> */}
       <div className="header-right">
-        <BsFillBellFill className="icon" />
-        <BsFillEnvelopeFill className="icon" />
-        <BsPersonCircle className="icon" />
+        <BsSearch className="icon" style={{ cursor: "pointer" }} />
       </div>
     </header>
   );
