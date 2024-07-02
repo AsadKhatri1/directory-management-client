@@ -140,7 +140,11 @@ const Auth = () => {
               background: ` #3C5B6F`,
             }}
           >
-            <img className="w-100 h-100" src={logo} alt="logo" />
+            <img
+              style={{ height: "80%", width: "100%" }}
+              src={logo}
+              alt="logo"
+            />
           </div>
         </div>
       </div>

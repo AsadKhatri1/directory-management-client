@@ -66,7 +66,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
         <li className="sidebar-item">
           <Link to="/dashboard/expense">
             <GiExpense className="mx-2" />
-            Add Expense
+            Finance
           </Link>
         </li>
         <li className="sidebar-item bg-danger text-white" onClick={logout}>

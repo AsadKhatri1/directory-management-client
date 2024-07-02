@@ -500,8 +500,7 @@ const ResidentForm = () => {
 
   return (
     <main className="main-container text-center mt-5">
-      <h1>Add A New Resident</h1>
-
+      <h1 className="my-3 fw-bold">Add A New Resident</h1>
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
         <div className="row text-center justify-content-center pt-2 ">
           <div className="col-md-6">
@@ -758,7 +757,7 @@ const ResidentForm = () => {
             <br />
             <div className="mt-3">
               <hr />
-              <h3 className="my-3 fw-bold fs-6">Enter Family Members</h3>
+              <h1 className="my-3 fw-bold ">Enter Family Members</h1>
 
               {/* Relative Fields */}
               {relatives.map((relative, index) => (
@@ -988,7 +987,7 @@ const ResidentForm = () => {
             <br />
             <div className="mt-3">
               <hr />
-              <h3 className="my-3 fw-bold fs-6">Enter Tanent Details</h3>
+              <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
 
               {tanents.map((tanent, index) => (
                 <div key={index}>
@@ -1298,7 +1297,7 @@ const ResidentForm = () => {
             />{" "}
             <div className="text-center my-3">
               <hr />
-              <h3 className="my-3 fw-bold fs-6">Enter servant details</h3>
+              <h1 className="my-3 fw-bold ">Enter servant details</h1>
               {maids.map((maid, index) => (
                 <div key={index}>
                   <input
@@ -1466,7 +1465,7 @@ const ResidentForm = () => {
             </div>
             <div className="text-center mt-3">
               <hr />
-              <h3 className="my-3 fw-bold fs-6">Enter vehicle details</h3>
+              <h1 className="my-3 fw-bold">Enter vehicle details</h1>
               {/* Vehicle Fields */}
               {vehicles.map((vehicle, index) => (
                 <div key={index}>
