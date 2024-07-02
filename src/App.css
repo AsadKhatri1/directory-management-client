@@ -160,8 +160,14 @@ body {
 .cards:nth-child(2) {
   background-color: #006a9b;
 }
+.masjid-card {
+  background-color: #006a9b;
+}
 .cards:nth-child(3) {
   background-color: #05d0df;
+}
+.rec-card {
+  background-color: #006a72;
 }
 .card-inner {
   display: flex;

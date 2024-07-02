@@ -4,7 +4,10 @@ import { toast } from "react-toastify";
 
 import { ImCross } from "react-icons/im";
 import moment from "moment";
+import { IoIosWallet } from "react-icons/io";
 const ExpenseForm = () => {
+  const [recBalance, setRecBalance] = useState(0);
+  const [masjidBalance, setMasjidBalance] = useState(0);
   const [Title, setTitle] = useState("");
   const [show, setShow] = useState(false);
   const [Amount, setAmount] = useState("");
@@ -22,6 +25,29 @@ const ExpenseForm = () => {
       expenseDate.month() === currentMonth && expenseDate.year() === currentYear
     );
   });
+
+  // getting masjid & rec balance
+  const getMasjidBalance = async () => {
+    const res = await axios.get(
+      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+    );
+    if (res.data.success) {
+      setMasjidBalance(res.data.acc.Balance);
+    }
+  };
+  const getRecBalance = async () => {
+    const res = await axios.get(
+      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+    );
+    if (res.data.success) {
+      setRecBalance(res.data.acc.Balance);
+    }
+  };
+
+  useEffect(() => {
+    getMasjidBalance();
+    getRecBalance();
+  }, []);
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -76,6 +102,8 @@ const ExpenseForm = () => {
         }
         setShow(false);
         allExpenses();
+        getMasjidBalance();
+        getRecBalance();
       }
     } catch (err) {
       console.log(err);
@@ -96,7 +124,7 @@ const ExpenseForm = () => {
   return (
     <>
       <main className="main-container text-center mt-3">
-        <div className="row">
+        <div className="row my-4">
           <div className="col-md-9"></div>
           <div className="col-md-3">
             {show ? (
@@ -112,6 +140,28 @@ const ExpenseForm = () => {
                 Add New Expense
               </button>
             )}
+          </div>
+        </div>
+        <div className="row my-5">
+          <div className="col-md-6 text-center">
+            {" "}
+            <div className="rec-card p-3 rounded my-2">
+              <div className="card-inner">
+                <h6 className="fw-bold">REC Account Balance</h6>
+                <IoIosWallet className="card-icon" />
+              </div>
+              <h3 className="mt-1">RS. {recBalance}</h3>
+            </div>
+          </div>
+          <div className="col-md-6 text-center">
+            {" "}
+            <div className=" masjid-card p-3 rounded my-2">
+              <div className="card-inner">
+                <h6 className="fw-bold ">Masjid Account Balance</h6>
+                <IoIosWallet className="card-icon" />
+              </div>
+              <h2>RS. {masjidBalance}</h2>
+            </div>
           </div>
         </div>
         {show ? (
