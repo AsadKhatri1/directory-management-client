@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import ReactToPrint from "react-to-print";
+import logo from "../assets/logo.png";
 const Invoice = () => {
   const componentRef = useRef();
   const resident = JSON.parse(localStorage.getItem("resident"));
@@ -13,13 +14,20 @@ const Invoice = () => {
     <div className="main d-flex flex-column align-items-center justify-content-center vw-100 vh-100 p-3">
       <div
         ref={componentRef}
-        className="invoice d-flex flex-column align-items-center justify-content-center p-5 rounded v-100 h-100"
+        className="invoice d-flex flex-column align-items-center justify-content-center px-5 rounded v-100 h-100"
         style={{
           backgroundColor: "white",
           color: "black",
           boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0p",
         }}
       >
+        <div className="text-center">
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ width: "185px", height: "250px" }}
+          />
+        </div>
         <h2 className="text-center my-2">PAYMENT INVOICE</h2>
         <hr style={{ width: "80%", height: "2px" }} />
 

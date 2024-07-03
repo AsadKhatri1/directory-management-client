@@ -141,7 +141,7 @@ const Auth = () => {
             }}
           >
             <img
-              style={{ height: "80%", width: "100%" }}
+              style={{ height: "600px", width: "470px" }}
               src={logo}
               alt="logo"
             />
