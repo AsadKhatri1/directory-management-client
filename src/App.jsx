@@ -9,6 +9,7 @@ import AddAdmin from "./pages/AddAdmin.jsx";
 import ResidentDetail from "./pages/ResidentDetail.jsx";
 import Invoice from "./pages/Invoice.jsx";
 import Expense from "./pages/Expense.jsx";
+import Receipt from "./components/Receipt.jsx";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/dashboard/addAdmin" element={<AddAdmin />} />
         <Route path="/dashboard/resident/invoice" element={<Invoice />} />
         <Route path="/dashboard/expense" element={<Expense />} />
+        <Route path="/dashboard/expense/receipt/:id" element={<Receipt />} />
       </Routes>
     </Router>
   );

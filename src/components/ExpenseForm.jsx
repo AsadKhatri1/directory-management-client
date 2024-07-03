@@ -5,7 +5,9 @@ import { toast } from "react-toastify";
 import { ImCross } from "react-icons/im";
 import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
+import { Navigate, useNavigate } from "react-router-dom";
 const ExpenseForm = () => {
+  const navigate = useNavigate();
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
   const [Title, setTitle] = useState("");
@@ -142,30 +144,14 @@ const ExpenseForm = () => {
             )}
           </div>
         </div>
-        <div className="row my-5">
-          <div className="col-md-6 text-center">
-            {" "}
-            <div className="rec-card p-3 rounded my-2">
-              <div className="card-inner">
-                <h6 className="fw-bold">REC Account Balance</h6>
-                <IoIosWallet className="card-icon" />
-              </div>
-              <h3 className="mt-1">RS. {recBalance}</h3>
-            </div>
-          </div>
-          <div className="col-md-6 text-center">
-            {" "}
-            <div className=" masjid-card p-3 rounded my-2">
-              <div className="card-inner">
-                <h6 className="fw-bold ">Masjid Account Balance</h6>
-                <IoIosWallet className="card-icon" />
-              </div>
-              <h2>RS. {masjidBalance}</h2>
-            </div>
-          </div>
-        </div>
         {show ? (
-          <>
+          <div
+            className="py-3 rounded"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+            }}
+          >
             <h2>LIST A NEW EXPENSE</h2>
             <form
               action="post"
@@ -235,10 +221,34 @@ const ExpenseForm = () => {
                 ADD
               </button>
             </form>
-          </>
+          </div>
         ) : (
           <></>
         )}
+
+        <div className="row my-5">
+          <div className="col-md-6 text-center">
+            {" "}
+            <div className="rec-card p-3 rounded my-2">
+              <div className="card-inner">
+                <h6 className="fw-bold">REC Account Balance</h6>
+                <IoIosWallet className="card-icon" />
+              </div>
+              <h3 className="mt-1">RS. {recBalance}</h3>
+            </div>
+          </div>
+          <div className="col-md-6 text-center">
+            {" "}
+            <div className=" masjid-card p-3 rounded my-2">
+              <div className="card-inner">
+                <h6 className="fw-bold ">Masjid Account Balance</h6>
+                <IoIosWallet className="card-icon" />
+              </div>
+              <h2>RS. {masjidBalance}</h2>
+            </div>
+          </div>
+        </div>
+
         <div className="my-3 table-responsive mt-5">
           <h2 className="my-3">Expenses This Month</h2>
           <table className="table table-dark table-bordered table-hover">
@@ -259,7 +269,10 @@ const ExpenseForm = () => {
                   <td>{e.Title}</td>
                   <td>{e.Amount}</td>
                   <td>
-                    <button className="btn btn-outline-info">
+                    <button
+                      className="btn btn-outline-info"
+                      onClick={(event) => navigate(`receipt/${e._id}`)}
+                    >
                       View Receipt
                     </button>
                   </td>
