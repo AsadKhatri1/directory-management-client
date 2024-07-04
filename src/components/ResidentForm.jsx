@@ -753,7 +753,114 @@ const ResidentForm = () => {
               }}
             />
             <br />
-            {/* --------------------------------------------------- */}
+            <label htmlFor="date">Date Of Birth</label> <br />
+            <input
+              value={DOB}
+              onChange={(e) => setDOB(e.target.value)}
+              type="date"
+              name="date"
+              id="date"
+              placeholder="Date Of Birth"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <input
+              value={officeTel}
+              onChange={(e) => setOfficeTel(e.target.value)}
+              type="tel"
+              name="officeTel"
+              id="office tel"
+              placeholder="Tel (office)"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />
+            <br />
+            <textarea
+              value={bAddress}
+              onChange={(e) => setBAddress(e.target.value)}
+              type="text"
+              name="business address"
+              id="business address"
+              placeholder="Business/Office Address"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <input
+              value={NOCHolder}
+              onChange={(e) => setNOCHolder(e.target.value)}
+              type="text"
+              name="noc"
+              id="noc"
+              placeholder="NOC Holder's Name"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
+            <input
+              value={NOCIssue}
+              onChange={(e) => setNOCIssue(e.target.value)}
+              type="date"
+              name="nocIssue"
+              id="nocIssue"
+              placeholder="NOC Issueance Date"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />{" "}
+            <br />
+            <input
+              value={NOCNo}
+              onChange={(e) => setNOCNo(e.target.value)}
+              type="text"
+              name="nocno"
+              id="nocno"
+              placeholder="NOC Number"
+              className="w-75 my-3 text-white py-2"
+              style={{
+                background: "transparent",
+                border: "none",
+                borderBottom: "1px solid white",
+                borderRadius: "12px",
+                textIndent: "12px",
+                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+              }}
+            />
             <br />
             <div className="mt-3">
               <hr />
@@ -983,320 +1090,9 @@ const ResidentForm = () => {
                 <FaPlus /> Members
               </button>
             </div>
-            {/* ----------------- tanents fields ------------------ */}
-            <br />
-            <div className="mt-3">
-              <hr />
-              <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
-
-              {tanents.map((tanent, index) => (
-                <div key={index}>
-                  <input
-                    value={tanent.name}
-                    onChange={(e) => handleTanentChange(index, "name", e)}
-                    type="text"
-                    name="name"
-                    placeholder="Tanent Name"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.cnic}
-                    onChange={(e) => handleTanentChange(index, "cnic", e)}
-                    type="text"
-                    name="cnic"
-                    placeholder="CNIC"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.occupation}
-                    onChange={(e) => handleTanentChange(index, "occupation", e)}
-                    type="text"
-                    name="occupation"
-                    placeholder="Occupation"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.number}
-                    onChange={(e) => handleTanentChange(index, "number", e)}
-                    type="tel"
-                    name="number"
-                    placeholder="Phone No"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <label htmlFor="date">Date Of Birth</label>
-                  <br />
-                  <input
-                    value={tanent.dob}
-                    onChange={(e) => handleTanentChange(index, "dob", e)}
-                    type="date"
-                    name="dob"
-                    placeholder="Date Of Birth"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <label htmlFor="nocIssue">Date Of NOC Issuance</label>
-                  <br />
-                  <input
-                    value={tanent.NOCIssue}
-                    onChange={(e) => handleTanentChange(index, "nocIssue", e)}
-                    type="date"
-                    name="nocIssue"
-                    id="nocIssue"
-                    placeholder="NOC Issueance Date"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />{" "}
-                  <br />
-                  <input
-                    value={tanent.nocNo}
-                    onChange={(e) => handleTanentChange(index, "nocNo", e)}
-                    type="text"
-                    name="nocNo"
-                    id="nocno"
-                    placeholder="NOC Number"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
-                    <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handleTanentPhotoUpload(index, event)
-                      }
-                      hidden
-                    />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
-                    <input
-                      type="file"
-                      name="cnicFile"
-                      accept="image/* "
-                      onChange={(event) => handleTanentCnicUpload(index, event)}
-                      hidden
-                    />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
-                    <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/* "
-                      onChange={(event) => handleTanentNocUpload(index, event)}
-                      hidden
-                    />
-                  </label>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={addTanentField}
-                className="btn btn-outline-primary m-5 mt-2"
-              >
-                <FaPlus /> Tanents
-              </button>
-              <hr />
-            </div>
           </div>
           <div className="col-md-6">
-            <label htmlFor="date">Date Of Birth</label> <br />
-            <input
-              value={DOB}
-              onChange={(e) => setDOB(e.target.value)}
-              type="date"
-              name="date"
-              id="date"
-              placeholder="Date Of Birth"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <input
-              value={officeTel}
-              onChange={(e) => setOfficeTel(e.target.value)}
-              type="tel"
-              name="officeTel"
-              id="office tel"
-              placeholder="Tel (office)"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <textarea
-              value={bAddress}
-              onChange={(e) => setBAddress(e.target.value)}
-              type="text"
-              name="business address"
-              id="business address"
-              placeholder="Business/Office Address"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCHolder}
-              onChange={(e) => setNOCHolder(e.target.value)}
-              type="text"
-              name="noc"
-              id="noc"
-              placeholder="NOC Holder's Name"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
-            <input
-              value={NOCIssue}
-              onChange={(e) => setNOCIssue(e.target.value)}
-              type="date"
-              name="nocIssue"
-              id="nocIssue"
-              placeholder="NOC Issueance Date"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCNo}
-              onChange={(e) => setNOCNo(e.target.value)}
-              type="text"
-              name="nocno"
-              id="nocno"
-              placeholder="NOC Number"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
             <div className="text-center my-3">
-              <hr />
               <h1 className="my-3 fw-bold ">Enter servant details</h1>
               {maids.map((maid, index) => (
                 <div key={index}>
@@ -1616,6 +1412,205 @@ const ResidentForm = () => {
                 className="btn btn-outline-primary m-5 mt-2"
               >
                 <FaPlus /> Vehicles
+              </button>
+              <hr />
+            </div>
+            <div className="mt-3">
+              <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
+
+              {tanents.map((tanent, index) => (
+                <div key={index}>
+                  <input
+                    value={tanent.name}
+                    onChange={(e) => handleTanentChange(index, "name", e)}
+                    type="text"
+                    name="name"
+                    placeholder="Tanent Name"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.cnic}
+                    onChange={(e) => handleTanentChange(index, "cnic", e)}
+                    type="text"
+                    name="cnic"
+                    placeholder="CNIC"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.occupation}
+                    onChange={(e) => handleTanentChange(index, "occupation", e)}
+                    type="text"
+                    name="occupation"
+                    placeholder="Occupation"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <input
+                    value={tanent.number}
+                    onChange={(e) => handleTanentChange(index, "number", e)}
+                    type="tel"
+                    name="number"
+                    placeholder="Phone No"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <br />
+                  <label htmlFor="date">Date Of Birth</label>
+                  <br />
+                  <input
+                    value={tanent.dob}
+                    onChange={(e) => handleTanentChange(index, "dob", e)}
+                    type="date"
+                    name="dob"
+                    placeholder="Date Of Birth"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <br />
+                  <label htmlFor="nocIssue">Date Of NOC Issuance</label>
+                  <br />
+                  <input
+                    value={tanent.NOCIssue}
+                    onChange={(e) => handleTanentChange(index, "nocIssue", e)}
+                    type="date"
+                    name="nocIssue"
+                    id="nocIssue"
+                    placeholder="NOC Issueance Date"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />{" "}
+                  <br />
+                  <input
+                    value={tanent.nocNo}
+                    onChange={(e) => handleTanentChange(index, "nocNo", e)}
+                    type="text"
+                    name="nocNo"
+                    id="nocno"
+                    placeholder="NOC Number"
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/*"
+                      onChange={(event) =>
+                        handleTanentPhotoUpload(index, event)
+                      }
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
+                    <input
+                      type="file"
+                      name="cnicFile"
+                      accept="image/* "
+                      onChange={(event) => handleTanentCnicUpload(index, event)}
+                      hidden
+                    />
+                  </label>
+                  <label
+                    className="w-75 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  >
+                    {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
+                    <input
+                      type="file"
+                      name="nocFile"
+                      accept="image/* "
+                      onChange={(event) => handleTanentNocUpload(index, event)}
+                      hidden
+                    />
+                  </label>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addTanentField}
+                className="btn btn-outline-primary m-5 mt-2"
+              >
+                <FaPlus /> Tanents
               </button>
               <hr />
             </div>
