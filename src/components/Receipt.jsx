@@ -32,7 +32,7 @@ const Receipt = () => {
             <img
               src={logo}
               alt="Logo"
-              style={{ width: "170px", height: "200px" }}
+              style={{ width: "150px", height: "200px" }}
             />
           </div>
           <div className="col-md-6 d-flex flex-column align-items-end justify-content-center px-5 ">
@@ -63,15 +63,16 @@ const Receipt = () => {
           </div>
         </div>
         <hr />
-        <div className="mt-5 px-5 d-flex align-items-start justify-content-center ">
+
+        <div className="mt-5 d-flex align-items-start justify-content-center ">
           <div className="left w-50 px-5 d-flex align-items-start justify-content-start mb-5">
             <h5 className="text-danger fw-bold">Date:</h5>
             <span className="px-2 text-danger">
               {moment(expense?.createdAt).format("MMMM Do, YYYY")}
             </span>
           </div>
-          <div className="right w-50 d-flex align-items-center justify-content-end mb-5">
-            <h2 className="text-success fw-bold">Total:</h2>
+          <div className="right w-50 d-flex align-items-center justify-content-end mb-5 mx-5">
+            <h2 className="text-success fw-bold ">Total:</h2>
             <span className="px-2 text-success fw-bold">
               Rs. {expense.Amount}
             </span>
