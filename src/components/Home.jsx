@@ -145,19 +145,7 @@ const Home = () => {
             <IoIosWallet className="card-icon" />
           </div>
           <h2>
-            {/* {cars < 1 ? (
-              <Audio
-                height="50"
-                width="50"
-                radius="9"
-                color="white"
-                ariaLabel="loading"
-                wrapperStyle
-                wrapperClass
-              />
-            ) : (
-              cars
-            )} */}
+          
             RS. {masjidBalance}
           </h2>
         </div>

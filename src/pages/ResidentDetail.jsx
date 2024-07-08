@@ -91,7 +91,7 @@ const ResidentDetail = () => {
         const finalMasjidBalance =
           JSON.parse(re.data.acc.Balance) + masjidAmount;
         const res1 = await axios.put(
-          "http://localhost:4000/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+          "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
           { Balance: finalMasjidBalance }
         );
       }

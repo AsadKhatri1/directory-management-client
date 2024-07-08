@@ -14,7 +14,7 @@ const Invoice = () => {
     <div className="main d-flex flex-column align-items-center justify-content-center vw-100 vh-100 p-3">
       <div
         ref={componentRef}
-        className="invoice d-flex flex-column align-items-center justify-content-center px-5 rounded v-100 h-100"
+        className="invoice d-flex flex-column align-items-center justify-content-center p-5 rounded v-100 h-100"
         style={{
           backgroundColor: "white",
           color: "black",

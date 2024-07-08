@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BsFillBellFill,
-  BsFillEnvelopeFill,
-  BsPersonCircle,
-  BsSearch,
-  BsJustify,
-} from "react-icons/bs";
+import { BsSearch, BsJustify } from "react-icons/bs";
 const Header = ({ openSideBar }) => {
   const searchHandler = () => {};
   return (
