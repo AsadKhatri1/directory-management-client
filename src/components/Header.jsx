@@ -17,7 +17,8 @@ const Header = ({ openSideBar }) => {
         </form>
       </div> */}
       <div className="header-right">
-        <BsSearch className="icon" style={{ cursor: "pointer" }} />
+        <BsSearch className="icon" style={{ cursor: "pointer" }}  onClick={() => navigate("/dashboard/residents")} />
+        
       </div>
     </header>
   );
