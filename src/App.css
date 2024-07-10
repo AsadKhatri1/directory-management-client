@@ -154,20 +154,20 @@ body {
 }
 
 .cards:first-child {
-  background-color: #062d96;
+  background-color: #03ac03;
 }
 
 .cards:nth-child(2) {
-  background-color: #006a9b;
+  background-color: #049a43;
 }
 .masjid-card {
-  background-color: #006a9b;
+  background-color: #049a43;
 }
 .cards:nth-child(3) {
-  background-color: #05d0df;
+  background-color: #e2d0a9;
 }
 .rec-card {
-  background-color: #006a72;
+  background-color: #03ac03;
 }
 .card-inner {
   display: flex;
