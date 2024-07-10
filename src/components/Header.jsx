@@ -1,6 +1,8 @@
 import React from "react";
 import { BsSearch, BsJustify } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
 const Header = ({ openSideBar }) => {
+  const navigate = useNavigate();
   const searchHandler = () => {};
   return (
     <header className="header">
@@ -17,7 +19,11 @@ const Header = ({ openSideBar }) => {
         </form>
       </div> */}
       <div className="header-right">
-        <BsSearch className="icon" style={{ cursor: "pointer" }} />
+        <BsSearch
+          className="icon"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/dashboard/residents")}
+        />
       </div>
     </header>
   );
