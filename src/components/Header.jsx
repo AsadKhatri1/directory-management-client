@@ -1,6 +1,7 @@
 import React from "react";
 import { BsSearch, BsJustify } from "react-icons/bs";
 const Header = ({ openSideBar }) => {
+    const navigate = useNavigate();
   const searchHandler = () => {};
   return (
     <header className="header">
