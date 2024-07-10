@@ -12,7 +12,9 @@ const ExpenseForm = () => {
   const [masjidBalance, setMasjidBalance] = useState(0);
   const [Title, setTitle] = useState("");
   const [show, setShow] = useState(false);
+  const [showF, setShowF] = useState(false);
   const [Amount, setAmount] = useState("");
+  const [FundAmount, setFundAmount] = useState("");
   const [Account, setAccount] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   // filter for current month expenses
@@ -111,6 +113,39 @@ const ExpenseForm = () => {
       console.log(err);
     }
   };
+  const submitFundHandler = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+    try {
+      // Ensure FundAmount is parsed as a number
+      const fundAmountNumber = parseFloat(FundAmount);
+
+      // Check if FundAmount is a valid number
+      if (isNaN(fundAmountNumber)) {
+        toast.error("Please enter a valid amount");
+        return;
+      }
+
+      const re = await axios.get(
+        `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+      );
+      const currentBalance = parseFloat(re.data.acc.Balance); // Parse the current balance as a number
+
+      const finalMasjidBalance = currentBalance + fundAmountNumber;
+      const res1 = await axios.put(
+        "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+        { Balance: finalMasjidBalance }
+      );
+      setFundAmount("");
+      setShowF(false);
+      allExpenses();
+      getMasjidBalance();
+      getRecBalance();
+      toast.success("Successfully updated the balance");
+    } catch (err) {
+      toast.error("Error in adding fund");
+    }
+  };
+
   const allExpenses = async () => {
     const res = await axios.get(
       "https://directory-management-g8gf.onrender.com/api/v1/expense/expenses"
@@ -127,8 +162,25 @@ const ExpenseForm = () => {
     <>
       <main className="main-container text-center mt-3">
         <div className="row my-4">
-          <div className="col-md-9"></div>
-          <div className="col-md-3">
+          <div className="col-md-3 my-2">
+            {showF ? (
+              <ImCross
+                onClick={() => setShowF(!showF)}
+                style={{ cursor: "pointer" }}
+              />
+            ) : (
+              <button
+                className="btn btn-success rounded"
+                onClick={() => {
+                  setShowF(!showF), setShow(false);
+                }}
+              >
+                + Masjid Funds
+              </button>
+            )}
+          </div>
+          <div className="col-md-6"></div>
+          <div className="col-md-3 my-2">
             {show ? (
               <ImCross
                 onClick={() => setShow(!show)}
@@ -137,7 +189,9 @@ const ExpenseForm = () => {
             ) : (
               <button
                 className="btn btn-success rounded"
-                onClick={() => setShow(!show)}
+                onClick={() => {
+                  setShow(!show), setShowF(false);
+                }}
               >
                 Add New Expense
               </button>
@@ -212,6 +266,50 @@ const ExpenseForm = () => {
                   <option value="masjid">Masjid</option>
                 </select>
               </div>
+              <br />
+              <button
+                type="submit"
+                className="btn btn-success w-75 mt-1"
+                style={{ borderRadius: "12px" }}
+              >
+                ADD
+              </button>
+            </form>
+          </div>
+        ) : (
+          <></>
+        )}
+        {showF ? (
+          <div
+            className="py-3 rounded"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+            }}
+          >
+            <h2>MASJID FUND</h2>
+            <form
+              action="post"
+              className="w-100 mt-3 text-center"
+              onSubmit={submitFundHandler}
+            >
+              <input
+                value={FundAmount}
+                onChange={(e) => setFundAmount(e.target.value)}
+                type="number"
+                name="amount"
+                id="Email"
+                placeholder="Amount"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
               <br />
               <button
                 type="submit"
