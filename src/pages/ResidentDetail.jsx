@@ -12,6 +12,7 @@ const ResidentDetail = () => {
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
+  const [monthsInput, setMonthsInput] = useState(0);
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
@@ -80,7 +81,7 @@ const ResidentDetail = () => {
           `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
         );
         const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
-        const res = await axios.put(
+        await axios.put(
           "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
           { Balance: finalRecBalance }
         );
@@ -90,15 +91,19 @@ const ResidentDetail = () => {
         );
         const finalMasjidBalance =
           JSON.parse(re.data.acc.Balance) + masjidAmount;
-        const res1 = await axios.put(
+        await axios.put(
           "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
           { Balance: finalMasjidBalance }
         );
       }
-      // Perform the API call
+
+      // Get the number of months from the user input
+      const numberOfMonths = parseInt(monthsInput); // Replace monthsInput with your actual input field
+
+      // Perform the API call to update the resident's paid status
       const { data } = await axios.put(
         `https://directory-management-g8gf.onrender.com/api/v1/resident/updateResident/${params.id}`,
-        { paid: paid },
+        { paid, numberOfMonths },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
@@ -108,12 +113,13 @@ const ResidentDetail = () => {
 
       if (data.success) {
         toast.success(data.message);
-        setPaid(false);
+        console.log(data.resident);
+        setPaid(false); // Assuming you want to reset this state after successful update
         navigate("/dashboard/residents");
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.response.message);
+      toast.error(err.response?.message || "An error occurred");
     }
   };
 
@@ -500,23 +506,43 @@ const ResidentDetail = () => {
               </label>
               <br />
               {showAmountInput ? (
-                <input
-                  value={feeAmount}
-                  onChange={(e) => setFeeAmount(e.target.value)}
-                  type="number"
-                  name="Fee Amount"
-                  id="FeeAmount"
-                  placeholder="Received Amount"
-                  className="w-50 my-3 text-white py-2"
-                  style={{
-                    background: "transparent",
-                    border: "none",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                  }}
-                />
+                <>
+                  <input
+                    value={feeAmount}
+                    onChange={(e) => setFeeAmount(e.target.value)}
+                    type="number"
+                    name="Fee Amount"
+                    id="FeeAmount"
+                    placeholder="Received Amount"
+                    className="w-50 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />{" "}
+                  <br />
+                  <input
+                    value={monthsInput}
+                    onChange={(e) => setMonthsInput(e.target.value)}
+                    type="number"
+                    name="Number"
+                    id="FeeAmount"
+                    placeholder="Number of Months"
+                    className="w-50 my-3 text-white py-2"
+                    style={{
+                      background: "transparent",
+                      border: "none",
+                      borderBottom: "1px solid white",
+                      borderRadius: "12px",
+                      textIndent: "12px",
+                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    }}
+                  />
+                </>
               ) : (
                 <></>
               )}
