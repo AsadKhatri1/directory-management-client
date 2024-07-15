@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { BsSearch } from "react-icons/bs";
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
@@ -9,7 +9,7 @@ const ResidentTable = () => {
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
-  const [numberOfMonths, setNumberOfMonths] = useState(1);
+  const [numberOfMonths, setNumberOfMonths] = useState(0);
   // Function to execute after 4 seconds
 
   // Start the timer

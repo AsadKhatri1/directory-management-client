@@ -12,7 +12,7 @@ const ResidentDetail = () => {
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
-  const [monthsInput, setMonthsInput] = useState(0);
+  const [monthsInput, setMonthsInput] = useState("");
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);

@@ -175,7 +175,7 @@ const ExpenseForm = () => {
                   setShowF(!showF), setShow(false);
                 }}
               >
-                + Masjid Funds
+                + Donations
               </button>
             )}
           </div>
