@@ -17,6 +17,7 @@ const ExpenseForm = () => {
   const [FundAmount, setFundAmount] = useState("");
   const [Account, setAccount] = useState("");
   const [expenseList, setExpenseList] = useState([]);
+  const [incomeList, setIncomeList] = useState([]);
   // filter for current month expenses
 
   // Get the current month and year
@@ -158,6 +159,19 @@ const ExpenseForm = () => {
     allExpenses();
   }, []);
 
+  const allIncomes = async () => {
+    const res = await axios.get(
+      "https://directory-management-g8gf.onrender.com/api/v1/income/allIncomes"
+    );
+    if (res.data.success) {
+      setIncomeList(res.data.incomeList);
+    }
+  };
+  useEffect(() => {
+    allIncomes();
+    console.log("income", incomeList);
+  }, []);
+
   return (
     <>
       <main className="main-container text-center mt-3">
@@ -287,7 +301,7 @@ const ExpenseForm = () => {
                 "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             }}
           >
-            <h2>MASJID FUND</h2>
+            <h2>Donations</h2>
             <form
               action="post"
               className="w-100 mt-3 text-center"
@@ -347,37 +361,62 @@ const ExpenseForm = () => {
           </div>
         </div>
 
-        <div className="my-3 table-responsive mt-5">
-          <h2 className="my-3">Expenses This Month</h2>
-          <table className="table table-dark table-bordered table-hover">
-            <thead className="bg-light">
-              <tr className="text-center">
-                <th scope="col">Sno.</th>
-                <th scope="col">Date</th>
-                <th scope="col">Title</th>
-                <th scope="col">Amount</th>
-                <th scope="col">Receipt</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredExpenseList.map((e, i) => (
-                <tr key={i} className="text-center align-middle">
-                  <td>{i + 1}</td>
-                  <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                  <td>{e.Title}</td>
-                  <td>{e.Amount}</td>
-                  <td>
-                    <button
-                      className="btn btn-outline-info"
-                      onClick={(event) => navigate(`receipt/${e._id}`)}
-                    >
-                      View Receipt
-                    </button>
-                  </td>
+        <div className="row">
+          <div className="my-3 table-responsive mt-5 col-md-6">
+            <h2 className="my-3">Expenses</h2>
+            <table className="table table-dark table-bordered table-hover">
+              <thead className="bg-light">
+                <tr className="text-center">
+                  <th scope="col">Sno.</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Receipt</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {expenseList.map((e, i) => (
+                  <tr key={i} className="text-center align-middle">
+                    <td>{i + 1}</td>
+                    <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                    <td>{e.Title}</td>
+                    <td>{e.Amount}</td>
+                    <td>
+                      <button
+                        className="btn btn-outline-info"
+                        onClick={(event) => navigate(`receipt/${e._id}`)}
+                      >
+                        View Receipt
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="my-3 table-responsive mt-5 col-md-6">
+            <h2 className="my-3">Incomes</h2>
+            <table className="table table-dark table-bordered table-hover">
+              <thead className="bg-light">
+                <tr className="text-center">
+                  <th scope="col">Sno.</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Resident</th>
+                  <th scope="col">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {incomeList.map((e, i) => (
+                  <tr key={i} className="text-center align-middle">
+                    <td>{i + 1}</td>
+                    <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                    <td>{e.ResidentName}</td>
+                    <td>{e.Amount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
     </>

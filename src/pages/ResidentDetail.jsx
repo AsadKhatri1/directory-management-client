@@ -60,6 +60,8 @@ const ResidentDetail = () => {
 
   // updating payment status
 
+  console.log("my", resident);
+
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
@@ -71,6 +73,17 @@ const ResidentDetail = () => {
         if (isNaN(feeAmountNumber)) {
           toast.error("Please enter a valid amount");
           return;
+        }
+
+        const resIn = await axios.post(
+          "https://directory-management-g8gf.onrender.com/api/v1/income/addIncome",
+          {
+            ResidentName: resident.FullName ? resident.FullName : "Unknown",
+            Amount: feeAmountNumber,
+          }
+        );
+        if (resIn.success) {
+          toast.success("Income added");
         }
 
         const recAmount = feeAmountNumber / 2;
