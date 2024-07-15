@@ -79,6 +79,7 @@ const ResidentDetail = () => {
           "https://directory-management-g8gf.onrender.com/api/v1/income/addIncome",
           {
             ResidentName: resident.FullName ? resident.FullName : "Unknown",
+            HouseNo: resident.HouseNumber,
             Amount: feeAmountNumber,
           }
         );

@@ -1,21 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
+
 const ResidentTable = () => {
   let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
   const [numberOfMonths, setNumberOfMonths] = useState(0);
-  // Function to execute after 4 seconds
-
-  // Start the timer
-
-  // Optional: You can clear the timer if needed before it finishes
-  // clearTimeout(timerId);
+  const [showUnpaidOnly, setShowUnpaidOnly] = useState(false); // New state for filter
 
   const allResidents = async () => {
     const res = await axios.get(
@@ -29,11 +24,11 @@ const ResidentTable = () => {
       toast(err.response?.data?.message);
     }
   };
+
   useEffect(() => {
     allResidents();
   }, []);
 
-  //   deleting a resident
   const handleDelete = async (id) => {
     try {
       const res = await axios.delete(
@@ -54,13 +49,6 @@ const ResidentTable = () => {
       toast.error(err.response?.data?.message);
     }
   };
-  // search handler
-
-  // const searchHandler = (e) => {
-  //   e.preventDefault();
-  // };
-
-  // Function to handle fee slip generation
 
   const generateFeeSlip = async (residentId) => {
     try {
@@ -89,18 +77,14 @@ const ResidentTable = () => {
           JSON.stringify(response.data.numberOfMonths)
         );
         navigate("/dashboard/resident/invoice");
-        // Optionally, show a success message or perform other actions
       } else {
         console.error("Failed to generate fee slip:", response.data.message);
-        // Show an error message or handle the error in a suitable way
       }
     } catch (error) {
       console.error("Error generating fee slip:", error);
-      // Show an error message or handle the error in a suitable way
     }
   };
 
-  // pagination work below
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10;
   const lastIndex = currentPage * recordsPerPage;
@@ -125,17 +109,37 @@ const ResidentTable = () => {
 
   return (
     <main className="main-container text-center">
-      <div className="header-left d-flex   mb-4">
-        <form action="post" className="mx-2 rounded w-100 ">
+      <div className="header-left d-flex mb-4">
+        <form action="post" className="mx-2 rounded w-100">
           <input
             placeholder="Search for residents"
             type="text"
-            className=" input mx-2 py-2"
+            className="input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
           />
         </form>
+        {/* <label className="mx-2">
+          <input
+            type="checkbox"
+            checked={showUnpaidOnly}
+            onChange={(e) => setShowUnpaidOnly(e.target.checked)}
+          />
+          Show Unpaid Only
+        </label> */}
       </div>
-      <h1 className="mx-5 mt-4 mb-2 ">Resident Table</h1>
+      <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
+      <div className="row">
+        <h3 className="text-center">Filters</h3>
+        <label className="mx-2">
+          <input
+            type="checkbox"
+            className="mx-2"
+            checked={showUnpaidOnly}
+            onChange={(e) => setShowUnpaidOnly(e.target.checked)}
+          />
+          Unpaid Residents
+        </label>
+      </div>
       <div className="main-table w-100 table-responsive mt-5">
         <table className="table table-dark table-bordered table-hover">
           <thead className="bg-light">
@@ -164,13 +168,15 @@ const ResidentTable = () => {
           <tbody>
             {records
               .filter((item) => {
-                return search.toLowerCase() === ""
-                  ? item
-                  : item.FullName.toLowerCase().includes(search) ||
-                      item.Email.toLowerCase().includes(search) ||
-                      item.Phone.toLowerCase().includes(search) ||
-                      item.HouseNumber.toLowerCase().includes(search) ||
-                      item.CNIC.toLowerCase().includes(search);
+                return (
+                  (search.toLowerCase() === "" ||
+                    item.FullName.toLowerCase().includes(search) ||
+                    item.Email.toLowerCase().includes(search) ||
+                    item.Phone.toLowerCase().includes(search) ||
+                    item.HouseNumber.toLowerCase().includes(search) ||
+                    item.CNIC.toLowerCase().includes(search)) &&
+                  (!showUnpaidOnly || !item.paid)
+                );
               })
               .map((r, i) => (
                 <tr key={r._id} className="text-center align-middle">
@@ -180,11 +186,10 @@ const ResidentTable = () => {
                   <td>{r.HouseNumber}</td>
                   <td>{r.CNIC}</td>
                   <td style={{ color: r.paid ? "green" : "red" }}>
-                    {r.paid ? "paid" : "Unpaid"}
+                    {r.paid ? "Paid" : "Unpaid"}
                   </td>
                   <td>
                     <select
-                      // value={numberOfMonths}
                       onChange={(e) => setNumberOfMonths(e.target.value)}
                       className="form-select my-1"
                     >
@@ -193,7 +198,6 @@ const ResidentTable = () => {
                       <option value="2">2 Months</option>
                       <option value="6">6 Months</option>
                       <option value="12">1 year</option>
-                      {/* Add more options for different durations if needed */}
                     </select>
                     <button
                       className={
@@ -205,7 +209,6 @@ const ResidentTable = () => {
                     >
                       Generate Fee Slip
                     </button>
-                    {/* Other action buttons */}
                   </td>
                   <td>
                     <button

@@ -402,6 +402,7 @@ const ExpenseForm = () => {
                   <th scope="col">Sno.</th>
                   <th scope="col">Date</th>
                   <th scope="col">Resident</th>
+                  <th scope="col">House Number</th>
                   <th scope="col">Amount</th>
                 </tr>
               </thead>
@@ -411,6 +412,7 @@ const ExpenseForm = () => {
                     <td>{i + 1}</td>
                     <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                     <td>{e.ResidentName}</td>
+                    <td>{e.HouseNo}</td>
                     <td>{e.Amount}</td>
                   </tr>
                 ))}
