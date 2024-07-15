@@ -128,8 +128,9 @@ const ResidentTable = () => {
         </label> */}
       </div>
 
-      <div className="row border py-3 d-flex align-items-center justify-content-left">
-        <h3 className="text-center">Filters</h3>
+      <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
+
+      <div className="row border py-3 my-3">
         <label className="mx-2">
           <input
             type="checkbox"
@@ -140,7 +141,6 @@ const ResidentTable = () => {
           Unpaid Residents
         </label>
       </div>
-      <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
       <div className="main-table w-100 table-responsive mt-5">
         <table className="table table-dark table-bordered table-hover">
           <thead className="bg-light">
