@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-
 import { ImCross } from "react-icons/im";
 import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
 import { Navigate, useNavigate } from "react-router-dom";
+
 const ExpenseForm = () => {
   const navigate = useNavigate();
   const [recBalance, setRecBalance] = useState(0);
@@ -15,19 +15,27 @@ const ExpenseForm = () => {
   const [showF, setShowF] = useState(false);
   const [Amount, setAmount] = useState("");
   const [FundAmount, setFundAmount] = useState("");
+  const [FullName, setFullName] = useState("");
+  const [Reason, setReason] = useState("");
   const [Account, setAccount] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-  // filter for current month expenses
+  const [selectedMonth, setSelectedMonth] = useState(moment().month());
+  const [selectedYear, setSelectedYear] = useState(moment().year());
 
-  // Get the current month and year
-  const currentMonth = moment().month(); // 0-based index, so January is 0
-  const currentYear = moment().year();
-
+  // Filtered expenses and incomes based on selected month and year
   const filteredExpenseList = expenseList.filter((e) => {
     const expenseDate = moment(e?.createdAt);
     return (
-      expenseDate.month() === currentMonth && expenseDate.year() === currentYear
+      expenseDate.month() === selectedMonth &&
+      expenseDate.year() === selectedYear
+    );
+  });
+
+  const filteredIncomeList = incomeList.filter((e) => {
+    const incomeDate = moment(e?.createdAt);
+    return (
+      incomeDate.month() === selectedMonth && incomeDate.year() === selectedYear
     );
   });
 
@@ -40,6 +48,7 @@ const ExpenseForm = () => {
       setMasjidBalance(res.data.acc.Balance);
     }
   };
+
   const getRecBalance = async () => {
     const res = await axios.get(
       `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
@@ -53,6 +62,7 @@ const ExpenseForm = () => {
     getMasjidBalance();
     getRecBalance();
   }, []);
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -70,10 +80,7 @@ const ExpenseForm = () => {
         setAmount("");
         setAccount("");
         if (Account === "rec") {
-          // Ensure feeAmount is parsed as a number
           const feeAmountNumber = parseFloat(Amount);
-
-          // Check if feeAmount is a valid number
           if (isNaN(feeAmountNumber)) {
             toast.error("Please enter a valid amount");
             return;
@@ -81,17 +88,14 @@ const ExpenseForm = () => {
           const re1 = await axios.get(
             `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
-          const finalRecBalance = JSON.parse(re1.data.acc.Balance) - Amount;
-          const res = await axios.put(
+          const finalRecBalance = parseFloat(re1.data.acc.Balance) - Amount;
+          await axios.put(
             "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
             { Balance: finalRecBalance }
           );
         }
         if (Account === "masjid") {
-          // Ensure feeAmount is parsed as a number
           const feeAmountNumber = parseFloat(Amount);
-
-          // Check if feeAmount is a valid number
           if (isNaN(feeAmountNumber)) {
             toast.error("Please enter a valid amount");
             return;
@@ -99,8 +103,8 @@ const ExpenseForm = () => {
           const re = await axios.get(
             `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
-          const finalMasjidBalance = JSON.parse(re.data.acc.Balance) - Amount;
-          const res1 = await axios.put(
+          const finalMasjidBalance = parseFloat(re.data.acc.Balance) - Amount;
+          await axios.put(
             "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
             { Balance: finalMasjidBalance }
           );
@@ -114,34 +118,55 @@ const ExpenseForm = () => {
       console.log(err);
     }
   };
-  const submitFundHandler = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    try {
-      // Ensure FundAmount is parsed as a number
-      const fundAmountNumber = parseFloat(FundAmount);
 
-      // Check if FundAmount is a valid number
+  const submitFundHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const fundAmountNumber = parseFloat(FundAmount);
       if (isNaN(fundAmountNumber)) {
         toast.error("Please enter a valid amount");
         return;
       }
-
-      const re = await axios.get(
-        `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+      const resIn = await axios.post(
+        "https://directory-management-g8gf.onrender.com/api/v1/income/addIncome",
+        {
+          ResidentName: FullName,
+          Amount: fundAmountNumber,
+          Reason,
+        }
       );
-      const currentBalance = parseFloat(re.data.acc.Balance); // Parse the current balance as a number
-
-      const finalMasjidBalance = currentBalance + fundAmountNumber;
-      const res1 = await axios.put(
-        "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
-        { Balance: finalMasjidBalance }
-      );
-      setFundAmount("");
-      setShowF(false);
-      allExpenses();
-      getMasjidBalance();
-      getRecBalance();
-      toast.success("Successfully updated the balance");
+      if (resIn.data.success) {
+        if (Account === "rec") {
+          const re1 = await axios.get(
+            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance =
+            parseFloat(re1.data.acc.Balance) + fundAmountNumber;
+          await axios.put(
+            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+            { Balance: finalRecBalance }
+          );
+        } else if (Account === "masjid") {
+          const re = await axios.get(
+            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance =
+            parseFloat(re.data.acc.Balance) + fundAmountNumber;
+          await axios.put(
+            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+            { Balance: finalMasjidBalance }
+          );
+        }
+        setShowF(false);
+        allExpenses();
+        setFundAmount("");
+        setFullName("");
+        setReason("");
+        allIncomes();
+        getMasjidBalance();
+        getRecBalance();
+        toast.success("Successfully updated the balance");
+      }
     } catch (err) {
       toast.error("Error in adding fund");
     }
@@ -155,6 +180,7 @@ const ExpenseForm = () => {
       setExpenseList(res.data.expenseList);
     }
   };
+
   useEffect(() => {
     allExpenses();
   }, []);
@@ -167,9 +193,9 @@ const ExpenseForm = () => {
       setIncomeList(res.data.incomeList);
     }
   };
+
   useEffect(() => {
     allIncomes();
-    console.log("income", incomeList);
   }, []);
 
   return (
@@ -220,7 +246,7 @@ const ExpenseForm = () => {
                 "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             }}
           >
-            <h2>LIST A NEW EXPENSE</h2>
+            <h5>Add Expense</h5>
             <form
               action="post"
               className="w-100 mt-3 text-center"
@@ -291,7 +317,7 @@ const ExpenseForm = () => {
             </form>
           </div>
         ) : (
-          <></>
+          ""
         )}
         {showF ? (
           <div
@@ -301,12 +327,30 @@ const ExpenseForm = () => {
                 "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             }}
           >
-            <h2>Donations</h2>
+            <h5>Add Donation</h5>
             <form
               action="post"
               className="w-100 mt-3 text-center"
               onSubmit={submitFundHandler}
             >
+              <input
+                value={FullName}
+                onChange={(e) => setFullName(e.target.value)}
+                type="text"
+                name="name"
+                id="name"
+                placeholder="Full Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
               <input
                 value={FundAmount}
                 onChange={(e) => setFundAmount(e.target.value)}
@@ -324,7 +368,41 @@ const ExpenseForm = () => {
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />{" "}
-              <br />
+              <input
+                type="text"
+                placeholder="Reason for donations"
+                value={Reason}
+                onChange={(e) => setReason(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              ></input>
+              <div className="w-75 mx-auto">
+                <select
+                  onChange={(e) => setAccount(e.target.value)}
+                  className="form-select my-3 w-100 py-2"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  <option>Select Account</option>
+                  <option value="rec">REC</option>
+                  <option value="masjid">Masjid</option>
+                </select>
+              </div>
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
@@ -335,7 +413,7 @@ const ExpenseForm = () => {
             </form>
           </div>
         ) : (
-          <></>
+          ""
         )}
 
         <div className="row my-5">
@@ -360,64 +438,104 @@ const ExpenseForm = () => {
             </div>
           </div>
         </div>
-
-        <div className="row">
-          <div className="my-3 table-responsive mt-5 col-md-6">
-            <h2 className="my-3">Expenses</h2>
-            <table className="table table-dark table-bordered table-hover">
-              <thead className="bg-light">
-                <tr className="text-center">
-                  <th scope="col">Sno.</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Title</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Receipt</th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenseList.map((e, i) => (
-                  <tr key={i} className="text-center align-middle">
-                    <td>{i + 1}</td>
-                    <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                    <td>{e.Title}</td>
-                    <td>{e.Amount}</td>
-                    <td>
-                      <button
-                        className="btn btn-outline-info"
-                        onClick={(event) => navigate(`receipt/${e._id}`)}
-                      >
-                        View Receipt
-                      </button>
-                    </td>
-                  </tr>
+        <div className="mt-3">
+          <h5>FILTERS</h5>
+          <div className="row">
+            <div className="col-md-6">
+              <label htmlFor="month" className="my-2">
+                Select Month
+              </label>
+              <select
+                className="form-control"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+              >
+                {moment.months().map((month, index) => (
+                  <option key={index} value={index}>
+                    {month}
+                  </option>
                 ))}
-              </tbody>
-            </table>
+              </select>
+            </div>
+            <div className="col-md-6">
+              <label htmlFor="year" className="my-2">
+                Select Year
+              </label>
+              <select
+                className="form-control"
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+              >
+                {[...Array(10).keys()].map((_, index) => (
+                  <option key={index} value={moment().year() - index}>
+                    {moment().year() - index}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className="my-3 table-responsive mt-5 col-md-6">
-            <h2 className="my-3">Incomes</h2>
-            <table className="table table-dark table-bordered table-hover">
-              <thead className="bg-light">
-                <tr className="text-center">
-                  <th scope="col">Sno.</th>
-                  <th scope="col">Date</th>
-                  <th scope="col">Resident</th>
-                  <th scope="col">House Number</th>
-                  <th scope="col">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {incomeList.map((e, i) => (
-                  <tr key={i} className="text-center align-middle">
-                    <td>{i + 1}</td>
-                    <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                    <td>{e.ResidentName}</td>
-                    <td>{e.HouseNo}</td>
-                    <td>{e.Amount}</td>
+        </div>
+        <div className="container my-3">
+          <div className="row">
+            <div className="col-md-6">
+              <h3>Expenses</h3>
+              <table className="table table-dark table-bordered table-hover">
+                <thead className="bg-light">
+                  <tr className="text-center">
+                    <th scope="col">Sno.</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Receipt</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredExpenseList.map((e, i) => (
+                    <tr key={i} className="text-center align-middle">
+                      <td>{i + 1}</td>
+                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                      <td>{e.Title}</td>
+                      <td>{e.Amount}</td>
+                      <td>
+                        <button
+                          className="btn btn-outline-info"
+                          onClick={(event) => navigate(`receipt/${e._id}`)}
+                        >
+                          View Receipt
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="col-md-6">
+              <h3>Incomes</h3>
+              <table className="table table-dark table-bordered table-hover">
+                <thead className="bg-light">
+                  <tr className="text-center">
+                    <th scope="col">Sno.</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Resident</th>
+                    <th scope="col">House Number</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Reason</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredIncomeList.map((e, i) => (
+                    <tr key={i} className="text-center align-middle">
+                      <td>{i + 1}</td>
+                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                      <td>{e.ResidentName}</td>
+                      <td>{e.HouseNo}</td>
+                      <td>{e.Amount}</td>
+                      <td>{e.Reason}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </main>
