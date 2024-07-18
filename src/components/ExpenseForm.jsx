@@ -535,10 +535,10 @@ const ExpenseForm = () => {
                     <tr key={i} className="text-center align-middle">
                       <td>{i + 1}</td>
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                      <td>{e.ResidentName}</td>
-                      <td>{e.HouseNo}</td>
-                      <td>{e.Amount}</td>
-                      <td>{e.Reason}</td>
+                      <td>{e?.ResidentName}</td>
+                      <td>{e?.HouseNo}</td>
+                      <td>{e?.Reason}</td>
+                      <td>{e?.Amount}</td>
                     </tr>
                   ))}
                 </tbody>
