@@ -130,8 +130,17 @@ const ResidentTable = () => {
 
       <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
 
-      <div className="row border py-3 my-3">
-        <label className="mx-2">
+      <div
+        className="mt-5 py-3"
+        style={{
+          backgroundColor: "#263043",
+          borderRadius: "12px",
+          boxShadow:
+            "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+        }}
+      >
+        <h3>FILTERS</h3>
+        <label className="mx-2 d-inline">
           <input
             type="checkbox"
             className="mx-2"
@@ -141,7 +150,7 @@ const ResidentTable = () => {
           Unpaid Residents
         </label>
       </div>
-      <div className="main-table w-100 table-responsive mt-5">
+      <div className="main-table w-100 table-responsive mt-2">
         <table className="table table-dark table-bordered table-hover">
           <thead className="bg-light">
             <tr className="text-center">
