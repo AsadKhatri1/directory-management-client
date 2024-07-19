@@ -77,7 +77,7 @@ const Invoice = () => {
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
                   <h6 className="my-2">House No. </h6>
                   <h5
-                    className="mx-2 text-primary"
+                    className="mx-2 text-primary mt-2"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.HouseNumber}
@@ -92,7 +92,7 @@ const Invoice = () => {
                     _____________________
                   </span>{" "}
                 </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
                   <h6 className="my-2">Amount</h6>
                   <h5
                     className="mx-2 text-success"
@@ -119,7 +119,7 @@ const Invoice = () => {
                 alt="logo rec"
                 style={{ height: "45px", width: "40px" }}
               />
-              <div className="d-flex w-100 align-items-center justify-content-between">
+              <div className="d-flex w-100 align-items-center justify-content-between px-3">
                 <p className="my-2">
                   Date:
                   <span className="fw-400 mx-2">
@@ -144,18 +144,18 @@ const Invoice = () => {
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.FullName}
-                  </h5>{" "}
+                  </h5>
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
                   <h6 className="my-2">House No. </h6>
                   <h5
-                    className="mx-2 text-primary"
+                    className="mx-2 text-primary mt-2"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.HouseNumber}
-                  </h5>{" "}
+                  </h5>
                 </div>
-                <div className="d-flex w-100 align-items-center justify-content-between px-3">
+                <div className="d-flex w-100 align-items-center justify-content-between px-3 ">
                   <h6 className="my-2">Cash / Cheque No. </h6>
                   <span
                     className="mx-2"
@@ -164,7 +164,7 @@ const Invoice = () => {
                     _____________________
                   </span>{" "}
                 </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
                   <h6 className="my-2">Amount</h6>
                   <h5
                     className="mx-2 text-success"
