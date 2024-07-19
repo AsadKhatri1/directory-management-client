@@ -1,77 +1,205 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import logo from "../assets/logo.png";
+
 const Invoice = () => {
   const componentRef = useRef();
+
+  // Fetch resident, months, and amount from localStorage
   const resident = JSON.parse(localStorage.getItem("resident"));
   const months = JSON.parse(localStorage.getItem("months"));
   const amount = JSON.parse(localStorage.getItem("amount"));
+
+  // Get current date
   const day = new Date().getDate();
   const month = new Date().getMonth() + 1;
   const year = new Date().getFullYear();
 
-  return (
-    <div className="main d-flex flex-column align-items-center justify-content-center vw-100 vh-100 p-3">
-      <div
-        ref={componentRef}
-        className="invoice d-flex flex-column align-items-center justify-content-center p-5 rounded v-100 h-100"
-        style={{
-          backgroundColor: "white",
-          color: "black",
-          boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0p",
-        }}
-      >
-        <div className="text-center">
-          <img
-            src={logo}
-            alt="Logo"
-            style={{ width: "185px", height: "250px" }}
-          />
-        </div>
-        <h2 className="text-center my-2">PAYMENT INVOICE</h2>
-        <hr style={{ width: "80%", height: "2px" }} />
+  // State to manage the receipt number
+  const [receiptNumber, setReceiptNumber] = useState(() => {
+    // Retrieve the last receipt number from local storage or set it to 0 if not found
+    const lastReceiptNumber = localStorage.getItem("receiptNumber");
+    return lastReceiptNumber ? parseInt(lastReceiptNumber) + 1 : 1;
+  });
 
-        <div className=" d-flex flex-column align-items-end justify-content-center w-100 my-5">
-          <span className="my-1">
-            <h6 className="d-inline">FULL NAME : </h6>
-            <p className="d-inline">{resident.FullName}</p>
-          </span>
-          <span className="my-1">
-            <h6 className="d-inline">EMAIL : </h6>
-            <p className="d-inline">{resident.Email}</p>
-          </span>
-          <span className="my-1">
-            <h6 className="d-inline">Number Of Months : </h6>
-            <p className="d-inline">{months}</p>
-          </span>
-          <span className="my-1">
-            <h6 className="d-inline">Total Fee : </h6>
-            <p className="d-inline">{amount}</p>
-          </span>
-          <span className="my-1">
-            <h6 className="d-inline">Date: </h6>
-            <p className="d-inline">{day + "/" + month + "/" + year}</p>
-          </span>
-        </div>
+  useEffect(() => {
+    // Update the receipt number in local storage
+    localStorage.setItem("receiptNumber", receiptNumber);
+  }, [receiptNumber]);
+
+  return (
+    <>
+      <div className="main d-flex flex-column align-items-center justify-content-center w-100 vh-100 h-auto p-3 ">
         <div
-          className="black w-100 mb-4 rounded"
-          style={{ height: "8px", backgroundColor: "black" }}
-        ></div>
-        <div className="total">
-          <h4>
-            Total: <span className="fw-400 text-success">Rs.{amount}</span>
-          </h4>
+          ref={componentRef}
+          className="invoice px-4 rounded vw-100 h-100"
+          style={{
+            backgroundColor: "white",
+            color: "black",
+            boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0p",
+          }}
+        >
+          <div className="row h-50">
+            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center py-1">
+              <span style={{ opacity: "0.6" }}>REC Copy</span>
+              <img
+                src={logo}
+                alt="logo rec"
+                style={{ height: "45px", width: "40px" }}
+              />
+              <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                <p className="my-2">
+                  Date:
+                  <span className="fw-400 mx-2">
+                    {day + "/" + month + "/" + year}
+                  </span>
+                </p>
+                <p>Receipt# {receiptNumber}</p>
+              </div>
+              <div className="w-100">
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6>
+                    Received with thanks Member <br /> Contribution / Others{" "}
+                  </h6>
+                  <span className="" style={{ textDecoration: "underline" }}>
+                    _____________________
+                  </span>
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">From Mr. / Mrs. </h6>
+                  <h5
+                    className="mx-2 text-success"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    {resident.FullName}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">House No. </h6>
+                  <h5
+                    className="mx-2 text-primary"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    {resident.HouseNumber}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Cash / Cheque No. </h6>
+                  <span
+                    className="mx-2"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    _____________________
+                  </span>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Amount</h6>
+                  <h5
+                    className="mx-2 text-success"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Received By</h6>
+                  <span
+                    className="mx-2"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    ______________
+                  </span>{" "}
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center py-1">
+              <span style={{ opacity: "0.6" }}>Resident Copy</span>
+              <img
+                src={logo}
+                alt="logo rec"
+                style={{ height: "45px", width: "40px" }}
+              />
+              <div className="d-flex w-100 align-items-center justify-content-between">
+                <p className="my-2">
+                  Date:
+                  <span className="fw-400 mx-2">
+                    {day + "/" + month + "/" + year}
+                  </span>
+                </p>
+                <p>Receipt #{receiptNumber}</p>
+              </div>
+              <div className="w-100">
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6>
+                    Received with thanks Member <br /> Contribution / Others{" "}
+                  </h6>
+                  <span className="" style={{ textDecoration: "underline" }}>
+                    _____________________
+                  </span>
+                </div>
+                <div className="d-flex w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">From Mr. / Mrs. </h6>
+                  <h5
+                    className="mx-2 text-success"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    {resident.FullName}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">House No. </h6>
+                  <h5
+                    className="mx-2 text-primary"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    {resident.HouseNumber}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Cash / Cheque No. </h6>
+                  <span
+                    className="mx-2"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    _____________________
+                  </span>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Amount</h6>
+                  <h5
+                    className="mx-2 text-success"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="my-2">Received By</h6>
+                  <span
+                    className="mx-2"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    ______________
+                  </span>{" "}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="row h-50">
+            <div className="col-md-6 "></div>
+            <div className="col-md-6 "></div>
+          </div>
         </div>
       </div>
       <ReactToPrint
         trigger={() => (
-          <button className="mt-3 btn btn-outline-secondary">
+          <button className="mt-3 btn btn-outline-secondary text-center my-3">
             Print / Download
           </button>
         )}
         content={() => componentRef.current}
       />
-    </div>
+    </>
   );
 };
 
