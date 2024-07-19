@@ -62,7 +62,7 @@ const Invoice = () => {
                     Received with thanks Member <br /> Contribution / Others{" "}
                   </h6>
                   <span className="" style={{ textDecoration: "underline" }}>
-                    _____________________
+                    ________________
                   </span>
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
@@ -89,7 +89,7 @@ const Invoice = () => {
                     className="mx-2"
                     style={{ textDecoration: "underline" }}
                   >
-                    _____________________
+                    _______________
                   </span>{" "}
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
@@ -134,7 +134,7 @@ const Invoice = () => {
                     Received with thanks Member <br /> Contribution / Others{" "}
                   </h6>
                   <span className="" style={{ textDecoration: "underline" }}>
-                    _____________________
+                    ________________
                   </span>
                 </div>
                 <div className="d-flex w-100 align-items-center justify-content-between px-3">
@@ -161,7 +161,7 @@ const Invoice = () => {
                     className="mx-2"
                     style={{ textDecoration: "underline" }}
                   >
-                    _____________________
+                    _______________
                   </span>{" "}
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
