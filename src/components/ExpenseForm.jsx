@@ -507,7 +507,7 @@ const ExpenseForm = () => {
           <div className="col-md-6">
             <h4>Income List</h4>
             <div className="table-responsive">
-              <table className="table table-dark table-bordered table-hover">
+              <table className="table table-dark table-bordered table-hover inTable">
                 <thead className="bg-light">
                   <tr className="text-center">
                     <th scope="col">Date</th>
@@ -515,7 +515,7 @@ const ExpenseForm = () => {
                     <th scope="col">House Number</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Reason</th>
-                    <th scope="col">Owner/Tanent</th>
+                    <th scope="col">Residency</th>
                     <th scope="col">Type</th>
                   </tr>
                 </thead>
@@ -525,8 +525,9 @@ const ExpenseForm = () => {
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
-                      <td>{e?.Reason}</td>
                       <td>{e?.Amount}</td>
+                      <td>{e?.Reason}</td>
+
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
                     </tr>
