@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ImCross } from "react-icons/im";
 import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ExpenseForm = () => {
   const navigate = useNavigate();
@@ -20,26 +20,35 @@ const ExpenseForm = () => {
   const [Account, setAccount] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-  const [selectedMonth, setSelectedMonth] = useState(moment().month());
+  const [selectedStartMonth, setSelectedStartMonth] = useState(
+    moment().startOf("month").month()
+  );
+  const [selectedEndMonth, setSelectedEndMonth] = useState(
+    moment().endOf("month").month()
+  );
   const [selectedYear, setSelectedYear] = useState(moment().year());
 
-  // Filtered expenses and incomes based on selected month and year
+  // Filtered expenses and incomes based on selected month range and year
   const filteredExpenseList = expenseList.filter((e) => {
     const expenseDate = moment(e?.createdAt);
     return (
-      expenseDate.month() === selectedMonth &&
+      expenseDate.month() >= selectedStartMonth &&
+      expenseDate.month() <= selectedEndMonth &&
       expenseDate.year() === selectedYear
     );
   });
 
   const filteredIncomeList = incomeList.filter((e) => {
     const incomeDate = moment(e?.createdAt);
+    // console.log(incomeDate.month());
     return (
-      incomeDate.month() === selectedMonth && incomeDate.year() === selectedYear
+      incomeDate.month() >= selectedStartMonth &&
+      incomeDate.month() <= selectedEndMonth &&
+      incomeDate.year() === selectedYear
     );
   });
 
-  // getting masjid & rec balance
+  // Fetch balance data
   const getMasjidBalance = async () => {
     const res = await axios.get(
       `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
@@ -233,260 +242,157 @@ const ExpenseForm = () => {
                   setShow(!show), setShowF(false);
                 }}
               >
-                Add New Expense
+                + Expense
               </button>
             )}
           </div>
         </div>
-        {show ? (
-          <div
-            className="py-3 rounded"
-            style={{
-              boxShadow:
-                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
-            }}
-          >
-            <h5>Add Expense</h5>
-            <form
-              action="post"
-              className="w-100 mt-3 text-center"
-              onSubmit={submitHandler}
-            >
+        {show && (
+          <form className="container-sm" onSubmit={submitHandler}>
+            <div className="form-group">
+              <label htmlFor="title">Title:</label>
               <input
+                type="text"
+                className="form-control"
+                id="title"
                 value={Title}
                 onChange={(e) => setTitle(e.target.value)}
-                type="text"
-                name="FullName"
-                id="FullName"
-                placeholder="Title"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                required
               />
-              <br />
+            </div>
+            <div className="form-group">
+              <label htmlFor="amount">Amount:</label>
               <input
+                type="number"
+                className="form-control"
+                id="amount"
                 value={Amount}
                 onChange={(e) => setAmount(e.target.value)}
-                type="number"
-                name="amount"
-                id="Email"
-                placeholder="Amount"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
-              />{" "}
-              <br />
-              <div className="w-75 mx-auto">
-                <select
-                  onChange={(e) => setAccount(e.target.value)}
-                  className="form-select my-3 w-100 py-2"
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "black",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                  }}
-                >
-                  <option>Select Account</option>
-                  <option value="rec">REC</option>
-                  <option value="masjid">Masjid</option>
-                </select>
-              </div>
-              <br />
-              <button
-                type="submit"
-                className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: "12px" }}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="account">Account:</label>
+              <select
+                className="form-control"
+                id="account"
+                value={Account}
+                onChange={(e) => setAccount(e.target.value)}
+                required
               >
-                ADD
-              </button>
-            </form>
-          </div>
-        ) : (
-          ""
+                <option value="">Select Account</option>
+                <option value="masjid">Masjid</option>
+                <option value="rec">Rec</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary mt-3">
+              Submit
+            </button>
+          </form>
         )}
-        {showF ? (
-          <div
-            className="py-3 rounded"
-            style={{
-              boxShadow:
-                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
-            }}
-          >
-            <h5>Add Donation</h5>
-            <form
-              action="post"
-              className="w-100 mt-3 text-center"
-              onSubmit={submitFundHandler}
-            >
+        {showF && (
+          <form className="container-sm" onSubmit={submitFundHandler}>
+            <div className="form-group">
+              <label htmlFor="fullName">Full Name:</label>
               <input
+                type="text"
+                className="form-control"
+                id="fullName"
                 value={FullName}
                 onChange={(e) => setFullName(e.target.value)}
-                type="text"
-                name="name"
-                id="name"
-                placeholder="Full Name"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
-              />{" "}
-              <br />
-              <input
-                value={FundAmount}
-                onChange={(e) => setFundAmount(e.target.value)}
-                type="number"
-                name="amount"
-                id="Email"
-                placeholder="Amount"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
-              />{" "}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="reason">Reason:</label>
               <input
                 type="text"
-                placeholder="Reason for donations"
+                className="form-control"
+                id="reason"
                 value={Reason}
                 onChange={(e) => setReason(e.target.value)}
-                name="reason"
-                id="reason"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
-              ></input>
-              <div className="w-75 mx-auto">
-                <select
-                  onChange={(e) => setAccount(e.target.value)}
-                  className="form-select my-3 w-100 py-2"
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "black",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                  }}
-                >
-                  <option>Select Account</option>
-                  <option value="rec">REC</option>
-                  <option value="masjid">Masjid</option>
-                </select>
-              </div>
-              <button
-                type="submit"
-                className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: "12px" }}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="fundAmount">Amount:</label>
+              <input
+                type="number"
+                className="form-control"
+                id="fundAmount"
+                value={FundAmount}
+                onChange={(e) => setFundAmount(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="account">Account:</label>
+              <select
+                className="form-control"
+                id="account"
+                value={Account}
+                onChange={(e) => setAccount(e.target.value)}
+                required
               >
-                ADD
-              </button>
-            </form>
-          </div>
-        ) : (
-          ""
+                <option value="">Select Account</option>
+                <option value="masjid">Masjid</option>
+                <option value="rec">Rec</option>
+              </select>
+            </div>
+            <button type="submit" className="btn btn-primary mt-3">
+              Submit
+            </button>
+          </form>
         )}
 
-        <div className="row my-5">
-          <div className="col-md-6 text-center">
-            {" "}
-            <div className="rec-card p-3 rounded my-2">
-              <div className="card-inner">
-                <h6 className="fw-bold">REC Account Balance</h6>
-                <IoIosWallet className="card-icon" />
-              </div>
-              <h3 className="mt-1">RS. {recBalance}</h3>
-            </div>
-          </div>
-          <div className="col-md-6 text-center">
-            {" "}
-            <div className=" masjid-card p-3 rounded my-2">
-              <div className="card-inner">
-                <h6 className="fw-bold ">Masjid Account Balance</h6>
-                <IoIosWallet className="card-icon" />
-              </div>
-              <h2>RS. {masjidBalance}</h2>
-            </div>
-          </div>
-        </div>
+        {/* Filter Section */}
         <div
-          className="mt-3 p-3"
-          style={{
-            backgroundColor: "#263043",
-            borderRadius: "12px",
-            boxShadow:
-              "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
-          }}
+          className="my-4 p-3"
+          style={{ backgroundColor: "#263043", borderRadius: "12px" }}
         >
-          <h5>FILTERS</h5>
+          <h3 className="my-3">Filter By Range</h3>
           <div className="row">
             <div className="col-md-6">
-              <label htmlFor="month" className="my-2">
-                Select Month
-              </label>
-              <select
-                className="form-control"
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-              >
-                {moment.months().map((month, index) => (
-                  <option key={index} value={index}>
-                    {month}
-                  </option>
-                ))}
-              </select>
+              {" "}
+              <div className="form-group">
+                <label htmlFor="startMonth" className="mb-3">
+                  Start Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="startMonth"
+                  value={moment().month(selectedStartMonth).format("YYYY-MM")}
+                  onChange={(e) =>
+                    setSelectedStartMonth(moment(e.target.value).month())
+                  }
+                />
+              </div>
             </div>
             <div className="col-md-6">
-              <label htmlFor="year" className="my-2">
-                Select Year
-              </label>
-              <select
-                className="form-control"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-              >
-                {[...Array(10).keys()].map((_, index) => (
-                  <option key={index} value={moment().year() - index}>
-                    {moment().year() - index}
-                  </option>
-                ))}
-              </select>
+              {" "}
+              <div className="form-group">
+                <label htmlFor="endMonth" className="mb-3">
+                  End Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="endMonth"
+                  value={moment().month(selectedEndMonth).format("YYYY-MM")}
+                  onChange={(e) =>
+                    setSelectedEndMonth(moment(e.target.value).month())
+                  }
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div className="container my-3">
-          <div className="row">
-            <div className="col-md-6">
-              <h3>Expenses</h3>
+        <div className="row">
+          <div className="col-md-6">
+            <h4>Expense List</h4>
+
+            <div className="table-responsive">
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light">
                   <tr className="text-center">
@@ -517,8 +423,10 @@ const ExpenseForm = () => {
                 </tbody>
               </table>
             </div>
-            <div className="col-md-6">
-              <h3>Incomes</h3>
+          </div>
+          <div className="col-md-6">
+            <h4>Income List</h4>
+            <div className="table-responsive">
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light">
                   <tr className="text-center">

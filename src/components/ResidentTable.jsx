@@ -10,18 +10,19 @@ const ResidentTable = () => {
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
   const [numberOfMonths, setNumberOfMonths] = useState(0);
-  const [showUnpaidOnly, setShowUnpaidOnly] = useState(false); // New state for filter
+  const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
+  const [showTanentsOnly, setShowTanentsOnly] = useState(false);
 
   const allResidents = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
-    );
-    if (res?.data?.success) {
-      setResidents(res.data.residents);
-    }
     try {
+      const res = await axios.get(
+        "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
+      );
+      if (res?.data?.success) {
+        setResidents(res.data.residents);
+      }
     } catch (err) {
-      toast(err.response?.data?.message);
+      toast.error(err.response?.data?.message);
     }
   };
 
@@ -118,14 +119,6 @@ const ResidentTable = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </form>
-        {/* <label className="mx-2">
-          <input
-            type="checkbox"
-            checked={showUnpaidOnly}
-            onChange={(e) => setShowUnpaidOnly(e.target.checked)}
-          />
-          Show Unpaid Only
-        </label> */}
       </div>
 
       <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
@@ -139,7 +132,7 @@ const ResidentTable = () => {
             "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
         }}
       >
-        <h3>FILTERS</h3>
+        <h3 className="mb-3">FILTERS</h3>
         <label className="mx-2 d-inline">
           <input
             type="checkbox"
@@ -148,6 +141,15 @@ const ResidentTable = () => {
             onChange={(e) => setShowUnpaidOnly(e.target.checked)}
           />
           Unpaid Residents
+        </label>
+        <label className="mx-2 d-inline">
+          <input
+            type="checkbox"
+            className="mx-2"
+            checked={showTanentsOnly}
+            onChange={(e) => setShowTanentsOnly(e.target.checked)}
+          />
+          Tanents
         </label>
       </div>
       <div className="main-table w-100 table-responsive mt-2">
@@ -178,64 +180,127 @@ const ResidentTable = () => {
           <tbody>
             {records
               .filter((item) => {
-                return (
-                  (search.toLowerCase() === "" ||
-                    item.FullName.toLowerCase().includes(search) ||
-                    item.Email.toLowerCase().includes(search) ||
-                    item.Phone.toLowerCase().includes(search) ||
-                    item.HouseNumber.toLowerCase().includes(search) ||
-                    item.CNIC.toLowerCase().includes(search)) &&
-                  (!showUnpaidOnly || !item.paid)
-                );
+                const matchesSearch =
+                  search.toLowerCase() === "" ||
+                  item.FullName.toLowerCase().includes(search) ||
+                  item.Email.toLowerCase().includes(search) ||
+                  item.Phone.toLowerCase().includes(search) ||
+                  item.HouseNumber.toLowerCase().includes(search) ||
+                  item.CNIC.toLowerCase().includes(search);
+
+                const matchesUnpaid = !showUnpaidOnly || !item.paid;
+
+                return matchesSearch && matchesUnpaid;
               })
-              .map((r, i) => (
-                <tr key={r._id} className="text-center align-middle">
-                  <td>{r.FullName}</td>
-                  <td>{r.Email}</td>
-                  <td>{r.Phone}</td>
-                  <td>{r.HouseNumber}</td>
-                  <td>{r.CNIC}</td>
-                  <td style={{ color: r.paid ? "green" : "red" }}>
-                    {r.paid ? "Paid" : "Unpaid"}
-                  </td>
-                  <td>
-                    <select
-                      onChange={(e) => setNumberOfMonths(e.target.value)}
-                      className="form-select my-1"
-                    >
-                      <option>Select months</option>
-                      <option value="1">1 Month</option>
-                      <option value="2">2 Months</option>
-                      <option value="6">6 Months</option>
-                      <option value="12">1 year</option>
-                    </select>
-                    <button
-                      className={
-                        !r.paid
-                          ? "btn btn-outline-info m-1"
-                          : "btn btn-outline-secondary m-1 disabled"
-                      }
-                      onClick={() => generateFeeSlip(r._id)}
-                    >
-                      Generate Fee Slip
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-outline-danger m-1"
-                      onClick={() => handleDelete(r._id)}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="btn btn-outline-info m-1"
-                      onClick={() => navigate(`/dashboard/resident/${r._id}`)}
-                    >
-                      Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              .map((r, i) => {
+                if (showTanentsOnly && r.tanents.length > 0) {
+                  return r.tanents
+                    .filter((tenant) => tenant.FullName) // Check for tenant's FullName
+                    .map((tenant, index) => (
+                      <tr key={tenant._id} className="text-center align-middle">
+                        <td>{tenant.FullName}</td>
+                        <td>{tenant.Email}</td>
+                        <td>{tenant.Phone}</td>
+                        <td>{r.HouseNumber}</td>
+                        <td>{tenant.CNIC}</td>
+                        <td style={{ color: tenant.paid ? "green" : "red" }}>
+                          {tenant.paid ? "Paid" : "Unpaid"}
+                        </td>
+                        <td>
+                          <select
+                            onChange={(e) => setNumberOfMonths(e.target.value)}
+                            className="form-select my-1"
+                          >
+                            <option>Select months</option>
+                            <option value="1">1 Month</option>
+                            <option value="2">2 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">1 year</option>
+                          </select>
+                          <button
+                            className={
+                              !tenant.paid
+                                ? "btn btn-outline-info m-1"
+                                : "btn btn-outline-secondary m-1 disabled"
+                            }
+                            onClick={() => generateFeeSlip(tenant._id)}
+                          >
+                            Generate Fee Slip
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger m-1"
+                            onClick={() => handleDelete(tenant._id)}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            className="btn btn-outline-info m-1"
+                            onClick={() =>
+                              navigate(`/dashboard/resident/${tenant._id}`)
+                            }
+                          >
+                            Details
+                          </button>
+                        </td>
+                      </tr>
+                    ));
+                }
+                if (!showTanentsOnly || r.tanents.length === 0) {
+                  return (
+                    <tr key={r._id} className="text-center align-middle">
+                      <td>{r.FullName}</td>
+                      <td>{r.Email}</td>
+                      <td>{r.Phone}</td>
+                      <td>{r.HouseNumber}</td>
+                      <td>{r.CNIC}</td>
+                      <td style={{ color: r.paid ? "green" : "red" }}>
+                        {r.paid ? "Paid" : "Unpaid"}
+                      </td>
+                      <td>
+                        <select
+                          onChange={(e) => setNumberOfMonths(e.target.value)}
+                          className="form-select my-1"
+                        >
+                          <option>Select months</option>
+                          <option value="1">1 Month</option>
+                          <option value="2">2 Months</option>
+                          <option value="6">6 Months</option>
+                          <option value="12">1 year</option>
+                        </select>
+                        <button
+                          className={
+                            !r.paid
+                              ? "btn btn-outline-info m-1"
+                              : "btn btn-outline-secondary m-1 disabled"
+                          }
+                          onClick={() => generateFeeSlip(r._id)}
+                        >
+                          Generate Fee Slip
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline-danger m-1"
+                          onClick={() => handleDelete(r._id)}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          className="btn btn-outline-info m-1"
+                          onClick={() =>
+                            navigate(`/dashboard/resident/${r._id}`)
+                          }
+                        >
+                          Details
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                }
+                return null;
+              })}
           </tbody>
         </table>
         <nav>
