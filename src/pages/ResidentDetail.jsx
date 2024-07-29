@@ -61,8 +61,6 @@ const ResidentDetail = () => {
 
   // updating payment status
 
-  console.log("my", resident);
-
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
@@ -228,33 +226,25 @@ const ResidentDetail = () => {
           ) : (
             <>
               <br />
-              {showM ? (
+              {showM && members[0].name.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
-                    <h2 className=" my-5 text-secondary">Family Members</h2>
+                    <h2 className="my-5 text-secondary">Family Members</h2>
                     <div className="table-responsive">
                       <table className="table table-dark table-bordered table-hover">
                         <thead className="bg-light">
-                          {members.length > 0 ? (
-                            <tr className="text-center">
-                              <th scope="col">PHOTO</th>
-                              <th scope="col">NAME</th>
-                              <th scope="col">RELATION</th>
-                              <th scope="col">MOBILE NUMBER</th>
-                              <th scope="col">DOB</th>
-                              <th scope="col">OCCUPATION</th>
-                              <th scope="col">CNIC</th>
-                            </tr>
-                          ) : (
-                            <span>
-                              <h3 className="text-light">
-                                No Family Members To Show
-                              </h3>
-                            </span>
-                          )}
+                          <tr className="text-center">
+                            <th scope="col">PHOTO</th>
+                            <th scope="col">NAME</th>
+                            <th scope="col">RELATION</th>
+                            <th scope="col">MOBILE NUMBER</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">OCCUPATION</th>
+                            <th scope="col">CNIC</th>
+                          </tr>
                         </thead>
                         <tbody>
-                          {members.map((r, i) => (
+                          {members.map((r) => (
                             <tr
                               key={r._id}
                               className="text-center align-middle"
@@ -262,21 +252,20 @@ const ResidentDetail = () => {
                               <td>
                                 {r.photoUrl ? (
                                   <img
-                                    src={r?.photoUrl}
+                                    src={r.photoUrl}
                                     alt="Member photo"
                                     style={{ width: "50px", height: "50px" }}
                                   />
                                 ) : null}
                               </td>
-                              <td>{r?.name}</td>
-                              <td>{r?.relation}</td>
-                              <td>{r?.number}</td>
+                              <td>{r.name}</td>
+                              <td>{r.relation}</td>
+                              <td>{r.number}</td>
                               <td>
-                                {r.dob &&
-                                  moment(r?.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
                               </td>
-                              <td>{r?.occupation}</td>
-                              <td>{r?.cnic}</td>
+                              <td>{r.occupation}</td>
+                              <td>{r.cnic}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -284,55 +273,52 @@ const ResidentDetail = () => {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
+              ) : showM ? (
+                <div
+                  className="text-center py-3 pt-4"
+                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                >
+                  <h3 className="text-light">No Family Members To Show</h3>
+                </div>
+              ) : null}
+
               {/* maid details */}
               <br />
-              {showS ? (
+              {showS && maids[0].name.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
-                    <h2 className=" my-5 text-secondary">Servant Details</h2>
+                    <h2 className="my-5 text-secondary">Servant Details</h2>
                     <div className="table-responsive">
                       <table className="table table-dark table-bordered table-hover">
                         <thead className="bg-light">
-                          {maids.length > 0 ? (
-                            <tr className="text-center">
-                              <th scope="col">NAME</th>
-                              <th scope="col">DATE OF BIRTH</th>
-                              <th scope="col">MOBILE NUMBER</th>
-                              <th scope="col">CNIC</th>
-                              <th scope="col">ADDRESS</th>
-                              <th scope="col">GUARDIAN'S NAME</th>
-                              <th scope="col">CNIC</th>
-                            </tr>
-                          ) : (
-                            <span>
-                              <h3 className="text-light">
-                                No Servant Details To Show
-                              </h3>
-                            </span>
-                          )}
+                          <tr className="text-center">
+                            <th scope="col">NAME</th>
+                            <th scope="col">DATE OF BIRTH</th>
+                            <th scope="col">MOBILE NUMBER</th>
+                            <th scope="col">CNIC</th>
+                            <th scope="col">ADDRESS</th>
+                            <th scope="col">GUARDIAN'S NAME</th>
+                            <th scope="col">CNIC</th>
+                          </tr>
                         </thead>
                         <tbody>
-                          {maids.map((r, i) => (
+                          {maids.map((r) => (
                             <tr
                               key={r._id}
                               className="text-center align-middle"
                             >
-                              <td>{r?.name}</td>
+                              <td>{r.name}</td>
                               <td>
-                                {r.dob &&
-                                  moment(r?.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
                               </td>
-                              <td>{r?.number}</td>
-                              <td>{r?.cnic}</td>
-                              <td>{r?.address}</td>
-                              <td>{r?.guardian}</td>
+                              <td>{r.number}</td>
+                              <td>{r.cnic}</td>
+                              <td>{r.address}</td>
+                              <td>{r.guardian}</td>
                               <td>
-                                {r?.cnicUrl ? (
+                                {r.cnicUrl ? (
                                   <img
-                                    src={r?.cnicUrl}
+                                    src={r.cnicUrl}
                                     alt="Document"
                                     style={{ width: "50px", height: "50px" }}
                                   />
@@ -345,49 +331,47 @@ const ResidentDetail = () => {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
+              ) : showS ? (
+                <div
+                  className="text-center py-3 pt-4"
+                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                >
+                  <h3 className="text-light">No Servant Details To Show</h3>
+                </div>
+              ) : null}
+
               {/* vehicle details */}
-              {showV ? (
-                <div className=" text-center">
-                  <h2 className="my-5 text-secondary">VEHICLE DETAILS</h2>
+              {showV && vehicle[0].make.length > 0 ? (
+                <div className="text-center">
+                  <h2 className="my-5 text-secondary">Vehicle Details</h2>
                   <div className="table-responsive">
                     <table className="table table-dark table-bordered table-hover">
                       <thead className="bg-light">
-                        {vehicle.length > 0 ? (
-                          <tr className="text-center">
-                            <th scope="col">TYPE</th>
-                            <th scope="col">MAKE</th>
-                            <th scope="col">MODEL</th>
-                            <th scope="col">MODEL YEAR</th>
-                            <th scope="col">COLOUR</th>
-                            <th scope="col">REGISTERATION NUMBER</th>
-                            <th scope="col">STICKER NUMBER</th>
-                            <th scope="col">DOCUMENT</th>
-                          </tr>
-                        ) : (
-                          <span>
-                            <h3 className="text-light">
-                              No Vehicle Details To Show
-                            </h3>
-                          </span>
-                        )}
+                        <tr className="text-center">
+                          <th scope="col">TYPE</th>
+                          <th scope="col">MAKE</th>
+                          <th scope="col">MODEL</th>
+                          <th scope="col">MODEL YEAR</th>
+                          <th scope="col">COLOUR</th>
+                          <th scope="col">REGISTRATION NUMBER</th>
+                          <th scope="col">STICKER NUMBER</th>
+                          <th scope="col">DOCUMENT</th>
+                        </tr>
                       </thead>
                       <tbody>
-                        {vehicle.map((r, i) => (
+                        {vehicle.map((r) => (
                           <tr key={r._id} className="text-center align-middle">
-                            <td>{r?.type}</td>
-                            <td>{r?.make}</td>
-                            <td>{r?.model}</td>
-                            <td>{r?.year}</td>
-                            <td>{r?.colour}</td>
-                            <td>{r?.registrationNumber}</td>
-                            <td>{r?.stickerNumber}</td>
+                            <td>{r.type}</td>
+                            <td>{r.make}</td>
+                            <td>{r.model}</td>
+                            <td>{r.year}</td>
+                            <td>{r.colour}</td>
+                            <td>{r.registrationNumber}</td>
+                            <td>{r.stickerNumber}</td>
                             <td>
-                              {r?.paperDocument ? (
+                              {r.paperDocument ? (
                                 <img
-                                  src={r?.paperDocument}
+                                  src={r.paperDocument}
                                   alt="Document"
                                   style={{ width: "50px", height: "50px" }}
                                 />
@@ -399,35 +383,36 @@ const ResidentDetail = () => {
                     </table>
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
-              {showT ? (
+              ) : showV ? (
+                <div
+                  className="text-center py-3 pt-4"
+                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                >
+                  <h3 className="text-light">No Vehicle Details To Show</h3>
+                </div>
+              ) : null}
+
+              {/* tanents detals */}
+              {showT && tanents[0].name.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
-                    <h2 className=" my-5 text-secondary">TANENT DETAILS</h2>
+                    <h2 className="my-5 text-secondary">Tanent Details</h2>
                     <div className="table-responsive">
                       <table className="table table-dark table-bordered table-hover">
                         <thead className="bg-light">
-                          {tanents.length > 0 ? (
-                            <tr className="text-center">
-                              <th scope="col">PHOTO</th>
-                              <th scope="col">NAME</th>
-                              <th scope="col">NOC NUMBER</th>
-                              <th scope="col">NOC ISSUE DATE</th>
-                              <th scope="col">MOBILE NUMBER</th>
-                              <th scope="col">DOB</th>
-                              <th scope="col">OCCUPATION</th>
-                              <th scope="col">CNIC</th>
-                            </tr>
-                          ) : (
-                            <span>
-                              <h3 className="text-light">No Tanents To Show</h3>
-                            </span>
-                          )}
+                          <tr className="text-center">
+                            <th scope="col">PHOTO</th>
+                            <th scope="col">NAME</th>
+                            <th scope="col">NOC NUMBER</th>
+                            <th scope="col">NOC ISSUE DATE</th>
+                            <th scope="col">MOBILE NUMBER</th>
+                            <th scope="col">DOB</th>
+                            <th scope="col">OCCUPATION</th>
+                            <th scope="col">CNIC</th>
+                          </tr>
                         </thead>
                         <tbody>
-                          {tanents.map((r, i) => (
+                          {tanents.map((r) => (
                             <tr
                               key={r._id}
                               className="text-center align-middle"
@@ -435,25 +420,24 @@ const ResidentDetail = () => {
                               <td>
                                 {r.photoUrl ? (
                                   <img
-                                    src={r?.photoUrl}
-                                    alt="tanents photo"
+                                    src={r.photoUrl}
+                                    alt="Tanent photo"
                                     style={{ width: "50px", height: "50px" }}
                                   />
                                 ) : null}
                               </td>
-                              <td>{r?.name}</td>
-                              <td>{r?.nocNo}</td>
+                              <td>{r.name}</td>
+                              <td>{r.nocNo}</td>
                               <td>
                                 {r.nocIssue &&
-                                  moment(r?.nocIssue).format("MMMM Do, YYYY")}
+                                  moment(r.nocIssue).format("MMMM Do, YYYY")}
                               </td>
-                              <td>{r?.number}</td>
+                              <td>{r.number}</td>
                               <td>
-                                {r.dob &&
-                                  moment(r?.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
                               </td>
-                              <td>{r?.occupation}</td>
-                              <td>{r?.cnic}</td>
+                              <td>{r.occupation}</td>
+                              <td>{r.cnic}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -461,9 +445,14 @@ const ResidentDetail = () => {
                     </div>
                   </div>
                 </div>
-              ) : (
-                <></>
-              )}
+              ) : showT ? (
+                <div
+                  className="text-center py-3 pt-4"
+                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                >
+                  <h3 className="text-light">No Tanents To Show</h3>
+                </div>
+              ) : null}
 
               <div className="mt-2 mb-5">
                 <img

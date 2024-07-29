@@ -147,7 +147,9 @@ const ResidentTable = () => {
             type="checkbox"
             className="mx-2"
             checked={showTanentsOnly}
-            onChange={(e) => setShowTanentsOnly(e.target.checked)}
+            onChange={(e) => {
+              setShowTanentsOnly(e.target.checked);
+            }}
           />
           Tanents
         </label>
@@ -157,13 +159,14 @@ const ResidentTable = () => {
           <thead className="bg-light">
             <tr className="text-center">
               <th scope="col">Full Name</th>
-              <th scope="col">Email</th>
+              {!showTanentsOnly && <th scope="col">Email</th>}
               <th scope="col">Phone</th>
               <th scope="col">House Number</th>
               <th scope="col">CNIC</th>
-              <th scope="col">Payment Status</th>
-              <th scope="col">Payment Slip</th>
-              <th scope="col">Action</th>
+              {!showTanentsOnly && <th scope="col">Payment Status</th>}
+              {!showTanentsOnly && <th scope="col">Payment Slip</th>}
+              {!showTanentsOnly && <th scope="col">Action</th>}
+              {showTanentsOnly && <th scope="col">NOC</th>}
             </tr>
           </thead>
           {residents.length < 1 && (
@@ -180,6 +183,9 @@ const ResidentTable = () => {
           <tbody>
             {records
               .filter((item) => {
+                // Log the item to check its structure
+                console.log("Item:", item);
+
                 const matchesSearch =
                   search.toLowerCase() === "" ||
                   item.FullName.toLowerCase().includes(search) ||
@@ -192,62 +198,35 @@ const ResidentTable = () => {
 
                 return matchesSearch && matchesUnpaid;
               })
-              .map((r, i) => {
-                if (showTanentsOnly && r.tanents.length > 0) {
-                  return r.tanents
-                    .filter((tenant) => tenant.FullName) // Check for tenant's FullName
-                    .map((tenant, index) => (
-                      <tr key={tenant._id} className="text-center align-middle">
-                        <td>{tenant.FullName}</td>
-                        <td>{tenant.Email}</td>
-                        <td>{tenant.Phone}</td>
-                        <td>{r.HouseNumber}</td>
-                        <td>{tenant.CNIC}</td>
-                        <td style={{ color: tenant.paid ? "green" : "red" }}>
-                          {tenant.paid ? "Paid" : "Unpaid"}
-                        </td>
-                        <td>
-                          <select
-                            onChange={(e) => setNumberOfMonths(e.target.value)}
-                            className="form-select my-1"
-                          >
-                            <option>Select months</option>
-                            <option value="1">1 Month</option>
-                            <option value="2">2 Months</option>
-                            <option value="6">6 Months</option>
-                            <option value="12">1 year</option>
-                          </select>
-                          <button
-                            className={
-                              !tenant.paid
-                                ? "btn btn-outline-info m-1"
-                                : "btn btn-outline-secondary m-1 disabled"
-                            }
-                            onClick={() => generateFeeSlip(tenant._id)}
-                          >
-                            Generate Fee Slip
-                          </button>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-outline-danger m-1"
-                            onClick={() => handleDelete(tenant._id)}
-                          >
-                            Delete
-                          </button>
-                          <button
-                            className="btn btn-outline-info m-1"
-                            onClick={() =>
-                              navigate(`/dashboard/resident/${tenant._id}`)
-                            }
-                          >
-                            Details
-                          </button>
-                        </td>
-                      </tr>
-                    ));
-                }
-                if (!showTanentsOnly || r.tanents.length === 0) {
+              .flatMap((r) => {
+                // Log the tenant data to check its structure
+                console.log("Resident:", r);
+                console.log("Tenants:", r.tanents);
+
+                if (showTanentsOnly) {
+                  const validTenants = r.tanents.filter(
+                    (tenant) => tenant.name.length > 1
+                  );
+
+                  // Log the filtered tenants
+                  console.log("Valid Tenants:", validTenants);
+
+                  return validTenants.length > 0
+                    ? validTenants.map((tenant) => (
+                        <tr
+                          key={tenant._id || Math.random()}
+                          className="text-center align-middle"
+                        >
+                          <td>{tenant.name || "N/A"}</td>
+
+                          <td>{tenant.number || "N/A"}</td>
+                          <td>{r.HouseNumber}</td>
+                          <td>{tenant.cnic || "N/A"}</td>
+                          <td>{tenant.nocNo || "N/A"}</td>
+                        </tr>
+                      ))
+                    : [];
+                } else {
                   return (
                     <tr key={r._id} className="text-center align-middle">
                       <td>{r.FullName}</td>
@@ -299,7 +278,6 @@ const ResidentTable = () => {
                     </tr>
                   );
                 }
-                return null;
               })}
           </tbody>
         </table>
