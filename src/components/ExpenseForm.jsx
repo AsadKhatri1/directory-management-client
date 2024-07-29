@@ -142,6 +142,7 @@ const ExpenseForm = () => {
           ResidentName: FullName,
           Amount: fundAmountNumber,
           Reason,
+          Type: "Donation",
         }
       );
       if (resIn.data.success) {
@@ -247,102 +248,183 @@ const ExpenseForm = () => {
             )}
           </div>
         </div>
-        {show && (
-          <form className="container-sm" onSubmit={submitHandler}>
-            <div className="form-group">
-              <label htmlFor="title">Title:</label>
+        {show ? (
+          <div
+            className="py-3 rounded"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+            }}
+          >
+            <h5>Add Expense</h5>
+            <form
+              action="post"
+              className="w-100 mt-3 text-center"
+              onSubmit={submitHandler}
+            >
               <input
-                type="text"
-                className="form-control"
-                id="title"
                 value={Title}
                 onChange={(e) => setTitle(e.target.value)}
-                required
+                type="text"
+                name="FullName"
+                id="FullName"
+                placeholder="Title"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </div>
-            <div className="form-group">
-              <label htmlFor="amount">Amount:</label>
+              <br />
               <input
-                type="number"
-                className="form-control"
-                id="amount"
                 value={Amount}
                 onChange={(e) => setAmount(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="account">Account:</label>
-              <select
-                className="form-control"
-                id="account"
-                value={Account}
-                onChange={(e) => setAccount(e.target.value)}
-                required
+                type="number"
+                name="amount"
+                id="Email"
+                placeholder="Amount"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
+              <div className="w-75 mx-auto">
+                <select
+                  onChange={(e) => setAccount(e.target.value)}
+                  className="form-select my-3 w-100 py-2"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  <option>Select Account</option>
+                  <option value="rec">REC</option>
+                  <option value="masjid">Masjid</option>
+                </select>
+              </div>
+              <br />
+              <button
+                type="submit"
+                className="btn btn-success w-75 mt-1"
+                style={{ borderRadius: "12px" }}
               >
-                <option value="">Select Account</option>
-                <option value="masjid">Masjid</option>
-                <option value="rec">Rec</option>
-              </select>
-            </div>
-            <button type="submit" className="btn btn-primary mt-3">
-              Submit
-            </button>
-          </form>
+                ADD
+              </button>
+            </form>
+          </div>
+        ) : (
+          ""
         )}
-        {showF && (
-          <form className="container-sm" onSubmit={submitFundHandler}>
-            <div className="form-group">
-              <label htmlFor="fullName">Full Name:</label>
+
+        {showF ? (
+          <div
+            className="py-3 rounded"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+            }}
+          >
+            <h5>Add Donation</h5>
+            <form
+              action="post"
+              className="w-100 mt-3 text-center"
+              onSubmit={submitFundHandler}
+            >
               <input
-                type="text"
-                className="form-control"
-                id="fullName"
                 value={FullName}
                 onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="reason">Reason:</label>
-              <input
                 type="text"
-                className="form-control"
-                id="reason"
-                value={Reason}
-                onChange={(e) => setReason(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="fundAmount">Amount:</label>
+                name="name"
+                id="name"
+                placeholder="Full Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
               <input
-                type="number"
-                className="form-control"
-                id="fundAmount"
                 value={FundAmount}
                 onChange={(e) => setFundAmount(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="account">Account:</label>
-              <select
-                className="form-control"
-                id="account"
-                value={Account}
-                onChange={(e) => setAccount(e.target.value)}
-                required
+                type="number"
+                name="amount"
+                id="Email"
+                placeholder="Amount"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <input
+                type="text"
+                placeholder="Reason for donations"
+                value={Reason}
+                onChange={(e) => setReason(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              ></input>
+              <div className="w-75 mx-auto">
+                <select
+                  onChange={(e) => setAccount(e.target.value)}
+                  className="form-select my-3 w-100 py-2"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  <option>Select Account</option>
+                  <option value="rec">REC</option>
+                  <option value="masjid">Masjid</option>
+                </select>
+              </div>
+              <button
+                type="submit"
+                className="btn btn-success w-75 mt-1"
+                style={{ borderRadius: "12px" }}
               >
-                <option value="">Select Account</option>
-                <option value="masjid">Masjid</option>
-                <option value="rec">Rec</option>
-              </select>
-            </div>
-            <button type="submit" className="btn btn-primary mt-3">
-              Submit
-            </button>
-          </form>
+                ADD
+              </button>
+            </form>
+          </div>
+        ) : (
+          ""
         )}
 
         {/* Filter Section */}
@@ -396,7 +478,6 @@ const ExpenseForm = () => {
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light">
                   <tr className="text-center">
-                    <th scope="col">Sno.</th>
                     <th scope="col">Date</th>
                     <th scope="col">Title</th>
                     <th scope="col">Amount</th>
@@ -406,7 +487,6 @@ const ExpenseForm = () => {
                 <tbody>
                   {filteredExpenseList.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{i + 1}</td>
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e.Title}</td>
                       <td>{e.Amount}</td>
@@ -430,23 +510,25 @@ const ExpenseForm = () => {
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light">
                   <tr className="text-center">
-                    <th scope="col">Sno.</th>
                     <th scope="col">Date</th>
                     <th scope="col">Resident</th>
                     <th scope="col">House Number</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Reason</th>
+                    <th scope="col">Owner/Tanent</th>
+                    <th scope="col">Type</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredIncomeList.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{i + 1}</td>
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Reason}</td>
                       <td>{e?.Amount}</td>
+                      <td>{e?.Ownership}</td>
+                      <td>{e?.Type}</td>
                     </tr>
                   ))}
                 </tbody>

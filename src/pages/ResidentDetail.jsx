@@ -24,6 +24,7 @@ const ResidentDetail = () => {
   const [showT, setShowT] = useState(false);
   const [showAmountInput, setShowAmountInput] = useState(false);
   const [feeAmount, setFeeAmount] = useState("");
+  const [Ownership, setOwnership] = useState("");
   const navigate = useNavigate();
 
   // fetching single resident
@@ -81,6 +82,8 @@ const ResidentDetail = () => {
             ResidentName: resident.FullName ? resident.FullName : "Unknown",
             HouseNo: resident.HouseNumber,
             Amount: feeAmountNumber,
+            Ownership: Ownership,
+            Type: "membership",
           }
         );
         if (resIn.success) {
@@ -556,6 +559,66 @@ const ResidentDetail = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                  <div className="form-group">
+                    <select
+                      className="w-50 my-3 text-white py-2"
+                      id="account"
+                      value={Ownership}
+                      onChange={(e) => setOwnership(e.target.value)}
+                      required
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      <option
+                        value=""
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          color: "black",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Ownership
+                      </option>
+                      <option
+                        value="owner"
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          color: "black",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Owner
+                      </option>
+                      <option
+                        value="tanent"
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          color: "black",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Tanent
+                      </option>
+                    </select>
+                  </div>
                 </>
               ) : (
                 <></>
