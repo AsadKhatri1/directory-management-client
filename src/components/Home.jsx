@@ -136,7 +136,22 @@ const Home = () => {
             <h6 className="fw-bold">REC Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3>RS. {recBalance}</h3>
+          <h3>
+            {" "}
+            {!recBalance ? (
+              <Audio
+                height="50"
+                width="50"
+                radius="9"
+                color="white"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              `Rs. ${recBalance}`
+            )}
+          </h3>
         </div>
 
         <div className="cards">
@@ -145,8 +160,19 @@ const Home = () => {
             <IoIosWallet className="card-icon" />
           </div>
           <h2>
-          
-            RS. {masjidBalance}
+            {!masjidBalance ? (
+              <Audio
+                height="50"
+                width="50"
+                radius="9"
+                color="white"
+                ariaLabel="loading"
+                wrapperStyle
+                wrapperClass
+              />
+            ) : (
+              `Rs. ${masjidBalance}`
+            )}
           </h2>
         </div>
         <div className="cards">

@@ -5,6 +5,7 @@ import { ImCross } from "react-icons/im";
 import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import { Audio } from "react-loader-spinner";
 
 const ExpenseForm = () => {
   const navigate = useNavigate();
@@ -530,7 +531,21 @@ const ExpenseForm = () => {
               <h6 className="fw-bold">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h3>RS. {recBalance}</h3>
+            <h3>
+              {!recBalance ? (
+                <Audio
+                  height="50"
+                  width="50"
+                  radius="9"
+                  color="white"
+                  ariaLabel="loading"
+                  wrapperStyle
+                  wrapperClass
+                />
+              ) : (
+                `Rs. ${recBalance}`
+              )}
+            </h3>
           </div>
 
           <div className="cards">
@@ -538,7 +553,21 @@ const ExpenseForm = () => {
               <h6 className="fw-bold">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h2>RS. {masjidBalance}</h2>
+            <h2>
+              {!masjidBalance ? (
+                <Audio
+                  height="50"
+                  width="50"
+                  radius="9"
+                  color="white"
+                  ariaLabel="loading"
+                  wrapperStyle
+                  wrapperClass
+                />
+              ) : (
+                `Rs. ${masjidBalance}`
+              )}
+            </h2>
           </div>
         </div>
         {/* Filter Section */}

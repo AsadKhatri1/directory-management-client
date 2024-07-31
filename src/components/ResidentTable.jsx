@@ -164,7 +164,7 @@ const ResidentTable = () => {
               {showTanentsOnly && <th scope="col">NOC</th>}
             </tr>
           </thead>
-          {residents.length < 1 && (
+          {!residents && (
             <Audio
               height="60"
               width="50"
