@@ -523,16 +523,17 @@ const ExpenseForm = () => {
         ) : (
           ""
         )}
-        <div className="container row">
-          {" "}
-          <div className="cards col-md-5 m-2">
+
+        <div className="main-finance-cards">
+          <div className="cards">
             <div className="card-inner">
               <h6 className="fw-bold">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
             <h3>RS. {recBalance}</h3>
           </div>
-          <div className="cards col-md-5 m-2 ">
+
+          <div className="cards">
             <div className="card-inner">
               <h6 className="fw-bold">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
@@ -611,7 +612,7 @@ const ExpenseForm = () => {
                           className="btn btn-outline-info"
                           onClick={(event) => navigate(`receipt/${e._id}`)}
                         >
-                          View Receipt
+                          View
                         </button>
                       </td>
                     </tr>

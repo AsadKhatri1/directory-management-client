@@ -160,6 +160,12 @@ body {
   gap: 25px;
   margin: 15px 0px;
 }
+.main-finance-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+  margin: 15px 0px;
+}
 .cards {
   display: flex;
   flex-direction: column;
