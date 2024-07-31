@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import logo from "../assets/logo.png";
 import moment from "moment";
-import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+// import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
 const Invoice = () => {
   const componentRef = useRef();
@@ -27,7 +27,7 @@ const Invoice = () => {
       className="col-12 col-md-6 border p-4"
       style={{ backgroundColor: "white" }}
     >
-      <div className="row mb-3">
+      <div className="row mb-1">
         <div className="col-4 d-flex align-items-center">
           <p className="mb-0">
             <strong>Date:</strong> {now.format("DD-MM-YYYY")}
@@ -110,7 +110,7 @@ const Invoice = () => {
   return (
     <>
       <div
-        className="main d-flex flex-column align-items-center justify-content-start w-100"
+        className="main d-flex flex-column align-items-center justify-content-start w-100 "
         style={{ height: "50vh" }}
       >
         <div
