@@ -28,7 +28,6 @@ const ExpenseForm = () => {
     moment().endOf("month").month()
   );
   const [selectedYear, setSelectedYear] = useState(moment().year());
-
   // Filtered expenses and incomes based on selected month range and year
   const filteredExpenseList = expenseList.filter((e) => {
     const expenseDate = moment(e?.createdAt);
@@ -38,7 +37,6 @@ const ExpenseForm = () => {
       expenseDate.year() === selectedYear
     );
   });
-
   const filteredIncomeList = incomeList.filter((e) => {
     const incomeDate = moment(e?.createdAt);
     // console.log(incomeDate.month());
@@ -48,6 +46,29 @@ const ExpenseForm = () => {
       incomeDate.year() === selectedYear
     );
   });
+
+  // Pagination
+  const [expensesPerPage] = useState(8);
+  const [currentPageExpense, setCurrentPageExpense] = useState(1);
+  const [incomesPerPage] = useState(8);
+  const [currentPageIncome, setCurrentPageIncome] = useState(1);
+
+  const indexOfLastExpense = currentPageExpense * expensesPerPage;
+  const indexOfFirstExpense = indexOfLastExpense - expensesPerPage;
+  const currentExpenses = filteredExpenseList.slice(
+    indexOfFirstExpense,
+    indexOfLastExpense
+  );
+
+  const indexOfLastIncome = currentPageIncome * incomesPerPage;
+  const indexOfFirstIncome = indexOfLastIncome - incomesPerPage;
+  const currentIncomes = filteredIncomeList.slice(
+    indexOfFirstIncome,
+    indexOfLastIncome
+  );
+
+  const paginateExpenses = (pageNumber) => setCurrentPageExpense(pageNumber);
+  const paginateIncomes = (pageNumber) => setCurrentPageIncome(pageNumber);
 
   // Fetch balance data
   const getMasjidBalance = async () => {
@@ -210,7 +231,7 @@ const ExpenseForm = () => {
   useEffect(() => {
     allIncomes();
   }, []);
-
+  console.log(currentExpenses);
   return (
     <>
       <main className="main-container text-center mt-3">
@@ -504,14 +525,14 @@ const ExpenseForm = () => {
         )}
         <div className="container row">
           {" "}
-          <div className="cards col-md-5 mx-5">
+          <div className="cards col-md-5 m-2">
             <div className="card-inner">
               <h6 className="fw-bold">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
             <h3>RS. {recBalance}</h3>
           </div>
-          <div className="cards col-md-5 mx-5">
+          <div className="cards col-md-5 m-2 ">
             <div className="card-inner">
               <h6 className="fw-bold">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
@@ -568,7 +589,7 @@ const ExpenseForm = () => {
 
             <div className="table-responsive">
               <table className="table table-dark table-bordered table-hover">
-                <thead className="bg-light">
+                <thead className="bg-light border">
                   <tr className="text-center">
                     <th scope="col">Date</th>
                     <th scope="col">Title</th>
@@ -579,7 +600,7 @@ const ExpenseForm = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredExpenseList.map((e, i) => (
+                  {currentExpenses.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e.Title}</td>
@@ -598,12 +619,33 @@ const ExpenseForm = () => {
                 </tbody>
               </table>
             </div>
+
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateExpenses(currentPageExpense - 1)}
+                disabled={currentPageExpense === 1}
+              >
+                Previous
+              </button>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateExpenses(currentPageExpense + 1)}
+                disabled={
+                  currentPageExpense ===
+                  Math.ceil(filteredExpenseList.length / expensesPerPage)
+                }
+              >
+                Next
+              </button>
+            </div>
           </div>
+
           <div className="col-md-6">
             <h4>Income List</h4>
             <div className="table-responsive">
               <table className="table table-dark table-bordered table-hover inTable">
-                <thead className="bg-light">
+                <thead className="bg-light border">
                   <tr className="text-center">
                     <th scope="col">Date</th>
                     <th scope="col">Resident</th>
@@ -615,7 +657,7 @@ const ExpenseForm = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredIncomeList.map((e, i) => (
+                  {currentIncomes.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.ResidentName}</td>
@@ -629,6 +671,26 @@ const ExpenseForm = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            <div className="d-flex justify-content-center">
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateIncomes(currentPageIncome - 1)}
+                disabled={currentPageIncome === 1}
+              >
+                Previous
+              </button>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateIncomes(currentPageIncome + 1)}
+                disabled={
+                  currentPageIncome ===
+                  Math.ceil(filteredIncomeList.length / incomesPerPage)
+                }
+              >
+                Next
+              </button>
             </div>
           </div>
         </div>
