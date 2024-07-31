@@ -57,13 +57,13 @@ const Auth = () => {
             "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
         }}
       >
-        <div className="col-md-6 text-dark rounded-start bg-light d-flex flex-column align-items-center justify-content-center">
+        <div className="col-md-6 text-dark rounded-start bg-light d-flex flex-column align-items-center justify-content-center my-2">
           <h2 className="fw-bold" style={{ color: " #3C5B6F" }}>
             LOGIN
           </h2>
           <form className="w-75" onSubmit={submitHandler}>
             <div className="mb-3">
-              <label for="exampleInputEmail1" class="form-label">
+              <label htmlFor="exampleInputEmail1" class="form-label">
                 Email address
               </label>
               <input
@@ -77,7 +77,7 @@ const Auth = () => {
               />
             </div>
             <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label">
+              <label htmlFor="exampleInputPassword1" class="form-label">
                 Password
               </label>
               <div className="pass d-flex align-items-center">

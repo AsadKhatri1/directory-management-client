@@ -63,11 +63,6 @@ const ResidentTable = () => {
         }
       );
       if (response.data.success) {
-        console.log(
-          `Fee slip generated successfully for ${numberOfMonths}:`,
-          response.data.totalFee,
-          response.data.resident
-        );
         localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
         localStorage.setItem(
           "resident",
@@ -184,7 +179,6 @@ const ResidentTable = () => {
             {records
               .filter((item) => {
                 // Log the item to check its structure
-                console.log("Item:", item);
 
                 const matchesSearch =
                   search.toLowerCase() === "" ||
@@ -200,8 +194,6 @@ const ResidentTable = () => {
               })
               .flatMap((r) => {
                 // Log the tenant data to check its structure
-                console.log("Resident:", r);
-                console.log("Tenants:", r.tanents);
 
                 if (showTanentsOnly) {
                   const validTenants = r.tanents.filter(
@@ -209,7 +201,6 @@ const ResidentTable = () => {
                   );
 
                   // Log the filtered tenants
-                  console.log("Valid Tenants:", validTenants);
 
                   return validTenants.length > 0
                     ? validTenants.map((tenant) => (

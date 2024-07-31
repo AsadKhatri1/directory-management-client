@@ -231,7 +231,7 @@ const ExpenseForm = () => {
   useEffect(() => {
     allIncomes();
   }, []);
-  console.log(currentExpenses);
+
   return (
     <>
       <main className="main-container text-center mt-3">
