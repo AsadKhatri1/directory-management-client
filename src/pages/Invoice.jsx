@@ -40,22 +40,30 @@ const Invoice = () => {
           }}
         >
           <div className="row h-50">
-            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center py-1">
-              <span style={{ opacity: "0.6" }}>REC Copy</span>
+            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center">
+              <div className="w-100 row " style={{ marginTop: "-6px" }}>
+                <div className="col-md-4 d-flex align-items-center justify-content-start border">
+                  <p className="my-2 fw-semibold">
+                    Date:
+                    <span className="fw-400 mx-2">
+                      {day + "/" + month + "/" + year}
+                    </span>
+                  </p>
+                </div>
+                <div className="col-md-4 d-flex align-items-center justify-content-center border">
+                  <span style={{ opacity: "0.6" }}>REC Copy</span>
+                </div>
+                <div className="col-md-4 d-flex align-items-center justify-content-end border">
+                  <span className="fw-500">Receipt #{receiptNumber}</span>
+                </div>
+              </div>
+
               <img
                 src={logo}
                 alt="logo rec"
-                style={{ height: "45px", width: "40px" }}
+                style={{ height: "85px", width: "70px" }}
               />
-              <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                <p className="my-2">
-                  Date:
-                  <span className="fw-400 mx-2">
-                    {day + "/" + month + "/" + year}
-                  </span>
-                </p>
-                <p>Receipt# {receiptNumber}</p>
-              </div>
+
               <div className="w-100">
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
                   <h6>
@@ -66,34 +74,49 @@ const Invoice = () => {
                   </span>
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">From Mr. / Mrs. </h6>
+                  <h6 className="">From Mr. / Mrs. </h6>
                   <h5
-                    className="mx-2 text-success"
+                    className="mx-2 text-secondary"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.FullName}
                   </h5>{" "}
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">House No. </h6>
+                  <h6 className="">House No. </h6>
                   <h5
-                    className="mx-2 text-primary mt-2"
+                    className="mx-2 text-primary"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.HouseNumber}
                   </h5>{" "}
                 </div>
                 <div className="d-flex w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">Cash / Cheque No. </h6>
-                  <span
-                    className="mx-2"
-                    style={{ textDecoration: "underline" }}
-                  >
+                  <h6 className="">Cash / Cheque No. </h6>
+                  <span className="" style={{ textDecoration: "underline" }}>
                     _______________
                   </span>{" "}
                 </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
-                  <h6 className="my-2">Amount</h6>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="">REC Amount</h6>
+                  <h5
+                    className="mx-2 text-info"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount / 2}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="">Masjid Amount</h6>
+                  <h5
+                    className="mx-2 text-info"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount / 2}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
+                  <h6 className="">Total Amount</h6>
                   <h5
                     className="mx-2 text-success"
                     style={{ textDecoration: "underline" }}
@@ -113,21 +136,29 @@ const Invoice = () => {
               </div>
             </div>
             <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center py-1">
-              <span style={{ opacity: "0.6" }}>Resident Copy</span>
+              <div className=" w-100 row">
+                <div className="col-md-4 d-flex align-items-center justify-content-start border">
+                  <p className="my-2 fw-semibold">
+                    Date:
+                    <span className="fw-400 mx-2">
+                      {day + "/" + month + "/" + year}
+                    </span>
+                  </p>
+                </div>
+                <div className="col-md-4 d-flex align-items-center justify-content-center border">
+                  <span style={{ opacity: "0.6" }}>Resident Copy</span>
+                </div>
+                <div className="col-md-4 d-flex align-items-center justify-content-end border">
+                  <span className="fw-500">Receipt #{receiptNumber}</span>
+                </div>
+              </div>
+
               <img
                 src={logo}
                 alt="logo rec"
-                style={{ height: "45px", width: "40px" }}
+                style={{ height: "85px", width: "70px" }}
               />
-              <div className="d-flex w-100 align-items-center justify-content-between px-3">
-                <p className="my-2">
-                  Date:
-                  <span className="fw-400 mx-2">
-                    {day + "/" + month + "/" + year}
-                  </span>
-                </p>
-                <p>Receipt #{receiptNumber}</p>
-              </div>
+
               <div className="w-100">
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
                   <h6>
@@ -138,25 +169,25 @@ const Invoice = () => {
                   </span>
                 </div>
                 <div className="d-flex w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">From Mr. / Mrs. </h6>
+                  <h6 className="">From Mr. / Mrs. </h6>
                   <h5
-                    className="mx-2 text-success"
+                    className="mx-2 text-secondary"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.FullName}
                   </h5>
                 </div>
                 <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">House No. </h6>
+                  <h6 className="">House No. </h6>
                   <h5
-                    className="mx-2 text-primary mt-2"
+                    className="mx-2 text-primary"
                     style={{ textDecoration: "underline" }}
                   >
                     {resident.HouseNumber}
                   </h5>
                 </div>
                 <div className="d-flex w-100 align-items-center justify-content-between px-3 ">
-                  <h6 className="my-2">Cash / Cheque No. </h6>
+                  <h6 className="">Cash / Cheque No. </h6>
                   <span
                     className="mx-2"
                     style={{ textDecoration: "underline" }}
@@ -164,8 +195,26 @@ const Invoice = () => {
                     _______________
                   </span>{" "}
                 </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-2">
-                  <h6 className="my-2">Amount</h6>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
+                  <h6 className="my-2">REC Amount</h6>
+                  <h5
+                    className="mx-2 text-info"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount / 2}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
+                  <h6 className="my-2">Masjid Amount</h6>
+                  <h5
+                    className="mx-2 text-info"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    Rs. {amount / 2}
+                  </h5>{" "}
+                </div>
+                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
+                  <h6 className="my-2">Total Amount</h6>
                   <h5
                     className="mx-2 text-success"
                     style={{ textDecoration: "underline" }}
@@ -191,14 +240,16 @@ const Invoice = () => {
           </div>
         </div>
       </div>
-      <ReactToPrint
-        trigger={() => (
-          <button className="mt-3 btn btn-outline-secondary text-center my-3">
-            Print / Download
-          </button>
-        )}
-        content={() => componentRef.current}
-      />
+      <div className="row vw-100 text-center d-flex align-items-center justify-content-center">
+        <ReactToPrint
+          trigger={() => (
+            <button className="mt-3 btn btn-secondary text-center my-3 w-25">
+              Print / Download
+            </button>
+          )}
+          content={() => componentRef.current}
+        />
+      </div>
     </>
   );
 };
