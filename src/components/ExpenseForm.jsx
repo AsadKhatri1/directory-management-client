@@ -11,6 +11,7 @@ const ExpenseForm = () => {
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
   const [Title, setTitle] = useState("");
+  const [Type, setType] = useState("");
   const [show, setShow] = useState(false);
   const [showF, setShowF] = useState(false);
   const [Amount, setAmount] = useState("");
@@ -80,6 +81,7 @@ const ExpenseForm = () => {
         {
           Title,
           Amount,
+          Type,
         }
       );
       if (res.data.success) {
@@ -88,6 +90,7 @@ const ExpenseForm = () => {
         setTitle("");
         setAmount("");
         setAccount("");
+        setType("");
         if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
@@ -238,7 +241,7 @@ const ExpenseForm = () => {
               />
             ) : (
               <button
-                className="btn btn-success rounded"
+                className="btn btn-danger rounded"
                 onClick={() => {
                   setShow(!show), setShowF(false);
                 }}
@@ -298,10 +301,83 @@ const ExpenseForm = () => {
                 }}
               />{" "}
               <br />
+              {/* type */}
+              <div className="w-75 mx-auto">
+                <select
+                  onChange={(e) => setType(e.target.value)}
+                  className="form-select my-3 w-100 py-2"
+                  style={{
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  }}
+                >
+                  <option>Select Type</option>
+                  <option value="Wages And Salaries Mosque">
+                    Wages And Salaries Mosque
+                  </option>
+                  <option value="Utilities Mosque">Utilities Mosque</option>
+                  <option value="Mosque Jamia Expense">
+                    Mosque Jamia Expense
+                  </option>
+                  <option value="Mosque Jamia Repair & Maintenance">
+                    Mosque Jamia Repair & Maintenance
+                  </option>
+                  <option value="Mosque Tayyaba Expense">
+                    Mosque Tayyaba Expense
+                  </option>
+                  <option value="Mosque Tayyaba Repair & Maintenance">
+                    Mosque Tayyaba Repair & Maintenance
+                  </option>
+                  <option value="Mosque Withholding Tax">
+                    Mosque Withholding Tax
+                  </option>
+                  <option value="Solar Expense Account">
+                    Solar Expense Account
+                  </option>
+                  <option value="Ramzan Sehro Ifftar Expense 2023">
+                    Ramzan Sehro Ifftar Expense 2023
+                  </option>
+                  <option value="Wages and Salaries WARD">
+                    Wages and Salaries WARD
+                  </option>
+                  <option value="Wages And Salary (Yoga)">
+                    Wages And Salary (Yoga)
+                  </option>
+                  <option value="Utility WARD">Utility WARD</option>
+                  <option value="WARD General Expenses">
+                    WARD General Expenses
+                  </option>
+                  <option value="WARD Printing & Stationery">
+                    WARD Printing & Stationery
+                  </option>
+                  <option value="WARD Repairs and Maintenance">
+                    WARD Repairs and Maintenance
+                  </option>
+                  <option value="WARD Withholding Tax">
+                    WARD Withholding Tax
+                  </option>
+                  <option
+                    value="WARD XERO Monthly Subscription
+"
+                  >
+                    WARD XERO Monthly Subscription
+                  </option>
+                  <option value="Qurbani Expense">Qurbani Expense</option>
+                  <option value="Z Refund Contribution">
+                    Z Refund Contribution
+                  </option>
+                  <option value="Secuirity Deposit">Secuirity Deposit</option>
+                  <option value="Audit Fee">Audit Fee</option>
+                </select>
+              </div>
               <div className="w-75 mx-auto">
                 <select
                   onChange={(e) => setAccount(e.target.value)}
-                  className="form-select my-3 w-100 py-2"
+                  className="form-select mt-4 w-100 py-2"
                   style={{
                     backgroundColor: "transparent",
                     color: "black",
@@ -426,7 +502,23 @@ const ExpenseForm = () => {
         ) : (
           ""
         )}
-
+        <div className="container row">
+          {" "}
+          <div className="cards col-md-5 mx-5">
+            <div className="card-inner">
+              <h6 className="fw-bold">REC Account Balance</h6>
+              <IoIosWallet className="card-icon" />
+            </div>
+            <h3>RS. {recBalance}</h3>
+          </div>
+          <div className="cards col-md-5 mx-5">
+            <div className="card-inner">
+              <h6 className="fw-bold">Masjid Account Balance</h6>
+              <IoIosWallet className="card-icon" />
+            </div>
+            <h2>RS. {masjidBalance}</h2>
+          </div>
+        </div>
         {/* Filter Section */}
         <div
           className="my-4 p-3"
@@ -480,7 +572,9 @@ const ExpenseForm = () => {
                   <tr className="text-center">
                     <th scope="col">Date</th>
                     <th scope="col">Title</th>
+                    <th scope="col">Type</th>
                     <th scope="col">Amount</th>
+
                     <th scope="col">Receipt</th>
                   </tr>
                 </thead>
@@ -489,6 +583,7 @@ const ExpenseForm = () => {
                     <tr key={i} className="text-center align-middle">
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e.Title}</td>
+                      <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
                       <td>
                         <button

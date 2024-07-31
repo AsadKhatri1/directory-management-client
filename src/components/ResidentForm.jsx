@@ -1091,6 +1091,7 @@ const ResidentForm = () => {
               </button>
             </div>
           </div>
+
           <div className="col-md-6">
             <div className="text-center my-3">
               <h1 className="my-3 fw-bold ">Enter servant details</h1>
