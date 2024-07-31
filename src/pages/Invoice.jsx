@@ -1,251 +1,136 @@
 import React, { useEffect, useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import logo from "../assets/logo.png";
+import moment from "moment";
+import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
 const Invoice = () => {
   const componentRef = useRef();
+  const now = moment();
 
   // Fetch resident, months, and amount from localStorage
   const resident = JSON.parse(localStorage.getItem("resident"));
-  const months = JSON.parse(localStorage.getItem("months"));
   const amount = JSON.parse(localStorage.getItem("amount"));
-
-  // Get current date
-  const day = new Date().getDate();
-  const month = new Date().getMonth() + 1;
-  const year = new Date().getFullYear();
 
   // State to manage the receipt number
   const [receiptNumber, setReceiptNumber] = useState(() => {
-    // Retrieve the last receipt number from local storage or set it to 0 if not found
     const lastReceiptNumber = localStorage.getItem("receiptNumber");
     return lastReceiptNumber ? parseInt(lastReceiptNumber) + 1 : 1;
   });
 
   useEffect(() => {
-    // Update the receipt number in local storage
     localStorage.setItem("receiptNumber", receiptNumber);
   }, [receiptNumber]);
 
+  const invoiceSection = (copyType) => (
+    <div
+      className="col-12 col-md-6 border p-4"
+      style={{ backgroundColor: "white" }}
+    >
+      <div className="row mb-3">
+        <div className="col-4 d-flex align-items-center">
+          <p className="mb-0">
+            <strong>Date:</strong> {now.format("DD-MM-YYYY")}
+          </p>
+        </div>
+        <div className="col-4 text-center">
+          <p className="mb-0" style={{ opacity: "0.6" }}>
+            {copyType}
+          </p>
+        </div>
+        <div className="col-4 text-end">
+          <p className="mb-0">
+            <strong>Receipt #{receiptNumber}</strong>
+          </p>
+        </div>
+      </div>
+
+      <div className="text-center">
+        <img src={logo} alt="Logo" style={{ height: "95px", width: "80px" }} />
+      </div>
+
+      <div className="row mb-4 text-center">
+        <div className="col-12">
+          <h5>Received with thanks Member Contribution / Others</h5>
+        </div>
+      </div>
+
+      <div className="row mb-2 w-100 text-center">
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>From Mr. / Mrs.:</strong> {resident.FullName}
+          </p>
+        </div>
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>House No.:</strong> {resident.HouseNumber}
+          </p>
+        </div>
+      </div>
+
+      <div className="row mb-2 w-100 text-center">
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>Cash / Cheque No.:</strong> _______________
+          </p>
+        </div>
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>Received By:</strong> _______________
+          </p>
+        </div>
+      </div>
+
+      <div className="row mb-4 w-100 text-center">
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>REC Amount:</strong> Rs. {amount / 2}
+          </p>
+        </div>
+        <div className="col-6">
+          <p className="mb-1">
+            <strong>Masjid Amount:</strong> Rs. {amount / 2}
+          </p>
+        </div>
+      </div>
+
+      <div className="row mb-1 w-100 text-center">
+        <div className="col-12 text-center">
+          <p
+            className="mb-0"
+            style={{ fontSize: "1.25rem", fontWeight: "bold" }}
+          >
+            Total Amount: Rs. {amount}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
-      <div className="main d-flex flex-column align-items-center justify-content-center w-100 vh-100 h-auto p-3 ">
+      <div
+        className="main d-flex flex-column align-items-center justify-content-start w-100"
+        style={{ height: "50vh" }}
+      >
         <div
           ref={componentRef}
-          className="invoice px-4 rounded vw-100 h-100"
+          className="invoice row w-100 h-100"
           style={{
             backgroundColor: "white",
             color: "black",
-            boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0p",
+            boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+            width: "100%",
           }}
         >
-          <div className="row h-50">
-            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center">
-              <div className="w-100 row " style={{ marginTop: "-6px" }}>
-                <div className="col-md-4 d-flex align-items-center justify-content-start border">
-                  <p className="my-2 fw-semibold">
-                    Date:
-                    <span className="fw-400 mx-2">
-                      {day + "/" + month + "/" + year}
-                    </span>
-                  </p>
-                </div>
-                <div className="col-md-4 d-flex align-items-center justify-content-center border">
-                  <span style={{ opacity: "0.6" }}>REC Copy</span>
-                </div>
-                <div className="col-md-4 d-flex align-items-center justify-content-end border">
-                  <span className="fw-500">Receipt #{receiptNumber}</span>
-                </div>
-              </div>
-
-              <img
-                src={logo}
-                alt="logo rec"
-                style={{ height: "85px", width: "70px" }}
-              />
-
-              <div className="w-100">
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6>
-                    Received with thanks Member <br /> Contribution / Others{" "}
-                  </h6>
-                  <span className="" style={{ textDecoration: "underline" }}>
-                    ________________
-                  </span>
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">From Mr. / Mrs. </h6>
-                  <h5
-                    className="mx-2 text-secondary"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    {resident.FullName}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">House No. </h6>
-                  <h5
-                    className="mx-2 text-primary"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    {resident.HouseNumber}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">Cash / Cheque No. </h6>
-                  <span className="" style={{ textDecoration: "underline" }}>
-                    _______________
-                  </span>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">REC Amount</h6>
-                  <h5
-                    className="mx-2 text-info"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount / 2}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">Masjid Amount</h6>
-                  <h5
-                    className="mx-2 text-info"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount / 2}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">Total Amount</h6>
-                  <h5
-                    className="mx-2 text-success"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">Received By</h6>
-                  <span
-                    className="mx-2"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    ______________
-                  </span>{" "}
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 border d-flex flex-column align-items-center justify-content-center py-1">
-              <div className=" w-100 row">
-                <div className="col-md-4 d-flex align-items-center justify-content-start border">
-                  <p className="my-2 fw-semibold">
-                    Date:
-                    <span className="fw-400 mx-2">
-                      {day + "/" + month + "/" + year}
-                    </span>
-                  </p>
-                </div>
-                <div className="col-md-4 d-flex align-items-center justify-content-center border">
-                  <span style={{ opacity: "0.6" }}>Resident Copy</span>
-                </div>
-                <div className="col-md-4 d-flex align-items-center justify-content-end border">
-                  <span className="fw-500">Receipt #{receiptNumber}</span>
-                </div>
-              </div>
-
-              <img
-                src={logo}
-                alt="logo rec"
-                style={{ height: "85px", width: "70px" }}
-              />
-
-              <div className="w-100">
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6>
-                    Received with thanks Member <br /> Contribution / Others{" "}
-                  </h6>
-                  <span className="" style={{ textDecoration: "underline" }}>
-                    ________________
-                  </span>
-                </div>
-                <div className="d-flex w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">From Mr. / Mrs. </h6>
-                  <h5
-                    className="mx-2 text-secondary"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    {resident.FullName}
-                  </h5>
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="">House No. </h6>
-                  <h5
-                    className="mx-2 text-primary"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    {resident.HouseNumber}
-                  </h5>
-                </div>
-                <div className="d-flex w-100 align-items-center justify-content-between px-3 ">
-                  <h6 className="">Cash / Cheque No. </h6>
-                  <span
-                    className="mx-2"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    _______________
-                  </span>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
-                  <h6 className="my-2">REC Amount</h6>
-                  <h5
-                    className="mx-2 text-info"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount / 2}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
-                  <h6 className="my-2">Masjid Amount</h6>
-                  <h5
-                    className="mx-2 text-info"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount / 2}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3 mt-">
-                  <h6 className="my-2">Total Amount</h6>
-                  <h5
-                    className="mx-2 text-success"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    Rs. {amount}
-                  </h5>{" "}
-                </div>
-                <div className="d-flex  w-100 align-items-center justify-content-between px-3">
-                  <h6 className="my-2">Received By</h6>
-                  <span
-                    className="mx-2"
-                    style={{ textDecoration: "underline" }}
-                  >
-                    ______________
-                  </span>{" "}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="row h-50">
-            <div className="col-md-6 "></div>
-            <div className="col-md-6 "></div>
-          </div>
+          {invoiceSection("Office Copy")}
+          {invoiceSection("Resident Copy")}
         </div>
       </div>
-      <div className="row vw-100 text-center d-flex align-items-center justify-content-center">
+      <div className="text-center mt-5 ">
         <ReactToPrint
           trigger={() => (
-            <button className="mt-3 btn btn-secondary text-center my-3 w-25">
-              Print / Download
-            </button>
+            <button className="btn btn-secondary">Print / Download</button>
           )}
           content={() => componentRef.current}
         />
