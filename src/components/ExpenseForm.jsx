@@ -621,7 +621,7 @@ const ExpenseForm = () => {
               </table>
             </div>
 
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center my-3">
               <button
                 className="btn btn-secondary mx-2"
                 onClick={() => paginateExpenses(currentPageExpense - 1)}
