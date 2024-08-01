@@ -432,7 +432,27 @@ const ExpenseForm = () => {
                 </select>
               </div>
               <br />
-              <input
+              <label
+                className="w-75 mb-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {File ? File.name : "Upload Document"}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              {/* <input
                 type="file"
                 onChange={(e) => setFile(e.target.files[0])}
                 className="form-control w-75 mx-auto my-3"
@@ -443,7 +463,7 @@ const ExpenseForm = () => {
                   textIndent: "12px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />
+              /> */}
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
@@ -654,7 +674,7 @@ const ExpenseForm = () => {
                     <th scope="col">Title</th>
                     <th scope="col">Type</th>
                     <th scope="col">Amount</th>
-
+                    <th scope="col">Doc</th>
                     <th scope="col">Receipt</th>
                   </tr>
                 </thead>
@@ -665,6 +685,17 @@ const ExpenseForm = () => {
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
+                      <td>
+                        {e.fileUrl ? (
+                          <img
+                            src={e?.fileUrl}
+                            alt="Image doc"
+                            style={{ width: "75%", height: "75%" }}
+                          />
+                        ) : (
+                          "No Document"
+                        )}
+                      </td>
                       <td>
                         <button
                           className="btn btn-outline-info"
