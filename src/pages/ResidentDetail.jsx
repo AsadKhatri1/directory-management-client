@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import moment from "moment";
 import axios from "axios";
-
+import { Modal, Button } from "react-bootstrap";
 const ResidentDetail = () => {
   // redirect on refresh
   const [paid, setPaid] = useState(false);
@@ -26,6 +26,29 @@ const ResidentDetail = () => {
   const [feeAmount, setFeeAmount] = useState("");
   const [Ownership, setOwnership] = useState("");
   const navigate = useNavigate();
+
+  // modal work
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+  const handleImageClick = (url) => {
+    setSelectedImageUrl(url);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedImageUrl("");
+  };
+
+  const renderImage = (url) => (
+    <img
+      src={url}
+      alt="Document"
+      style={{ width: "50px", height: "50px", cursor: "pointer" }}
+      onClick={() => handleImageClick(url)}
+    />
+  );
 
   // fetching single resident
 
@@ -250,13 +273,7 @@ const ResidentDetail = () => {
                               className="text-center align-middle"
                             >
                               <td>
-                                {r.photoUrl ? (
-                                  <img
-                                    src={r.photoUrl}
-                                    alt="Member photo"
-                                    style={{ width: "50px", height: "50px" }}
-                                  />
-                                ) : null}
+                                {r.photoUrl ? renderImage(r.photoUrl) : null}
                               </td>
                               <td>{r.name}</td>
                               <td>{r.relation}</td>
@@ -316,13 +333,7 @@ const ResidentDetail = () => {
                               <td>{r.address}</td>
                               <td>{r.guardian}</td>
                               <td>
-                                {r.cnicUrl ? (
-                                  <img
-                                    src={r.cnicUrl}
-                                    alt="Document"
-                                    style={{ width: "50px", height: "50px" }}
-                                  />
-                                ) : null}
+                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
                               </td>
                             </tr>
                           ))}
@@ -369,13 +380,9 @@ const ResidentDetail = () => {
                             <td>{r.registrationNumber}</td>
                             <td>{r.stickerNumber}</td>
                             <td>
-                              {r.paperDocument ? (
-                                <img
-                                  src={r.paperDocument}
-                                  alt="Document"
-                                  style={{ width: "50px", height: "50px" }}
-                                />
-                              ) : null}
+                              {r.paperDocument
+                                ? renderImage(r.paperDocument)
+                                : null}
                             </td>
                           </tr>
                         ))}
@@ -418,13 +425,7 @@ const ResidentDetail = () => {
                               className="text-center align-middle"
                             >
                               <td>
-                                {r.photoUrl ? (
-                                  <img
-                                    src={r.photoUrl}
-                                    alt="Tanent photo"
-                                    style={{ width: "50px", height: "50px" }}
-                                  />
-                                ) : null}
+                                {r.photoUrl ? renderImage(r.photoUrl) : null}
                               </td>
                               <td>{r.name}</td>
                               <td>{r.nocNo}</td>
@@ -453,6 +454,25 @@ const ResidentDetail = () => {
                   <h3 className="text-light">No Tanents To Show</h3>
                 </div>
               ) : null}
+
+              {/* Modal */}
+              <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <img
+                    src={selectedImageUrl}
+                    alt="Document"
+                    style={{ width: "100%" }}
+                  />
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleCloseModal}>
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
 
               <div className="mt-2 mb-5">
                 <img

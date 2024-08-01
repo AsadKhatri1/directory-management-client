@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ImCross } from "react-icons/im";
+import { Modal, Button } from "react-bootstrap";
 import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +30,19 @@ const ExpenseForm = () => {
   const [selectedEndMonth, setSelectedEndMonth] = useState(
     moment().endOf("month").month()
   );
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+
+  const handleImageClick = (url) => {
+    setSelectedImageUrl(url);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedImageUrl("");
+  };
   const [selectedYear, setSelectedYear] = useState(moment().year());
   // Filtered expenses and incomes based on selected month range and year
   const filteredExpenseList = expenseList.filter((e) => {
@@ -685,7 +699,7 @@ const ExpenseForm = () => {
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
-                      <td>
+                      <td onClick={() => handleImageClick(e?.fileUrl)}>
                         {e.fileUrl ? (
                           <img
                             src={e?.fileUrl}
@@ -707,6 +721,24 @@ const ExpenseForm = () => {
                     </tr>
                   ))}
                 </tbody>
+                {/* Modal */}
+                <Modal show={showModal} onHide={handleCloseModal}>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Expense Document</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <img
+                      src={selectedImageUrl}
+                      alt="Document"
+                      style={{ width: "75%" }}
+                    />
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
               </table>
             </div>
 
