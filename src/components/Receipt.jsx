@@ -6,10 +6,14 @@ import { toast } from "react-toastify";
 import logo from "../assets/logo.png";
 import Expense from "../pages/Expense";
 import moment from "moment";
+
 const Receipt = () => {
   const componentRef = useRef();
   const [expense, setExpense] = useState([]);
   const { id } = useParams();
+  const [receiptId, setReceiptId] = useState(null);
+  const incrementedRef = useRef(false);
+
   const getExpense = async () => {
     const res = await axios.get(
       `https://directory-management-g8gf.onrender.com/api/v1/expense/getExpense/${id}`
@@ -17,11 +21,27 @@ const Receipt = () => {
     if (res.data.success) {
       setExpense(res.data.expense);
     } else {
-      toast.error("Error in retreiving expense");
+      toast.error("Error in retrieving expense");
     }
   };
+
+  const getReceiptId = () => {
+    let currentId = localStorage.getItem("receiptId");
+    if (!currentId) {
+      currentId = 1;
+    } else {
+      currentId = parseInt(currentId, 10) + 1;
+    }
+    localStorage.setItem("receiptId", currentId);
+    setReceiptId(currentId);
+  };
+
   useEffect(() => {
-    getExpense();
+    if (!incrementedRef.current) {
+      getExpense();
+      getReceiptId();
+      incrementedRef.current = true;
+    }
   }, []);
 
   return (
@@ -42,9 +62,8 @@ const Receipt = () => {
         </div>
         <div className="text-center my-2">
           <h2 className="fw-bold text-dark">RECEIPT</h2>
-          <h6 className="fw-bold text-secondary">ID - 00001</h6>
+          <h6 className="fw-bold text-secondary">ID - {receiptId}</h6>
         </div>
-        {/* <hr /> */}
         <div className="my-4 mx-3 d-flex align-items-start justify-content-center w-100">
           <div className="left w-50 px-5 d-flex align-items-start justify-content-center">
             <h3 className="text-dark fw-bold">Title</h3>

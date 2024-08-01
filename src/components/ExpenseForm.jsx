@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Audio } from "react-loader-spinner";
 
 const ExpenseForm = () => {
+  const [File, setFile] = useState(null);
   const navigate = useNavigate();
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
@@ -23,7 +24,7 @@ const ExpenseForm = () => {
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
   const [selectedStartMonth, setSelectedStartMonth] = useState(
-    moment().startOf("month").month()
+    moment().startOf("month").month() - 1
   );
   const [selectedEndMonth, setSelectedEndMonth] = useState(
     moment().endOf("month").month()
@@ -98,21 +99,37 @@ const ExpenseForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
+      let fileUrl = "";
+
+      if (File) {
+        const formData = new FormData();
+        formData.append("file", File);
+        formData.append("upload_preset", "images_preset"); // replace with your upload preset
+        const cloudinaryRes = await axios.post(
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
+          formData
+        );
+        fileUrl = await cloudinaryRes.data.secure_url;
+        console.log(fileUrl);
+      }
+
       const res = await axios.post(
         "https://directory-management-g8gf.onrender.com/api/v1/expense/addExpense",
         {
           Title,
           Amount,
           Type,
+          fileUrl,
         }
       );
+
       if (res.data.success) {
-        console.log(Account);
         toast.success(res.data.message);
         setTitle("");
         setAmount("");
         setAccount("");
         setType("");
+        setFile(null);
         if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
@@ -415,6 +432,18 @@ const ExpenseForm = () => {
                 </select>
               </div>
               <br />
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                className="form-control w-75 mx-auto my-3"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
