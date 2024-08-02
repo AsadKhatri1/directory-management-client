@@ -263,6 +263,7 @@ const ResidentDetail = () => {
                             <th scope="col">MOBILE NUMBER</th>
                             <th scope="col">DOB</th>
                             <th scope="col">OCCUPATION</th>
+                            <th scope="col">CNIC Number</th>
                             <th scope="col">CNIC</th>
                           </tr>
                         </thead>
@@ -283,6 +284,9 @@ const ResidentDetail = () => {
                               </td>
                               <td>{r.occupation}</td>
                               <td>{r.cnic}</td>
+                              <td>
+                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -316,6 +320,7 @@ const ResidentDetail = () => {
                             <th scope="col">ADDRESS</th>
                             <th scope="col">GUARDIAN'S NAME</th>
                             <th scope="col">CNIC</th>
+                            <th scope="col">CANT PASS</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -334,6 +339,11 @@ const ResidentDetail = () => {
                               <td>{r.guardian}</td>
                               <td>
                                 {r.cnicUrl ? renderImage(r.cnicUrl) : null}
+                              </td>
+                              <td>
+                                {r.cantPassUrl
+                                  ? renderImage(r.cantPassUrl)
+                                  : null}
                               </td>
                             </tr>
                           ))}
@@ -415,7 +425,9 @@ const ResidentDetail = () => {
                             <th scope="col">MOBILE NUMBER</th>
                             <th scope="col">DOB</th>
                             <th scope="col">OCCUPATION</th>
-                            <th scope="col">CNIC</th>
+                            <th scope="col">CNIC NUMBER</th>
+                            <th scope="col">CNIC </th>
+                            <th scope="col">NOC </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -439,6 +451,10 @@ const ResidentDetail = () => {
                               </td>
                               <td>{r.occupation}</td>
                               <td>{r.cnic}</td>
+                              <td>
+                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
+                              </td>{" "}
+                              <td>{r.nocUrl ? renderImage(r.nocUrl) : null}</td>
                             </tr>
                           ))}
                         </tbody>
@@ -468,7 +484,7 @@ const ResidentDetail = () => {
                   />
                 </Modal.Body>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleCloseModal}>
+                  <Button variant="danger" onClick={handleCloseModal}>
                     Close
                   </Button>
                 </Modal.Footer>

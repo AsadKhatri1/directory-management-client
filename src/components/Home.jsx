@@ -136,8 +136,7 @@ const Home = () => {
             <h6 className="fw-bold">REC Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3>
-            {" "}
+          <h3 className="my-2 card-number">
             {!recBalance ? (
               <Audio
                 height="50"
@@ -159,7 +158,7 @@ const Home = () => {
             <h6 className="fw-bold">Masjid Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h2>
+          <h3 className="my-2 card-number">
             {!masjidBalance ? (
               <Audio
                 height="50"
@@ -173,14 +172,14 @@ const Home = () => {
             ) : (
               `Rs. ${masjidBalance}`
             )}
-          </h2>
+          </h3>
         </div>
         <div className="cards">
           <div className="card-inner">
             <h6 className="fw-bold">Admins</h6>
             <RiAdminFill className="card-icon" />
           </div>
-          <h1>
+          <h3 className="my-2 card-number">
             {admins.length < 1 ? (
               <Audio
                 height="50"
@@ -194,7 +193,7 @@ const Home = () => {
             ) : (
               admins.length
             )}
-          </h1>
+          </h3>
         </div>
       </div>
 

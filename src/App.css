@@ -238,4 +238,7 @@ body {
   .invoice {
     width: auto;
   }
+  .card-number {
+    font-size: 16px;
+  }
 }
