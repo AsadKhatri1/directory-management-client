@@ -253,7 +253,11 @@ const ResidentTable = () => {
                       <td>
                         <button
                           className="btn btn-outline-danger m-1"
-                          onClick={() => handleDelete(r._id)}
+                          onClick={() => {
+                            if (confirm("Are you sure you want to delete?")) {
+                              handleDelete(r._id);
+                            }
+                          }}
                         >
                           Delete
                         </button>
