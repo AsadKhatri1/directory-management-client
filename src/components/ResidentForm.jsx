@@ -502,9 +502,9 @@ const ResidentForm = () => {
     <main className="main-container text-center mt-5">
       <h1 className="my-3 fw-bold">Add A New Resident</h1>
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
-        <div className="row text-center justify-content-center pt-2 ">
+        {/* new resident starts here */}
+        <div className="row">
           <div className="col-md-6">
-            {/* <div className="mb-5 w-75"> */}
             <label
               className="w-75 my-3 text-white py-2"
               style={{
@@ -697,7 +697,8 @@ const ResidentForm = () => {
                 boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
               }}
             />
-            <br />
+          </div>
+          <div className="col-md-6">
             <input
               value={Phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -862,12 +863,15 @@ const ResidentForm = () => {
               }}
             />
             <br />
-            <div className="mt-3">
-              <hr />
-              <h1 className="my-3 fw-bold ">Enter Family Members</h1>
-
-              {/* Relative Fields */}
-              {relatives.map((relative, index) => (
+          </div>
+        </div>
+        {/* family members starts here */}
+        <div className="row ">
+          <hr />
+          <h1 className="my-3 fw-bold text-center">Enter Family Members</h1>
+          {relatives.map((relative, index) => (
+            <>
+              <div className="col-md-6">
                 <div key={index}>
                   <input
                     value={relative.name}
@@ -999,6 +1003,10 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div>
                   <input
                     value={relative.number}
                     onChange={(e) => handleRelativeChange(index, "number", e)}
@@ -1081,21 +1089,27 @@ const ResidentForm = () => {
                     />
                   </label>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addRelativeField}
-                className="btn btn-outline-primary m-5 mt-2"
-              >
-                <FaPlus /> Members
-              </button>
-            </div>
+              </div>
+            </>
+          ))}
+          <div className="w-100 text-center">
+            <button
+              type="button"
+              onClick={addRelativeField}
+              className="btn btn-outline-primary m-5 mt-2 w-25 "
+            >
+              <FaPlus /> Members
+            </button>
           </div>
+        </div>
 
-          <div className="col-md-6">
-            <div className="text-center my-3">
-              <h1 className="my-3 fw-bold ">Enter servant details</h1>
-              {maids.map((maid, index) => (
+        {/* servant details */}
+        <div className="row">
+          <hr />
+          <h1 className="my-3 fw-bold text-center">Enter servant details</h1>
+          {maids.map((maid, index) => (
+            <>
+              <div className="col-md-6">
                 <div key={index}>
                   <input
                     value={maid.name}
@@ -1169,7 +1183,10 @@ const ResidentForm = () => {
                     }}
                   />
                   <br />
-
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div>
                   <input
                     value={maid.number}
                     onChange={(e) => handleMaidChange(index, "number", e)}
@@ -1251,20 +1268,27 @@ const ResidentForm = () => {
                     />
                   </label>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addMaidField}
-                className="btn btn-outline-primary m-5 mt-2"
-              >
-                <FaPlus /> Servants
-              </button>
-            </div>
-            <div className="text-center mt-3">
-              <hr />
-              <h1 className="my-3 fw-bold">Enter vehicle details</h1>
-              {/* Vehicle Fields */}
-              {vehicles.map((vehicle, index) => (
+              </div>
+            </>
+          ))}
+          <div className="text-center my-3">
+            <button
+              type="button"
+              onClick={addMaidField}
+              className="btn btn-outline-primary w-25 m-5 mt-2"
+            >
+              <FaPlus /> Servants
+            </button>
+          </div>
+        </div>
+
+        {/* vehicle details */}
+        <div className="row text-center">
+          <hr />
+          <h1 className="my-3 fw-bold">Enter vehicle details</h1>
+          {vehicles.map((vehicle, index) => (
+            <>
+              <div className="col-md-6">
                 <div key={index}>
                   {/* selection */}
 
@@ -1333,6 +1357,10 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div>
                   <input
                     value={vehicle.year}
                     onChange={(e) => handleVehicleChange(index, e)}
@@ -1406,20 +1434,27 @@ const ResidentForm = () => {
                     />
                   </label>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addVehicleField}
-                className="btn btn-outline-primary m-5 mt-2"
-              >
-                <FaPlus /> Vehicles
-              </button>
-              <hr />
-            </div>
-            <div className="mt-3">
-              <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
+              </div>
+            </>
+          ))}
+          <div className="text-center mt-3">
+            <button
+              type="button"
+              onClick={addVehicleField}
+              className="btn btn-outline-primary w-25 m-5 mt-2"
+            >
+              <FaPlus /> Vehicles
+            </button>
+          </div>
+        </div>
 
-              {tanents.map((tanent, index) => (
+        {/* tanent details */}
+        <div className="row text-center">
+          <hr />
+          <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
+          {tanents.map((tanent, index) => (
+            <>
+              <div className="col-md-6">
                 <div key={index}>
                   <input
                     value={tanent.name}
@@ -1504,7 +1539,11 @@ const ResidentForm = () => {
                       boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}
                   />
-                  <br />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <br />
+                <div>
                   <label htmlFor="nocIssue">Date Of NOC Issuance</label>
                   <br />
                   <input
@@ -1605,18 +1644,21 @@ const ResidentForm = () => {
                     />
                   </label>
                 </div>
-              ))}
-              <button
-                type="button"
-                onClick={addTanentField}
-                className="btn btn-outline-primary m-5 mt-2"
-              >
-                <FaPlus /> Tanents
-              </button>
-              <hr />
-            </div>
+              </div>
+            </>
+          ))}
+          <div>
+            <button
+              type="button"
+              onClick={addTanentField}
+              className="btn btn-outline-primary w-25 m-5 mt-2"
+            >
+              <FaPlus /> Tanents
+            </button>
           </div>
+        </div>
 
+        <div className="row text-center justify-content-center pt-2 ">
           {loader ? (
             <div className="text-center d-flex align-items-center my-3 justify-content-center">
               <Audio
