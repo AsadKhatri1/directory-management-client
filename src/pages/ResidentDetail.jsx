@@ -500,9 +500,18 @@ const ResidentDetail = () => {
                     width: "200px",
                   }}
                 />
-                <h1>{resident?.FullName}</h1>
-                <div className="row border my-3 py-3">
-                  <div className="col-md-6  ">
+                <h1 className="my-3">{resident?.FullName}</h1>
+
+                <div
+                  className="row my-3 py-3 mx-3"
+                  style={{
+                    backgroundColor: "#263043",
+                    borderRadius: "12px",
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+                  }}
+                >
+                  <div className="col-md-6">
                     <h5>EMAIL : {resident?.Email}</h5>
                     <h5>Phone # {resident?.Phone}</h5>
                     <h5>House # {resident?.HouseNumber}</h5>
