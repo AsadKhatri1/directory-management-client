@@ -589,18 +589,24 @@ const ExpenseForm = () => {
         )}
 
         <div className="main-finance-cards">
-          <div className="cards">
+          <div
+            className="cards"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+            }}
+          >
             <div className="card-inner">
-              <h6 className="fw-bold">REC Account Balance</h6>
+              <h6 className="opacity-50">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h3>
+            <h3 style={{ color: "#03bb50" }}>
               {!recBalance ? (
                 <Audio
                   height="50"
                   width="50"
                   radius="9"
-                  color="white"
+                  color="#03bb50"
                   ariaLabel="loading"
                   wrapperStyle
                   wrapperClass
@@ -611,18 +617,24 @@ const ExpenseForm = () => {
             </h3>
           </div>
 
-          <div className="cards">
+          <div
+            className="cards"
+            style={{
+              boxShadow:
+                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+            }}
+          >
             <div className="card-inner">
-              <h6 className="fw-bold">Masjid Account Balance</h6>
+              <h6 className="opacity-50">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h2>
+            <h2 style={{ color: "#03bb50" }}>
               {!masjidBalance ? (
                 <Audio
                   height="50"
                   width="50"
                   radius="9"
-                  color="white"
+                  color="#03bb50"
                   ariaLabel="loading"
                   wrapperStyle
                   wrapperClass
@@ -636,7 +648,13 @@ const ExpenseForm = () => {
         {/* Filter Section */}
         <div
           className="my-4 p-3"
-          style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+          style={{
+            backgroundColor: "#263043",
+            borderRadius: "12px",
+
+            boxShadow:
+              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+          }}
         >
           <h3 className="my-3">Filter By Range</h3>
           <div className="row">
@@ -680,7 +698,7 @@ const ExpenseForm = () => {
           <div className="col-md-6">
             <h4>Expense List</h4>
 
-            <div className="table-responsive">
+            <div className="table-responsive rounded">
               <table className="table table-dark table-bordered table-hover">
                 <thead className="bg-light border">
                   <tr className="text-center">
@@ -765,7 +783,7 @@ const ExpenseForm = () => {
 
           <div className="col-md-6">
             <h4>Income List</h4>
-            <div className="table-responsive">
+            <div className="table-responsive rounded">
               <table className="table table-dark table-bordered table-hover inTable">
                 <thead className="bg-light border">
                   <tr className="text-center">

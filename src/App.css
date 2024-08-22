@@ -122,9 +122,10 @@ body {
   background-color: rgba(255, 255, 255, 0.2);
   cursor: pointer;
 }
-.sidebar-item:active {
+.sidebar-item.active {
   background-color: rgba(255, 255, 255, 0.2) !important;
-  /* cursor: pointer; */
+  /* box-shadow: 0px 4px 8px #03c303; */
+  box-shadow: 0px 4px 8px #03bb50;
 }
 .sidebar-item > a {
   text-decoration: none;
@@ -176,20 +177,25 @@ body {
 }
 
 .cards:first-child {
-  background-color: #03bb50;
+  /* background-color: #03bb50; */
+  background-color: #263043;
 }
 
 .cards:nth-child(2) {
-  background-color: #007932;
+  background-color: #263043;
+  /* background-color: #007932; */
 }
 .masjid-card {
-  background-color: #03bb50;
+  background-color: #263043;
+  /* background-color: #03bb50; */
 }
 .cards:nth-child(3) {
-  background-color: #e2d0a9;
+  /* background-color: #efc18f; */
+  background-color: #263043;
 }
 .rec-card {
-  background-color: #007932;
+  background-color: #263043;
+  /* background-color: #007932; */
 }
 .card-inner {
   display: flex;

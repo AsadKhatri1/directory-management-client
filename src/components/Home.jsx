@@ -131,18 +131,24 @@ const Home = () => {
       </div>
 
       <div className="main-cards">
-        <div className="cards">
+        <div
+          className="cards"
+          style={{
+            boxShadow:
+              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+          }}
+        >
           <div className="card-inner">
-            <h6 className="fw-bold">REC Account Balance</h6>
+            <h6 className="opacity-50">REC Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3 className="my-2 card-number">
+          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
             {!recBalance ? (
               <Audio
                 height="50"
                 width="50"
                 radius="9"
-                color="white"
+                color="#03bb50"
                 ariaLabel="loading"
                 wrapperStyle
                 wrapperClass
@@ -153,18 +159,24 @@ const Home = () => {
           </h3>
         </div>
 
-        <div className="cards">
+        <div
+          className="cards"
+          style={{
+            boxShadow:
+              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+          }}
+        >
           <div className="card-inner">
-            <h6 className="fw-bold">Masjid Account Balance</h6>
+            <h6 className="opacity-50">Masjid Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3 className="my-2 card-number">
+          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
             {!masjidBalance ? (
               <Audio
                 height="50"
                 width="50"
                 radius="9"
-                color="white"
+                color="#03bb50"
                 ariaLabel="loading"
                 wrapperStyle
                 wrapperClass
@@ -174,18 +186,24 @@ const Home = () => {
             )}
           </h3>
         </div>
-        <div className="cards">
+        <div
+          className="cards"
+          style={{
+            boxShadow:
+              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+          }}
+        >
           <div className="card-inner">
-            <h6 className="fw-bold">Admins</h6>
+            <h6 className=" opacity-50">Admins</h6>
             <RiAdminFill className="card-icon" />
           </div>
-          <h3 className="my-2 card-number">
+          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
             {admins.length < 1 ? (
               <Audio
                 height="50"
                 width="50"
                 radius="9"
-                color="white"
+                color="#03bb50"
                 ariaLabel="loading"
                 wrapperStyle
                 wrapperClass
@@ -210,19 +228,19 @@ const Home = () => {
               bottom: 5,
             }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
+            {/* <CartesianGrid strokeDasharray="3 3" /> */}
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
             <Legend />
             <Bar
               dataKey="pv"
-              fill="#8884d8"
-              activeBar={<Rectangle fill="pink" stroke="blue" />}
+              fill="#03bb50"
+              activeBar={<Rectangle fill="#03c303" stroke="blue" />}
             />
             <Bar
               dataKey="uv"
-              fill="#82ca9d"
+              fill="#efc18f"
               activeBar={<Rectangle fill="gold" stroke="purple" />}
             />
           </BarChart>

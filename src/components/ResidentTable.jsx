@@ -119,12 +119,13 @@ const ResidentTable = () => {
       <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
 
       <div
-        className="mt-5 py-3"
+        className="my-5 py-3"
         style={{
           backgroundColor: "#263043",
           borderRadius: "12px",
+
           boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+            "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
         }}
       >
         <h3 className="mb-3">FILTERS</h3>
@@ -149,8 +150,8 @@ const ResidentTable = () => {
           Tanents
         </label>
       </div>
-      <div className="main-table w-100 table-responsive mt-2">
-        <table className="table table-dark table-bordered table-hover">
+      <div className="main-table w-100 table-responsive mt-2 rounded">
+        <table className="table table-dark table-bordered table-hover rounded">
           <thead className="bg-light">
             <tr className="text-center">
               <th scope="col">Full Name</th>
