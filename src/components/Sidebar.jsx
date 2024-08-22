@@ -48,7 +48,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           }`}
         >
           <Link to="/dashboard">
-            <MdDashboard className="mx-2" />
+            <MdDashboard className="mx-2 pb-1" />
             Dashboard
           </Link>
         </li>
@@ -96,7 +96,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           </Link>
         </li>
 
-        <li className="sidebar-item bg-danger text-white" onClick={logout}>
+        <li className="sidebar-item bg-danger text-white mt-3" onClick={logout}>
           <TbLogout2 className="mx-2 pb-1" />
           Logout
         </li>
