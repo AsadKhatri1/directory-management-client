@@ -2,10 +2,6 @@
 body::-webkit-scrollbar {
   display: none;
 }
-html::-webkit-scrollbar {
-  display: none;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -81,6 +77,9 @@ body {
   -webkit-transition: all 0.5s;
 }
 
+#sidebar::-webkit-scrollbar {
+  display: none;
+}
 .sidebar-title {
   display: flex;
   align-items: center;
@@ -150,6 +149,10 @@ body {
   padding: 20px;
   color: rgba(255, 255, 255, 0.95);
 }
+
+.main-container::-webkit-scrollbar {
+  display: none;
+}
 .main-title {
   display: flex;
   justify-content: space-between;
@@ -218,6 +221,9 @@ body {
 }
 
 .inTable::-webkit-scrollbar {
+  display: none;
+}
+.expTable::-webkit-scrollbar {
   display: none;
 }
 /* for responsive design */

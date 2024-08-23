@@ -112,18 +112,20 @@ const ResidentTable = () => {
             type="text"
             className="input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
+            style={{
+              border: "2px solid #009843",
+            }}
           />
         </form>
       </div>
 
-      <h1 className="mx-5 mt-4 mb-2">Resident Table</h1>
+      <h1 className="mx-5 mt-3 ">Resident Table</h1>
 
       <div
-        className="my-5 py-3"
+        className="my-3 py-3"
         style={{
           backgroundColor: "#263043",
           borderRadius: "12px",
-
           boxShadow:
             "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
         }}
@@ -150,9 +152,9 @@ const ResidentTable = () => {
           Tanents
         </label>
       </div>
-      <div className="main-table w-100 table-responsive mt-2 rounded">
+      <div className="main-table w-100 table-responsive mt-2 ">
         <table className="table table-dark table-bordered table-hover rounded">
-          <thead className="bg-light">
+          <thead className="bg-light border">
             <tr className="text-center">
               <th scope="col">Full Name</th>
               {!showTanentsOnly && <th scope="col">Email</th>}
@@ -280,7 +282,12 @@ const ResidentTable = () => {
         <nav>
           <ul className="pagination">
             <li className="page-item">
-              <a className="page-link" href="#" onClick={prevPage}>
+              <a
+                className="page-link"
+                href="#"
+                onClick={prevPage}
+                style={{ color: "rgb(3, 187, 80)" }}
+              >
                 Prev
               </a>
             </li>
@@ -293,15 +300,24 @@ const ResidentTable = () => {
               >
                 <a
                   href="#"
-                  className="page-link"
+                  className="page-link border-none"
                   onClick={() => changeCPage(n)}
+                  style={{
+                    backgroundColor: "rgb(3, 187, 80)",
+                    border: "1px solid #009843",
+                  }}
                 >
                   {n}
                 </a>
               </li>
             ))}
             <li className="page-item">
-              <a className="page-link" href="#" onClick={nextPage}>
+              <a
+                className="page-link"
+                href="#"
+                onClick={nextPage}
+                style={{ color: "rgb(3, 187, 80)" }}
+              >
                 Next
               </a>
             </li>

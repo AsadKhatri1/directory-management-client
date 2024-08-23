@@ -2,7 +2,7 @@ import React from "react";
 import { GoFileDirectoryFill } from "react-icons/go";
 import { MdDashboard } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
-import { FaHouseUser } from "react-icons/fa";
+import { FaHouseUser, FaMoneyBillWave } from "react-icons/fa";
 import { RiAdminFill } from "react-icons/ri";
 import { BsFillHouseAddFill } from "react-icons/bs";
 import { TbLogout2 } from "react-icons/tb";
@@ -24,15 +24,16 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
   return (
     <aside id="sidebar" className={sideBarToggle ? "sidebar-responsive" : ""}>
       <div className="sidebar-title">
-        <div className="sidebar-brand">
+        <div className="sidebar-brand w-100 d-flex align-items-center justify-content-center">
           <Link
             to="/dashboard"
+            className="text-center"
             style={{ textDecoration: "none", color: "#9e9ea4" }}
           >
             <img
               src={logo}
               className="icon-header"
-              style={{ height: "150px", width: "120px" }}
+              style={{ height: "200px", width: "160px" }}
             />{" "}
             Directory Management
           </Link>
@@ -73,7 +74,16 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             <BsFillHouseAddFill className="mx-2 pb-1" /> Add Resident
           </Link>
         </li>
-
+        <li
+          className={`sidebar-item ${
+            location.pathname === "/dashboard/expense" ? "active" : ""
+          }`}
+        >
+          <Link to="/dashboard/expense">
+            <FaMoneyBillWave className="mx-2 pb-1" />
+            Finance
+          </Link>
+        </li>
         <li
           className={`sidebar-item ${
             location.pathname === "/dashboard/addAdmin" ? "active" : ""
@@ -82,17 +92,6 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           <Link to="/dashboard/addAdmin">
             <RiAdminFill className="mx-2 pb-1" />
             Add Admin
-          </Link>
-        </li>
-
-        <li
-          className={`sidebar-item ${
-            location.pathname === "/dashboard/expense" ? "active" : ""
-          }`}
-        >
-          <Link to="/dashboard/expense">
-            <GiExpense className="mx-2 pb-1" />
-            Finance
           </Link>
         </li>
 
