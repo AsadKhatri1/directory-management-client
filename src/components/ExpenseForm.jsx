@@ -656,7 +656,7 @@ const ExpenseForm = () => {
               "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
           }}
         >
-          <h3 className="my-3">Filter By Range</h3>
+          {/* <h3 className="my-3">Filter By Range</h3> */}
           <div className="row">
             <div className="col-md-6">
               {" "}
