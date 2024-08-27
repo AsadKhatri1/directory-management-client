@@ -153,7 +153,7 @@ const ResidentTable = () => {
         </label>
       </div>
       <div className="main-table w-100 table-responsive mt-2 ">
-        <table className="table table-dark table-bordered table-hover rounded">
+        <table className="table table-dark table-hover rounded">
           <thead className="bg-light border">
             <tr className="text-center">
               <th scope="col">Full Name</th>
@@ -222,7 +222,12 @@ const ResidentTable = () => {
                     : [];
                 } else {
                   return (
-                    <tr key={r._id} className="text-center align-middle">
+                    <tr
+                      key={r._id}
+                      className="text-center align-middle"
+                      onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td>{r.FullName}</td>
                       <td>{r.Email}</td>
                       <td>{r.Phone}</td>
@@ -234,9 +239,9 @@ const ResidentTable = () => {
                       <td>
                         <select
                           onChange={(e) => setNumberOfMonths(e.target.value)}
-                          className="form-select my-1"
+                          className="form-select fs-6"
                         >
-                          <option>Select months</option>
+                          <option>Months</option>
                           <option value="1">1 Month</option>
                           <option value="2">2 Months</option>
                           <option value="6">6 Months</option>
@@ -250,12 +255,12 @@ const ResidentTable = () => {
                           }
                           onClick={() => generateFeeSlip(r._id)}
                         >
-                          Generate Fee Slip
+                          Generate
                         </button>
                       </td>
                       <td>
                         <button
-                          className="btn btn-outline-danger m-1"
+                          className="btn btn-outline-danger "
                           onClick={() => {
                             if (confirm("Are you sure you want to delete?")) {
                               handleDelete(r._id);

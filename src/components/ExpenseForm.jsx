@@ -699,7 +699,7 @@ const ExpenseForm = () => {
             <h4>Expense List</h4>
 
             <div className="table-responsive rounded exp-table">
-              <table className="table table-dark table-bordered table-hover ">
+              <table className="table table-dark table-hover ">
                 <thead className="bg-light border">
                   <tr className="text-center">
                     <th scope="col">Date</th>
@@ -784,7 +784,7 @@ const ExpenseForm = () => {
           <div className="col-md-6">
             <h4>Income List</h4>
             <div className="table-responsive rounded inTable">
-              <table className="table table-dark table-bordered table-hover ">
+              <table className="table table-dark table-hover ">
                 <thead className="bg-light border">
                   <tr className="text-center">
                     <th scope="col">Date</th>
