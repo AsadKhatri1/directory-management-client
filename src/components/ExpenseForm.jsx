@@ -706,7 +706,7 @@ const ExpenseForm = () => {
                     <th scope="col">Title</th>
                     <th scope="col">Type</th>
                     <th scope="col">Amount</th>
-                    <th scope="col">Doc</th>
+                    <th scope="col">Document</th>
                     <th scope="col">Receipt</th>
                   </tr>
                 </thead>
@@ -725,7 +725,8 @@ const ExpenseForm = () => {
                       </td>
                       <td>
                         <button
-                          className="btn btn-outline-info"
+                          className="btn btn-outline-success"
+                          // style={{ backgroundColor: " rgb(3, 187, 80)" }}
                           onClick={(event) => navigate(`receipt/${e._id}`)}
                         >
                           View
