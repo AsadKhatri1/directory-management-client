@@ -7,7 +7,7 @@ import moment from "moment";
 import { IoIosWallet } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Audio } from "react-loader-spinner";
-
+import { IoDocumentsSharp } from "react-icons/io5";
 const ExpenseForm = () => {
   const [File, setFile] = useState(null);
   const navigate = useNavigate();
@@ -717,16 +717,11 @@ const ExpenseForm = () => {
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
-                      <td onClick={() => handleImageClick(e?.fileUrl)}>
-                        {e.fileUrl ? (
-                          <img
-                            src={e?.fileUrl}
-                            alt="Image doc"
-                            style={{ width: "50%", height: "50%" }}
-                          />
-                        ) : (
-                          "No Document"
-                        )}
+                      <td
+                        onClick={() => handleImageClick(e?.fileUrl)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <IoDocumentsSharp />
                       </td>
                       <td>
                         <button

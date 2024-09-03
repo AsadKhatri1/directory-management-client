@@ -55,6 +55,13 @@ const ResidentForm = () => {
 
   const navigate = useNavigate();
 
+  // show family members form
+
+  const [showFam, setShowFam] = useState(false);
+  const [showVehicle, setShowVehicle] = useState(false);
+  const [showTanent, setShowTanent] = useState(false);
+  const [showServant, setShowServant] = useState(false);
+
   // upload single files to cloudinary
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
@@ -865,798 +872,858 @@ const ResidentForm = () => {
             <br />
           </div>
         </div>
-        {/* family members starts here */}
-        <div className="row ">
-          <hr />
-          <h1 className="my-3 fw-bold text-center">Enter Family Members</h1>
-          {relatives.map((relative, index) => (
-            <>
-              <div className="col-md-6">
-                <div key={index}>
-                  <input
-                    value={relative.name}
-                    onChange={(e) => handleRelativeChange(index, "name", e)}
-                    type="text"
-                    name="name"
-                    placeholder="Faily Member Name"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <select
-                    value={relative.relation}
-                    onChange={(e) => handleRelativeChange(index, "relation", e)}
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    <option
-                      value=""
-                      style={{
-                        background: "black",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      Select Relation
-                    </option>
-                    <option
-                      style={{
-                        background: "black",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                      value="Father"
-                    >
-                      Father
-                    </option>
-                    <option
-                      value="Mother"
-                      style={{
-                        background: "black",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      Mother
-                    </option>
-                    <option
-                      value="Husband/Wife"
-                      style={{
-                        background: "black",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      Husband/Wife
-                    </option>
-                    <option
-                      value="Child"
-                      style={{
-                        background: "black",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      Child
-                    </option>
-                    {/* Add other relation options */}
-                  </select>
-                  <input
-                    value={relative.cnic}
-                    onChange={(e) => handleRelativeChange(index, "cnic", e)}
-                    type="text"
-                    name="cnic"
-                    placeholder="CNIC"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={relative.occupation}
-                    onChange={(e) =>
-                      handleRelativeChange(index, "occupation", e)
-                    }
-                    type="text"
-                    name="occupation"
-                    placeholder="Occupation"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div>
-                  <input
-                    value={relative.number}
-                    onChange={(e) => handleRelativeChange(index, "number", e)}
-                    type="tel"
-                    name="number"
-                    placeholder="Phone No"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <label htmlFor="date">Date Of Birth</label>
-                  <br />
-                  <input
-                    value={relative.dob}
-                    onChange={(e) => handleRelativeChange(index, "dob", e)}
-                    type="date"
-                    name="dob"
-                    placeholder="Date Of Birth"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {relative.photoUrl
-                      ? relative.photoUrl.name
-                      : "Upload Photo"}
-                    <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handleRelativePhotoUpload(index, event)
-                      }
-                      hidden
-                    />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
-                    <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/* "
-                      onChange={(event) =>
-                        handleRelativeCnicUpload(index, event)
-                      }
-                      hidden
-                    />
-                  </label>
-                </div>
-              </div>
-            </>
-          ))}
-          <div className="w-100 text-center">
-            <button
-              type="button"
-              onClick={addRelativeField}
-              className="btn btn-outline-primary m-5 mt-2 w-25 "
-            >
-              <FaPlus /> Members
-            </button>
+
+        <div className="row my-3 w-100 d-flex gap-5 justify-content-center">
+          <div
+            className="col-md-2 cards "
+            onClick={() => setShowFam(!showFam)}
+            style={{
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
+            }}
+          >
+            {showFam ? "Hide Family Member Form" : "Add Family Members"}
+          </div>
+          <div
+            className="col-md-2 cards"
+            onClick={() => setShowServant(!showServant)}
+            style={{
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
+            }}
+          >
+            {showServant ? "Hide Servant Form" : "Add Servant"}
+          </div>
+          <div
+            className="col-md-2 cards"
+            onClick={() => setShowVehicle(!showVehicle)}
+            style={{
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
+            }}
+          >
+            {showVehicle ? "Hide Vehicle Form" : "Add Vehicle"}
+          </div>
+          <div
+            className="col-md-2 cards"
+            onClick={() => setShowTanent(!showTanent)}
+            style={{
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
+            }}
+          >
+            {showTanent ? "Hide Tanent Form" : "Add Tanent"}
           </div>
         </div>
+
+        {/* family members starts here */}
+        {showFam && (
+          <div className="row">
+            <hr />
+            <h1 className="my-3 fw-bold text-center">Enter Family Members</h1>
+            {relatives.map((relative, index) => (
+              <>
+                <div className="col-md-6">
+                  <div key={index}>
+                    <input
+                      value={relative.name}
+                      onChange={(e) => handleRelativeChange(index, "name", e)}
+                      type="text"
+                      name="name"
+                      placeholder="Faily Member Name"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <select
+                      value={relative.relation}
+                      onChange={(e) =>
+                        handleRelativeChange(index, "relation", e)
+                      }
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      <option
+                        value=""
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Select Relation
+                      </option>
+                      <option
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                        value="Father"
+                      >
+                        Father
+                      </option>
+                      <option
+                        value="Mother"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Mother
+                      </option>
+                      <option
+                        value="Husband/Wife"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Husband/Wife
+                      </option>
+                      <option
+                        value="Child"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Child
+                      </option>
+                      {/* Add other relation options */}
+                    </select>
+                    <input
+                      value={relative.cnic}
+                      onChange={(e) => handleRelativeChange(index, "cnic", e)}
+                      type="text"
+                      name="cnic"
+                      placeholder="CNIC"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={relative.occupation}
+                      onChange={(e) =>
+                        handleRelativeChange(index, "occupation", e)
+                      }
+                      type="text"
+                      name="occupation"
+                      placeholder="Occupation"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div>
+                    <input
+                      value={relative.number}
+                      onChange={(e) => handleRelativeChange(index, "number", e)}
+                      type="tel"
+                      name="number"
+                      placeholder="Phone No"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                    <label htmlFor="date">Date Of Birth</label>
+                    <br />
+                    <input
+                      value={relative.dob}
+                      onChange={(e) => handleRelativeChange(index, "dob", e)}
+                      type="date"
+                      name="dob"
+                      placeholder="Date Of Birth"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {relative.photoUrl
+                        ? relative.photoUrl.name
+                        : "Upload Photo"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/*"
+                        onChange={(event) =>
+                          handleRelativePhotoUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/* "
+                        onChange={(event) =>
+                          handleRelativeCnicUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+              </>
+            ))}
+            <div className="w-100 text-center">
+              <button
+                type="button"
+                onClick={addRelativeField}
+                className="btn btn-outline-primary m-5 mt-2 w-25 "
+              >
+                <FaPlus /> Members
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* servant details */}
-        <div className="row">
-          <hr />
-          <h1 className="my-3 fw-bold text-center">Enter servant details</h1>
-          {maids.map((maid, index) => (
-            <>
-              <div className="col-md-6">
-                <div key={index}>
-                  <input
-                    value={maid.name}
-                    onChange={(e) => handleMaidChange(index, "name", e)}
-                    type="text"
-                    name="name"
-                    className="w-75 my-3 text-white py-2"
-                    placeholder="Servant's Name"
-                    // Add your styling here
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <input
-                    value={maid.dob}
-                    onChange={(e) => handleMaidChange(index, "dob", e)}
-                    type="date"
-                    name="dob"
-                    placeholder="Date Of Birth"
-                    // Add your styling here
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <input
-                    value={maid.address}
-                    onChange={(e) => handleMaidChange(index, "address", e)}
-                    type="text"
-                    name="address"
-                    placeholder="Address"
-                    // Add your styling here
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <input
-                    value={maid.guardian}
-                    onChange={(e) => handleMaidChange(index, "guardian", e)}
-                    type="text"
-                    name="guardian"
-                    placeholder="Guardian's Name"
-                    // Add your styling here
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div>
-                  <input
-                    value={maid.number}
-                    onChange={(e) => handleMaidChange(index, "number", e)}
-                    type="tel"
-                    name="number"
-                    placeholder="Phone Number"
-                    // Add your styling here
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <input
-                    value={maid.cnic}
-                    onChange={(e) => handleMaidChange(index, "cnic", e)}
-                    type="text"
-                    name="cnic"
-                    placeholder="CNIC Number"
-                    // Add your styling here
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {maid.cnicUrl ? maid.cnicUrl.name : "Upload CNIC"}
+        {showServant && (
+          <div className="row">
+            <hr />
+            <h1 className="my-3 fw-bold text-center">Enter servant details</h1>
+            {maids.map((maid, index) => (
+              <>
+                <div className="col-md-6">
+                  <div key={index}>
                     <input
-                      type="file"
-                      name="cnicFile"
-                      accept="image/* "
-                      onChange={(event) => handleMaidCnicUpload(index, event)}
-                      hidden
+                      value={maid.name}
+                      onChange={(e) => handleMaidChange(index, "name", e)}
+                      type="text"
+                      name="name"
+                      className="w-75 my-3 text-white py-2"
+                      placeholder="Servant's Name"
+                      // Add your styling here
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {maid.cantPassUrl
-                      ? maid.cantPassUrl.name
-                      : "Upload Cant Pass"}
+                    <br />
                     <input
-                      type="file"
-                      name="cantPassFile"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handleMaidCantPassUpload(index, event)
-                      }
-                      hidden
+                      value={maid.dob}
+                      onChange={(e) => handleMaidChange(index, "dob", e)}
+                      type="date"
+                      name="dob"
+                      placeholder="Date Of Birth"
+                      // Add your styling here
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
+                    <br />
+                    <input
+                      value={maid.address}
+                      onChange={(e) => handleMaidChange(index, "address", e)}
+                      type="text"
+                      name="address"
+                      placeholder="Address"
+                      // Add your styling here
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                    <input
+                      value={maid.guardian}
+                      onChange={(e) => handleMaidChange(index, "guardian", e)}
+                      type="text"
+                      name="guardian"
+                      placeholder="Guardian's Name"
+                      // Add your styling here
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                  </div>
                 </div>
-              </div>
-            </>
-          ))}
-          <div className="text-center my-3">
-            <button
-              type="button"
-              onClick={addMaidField}
-              className="btn btn-outline-primary w-25 m-5 mt-2"
-            >
-              <FaPlus /> Servants
-            </button>
+                <div className="col-md-6">
+                  <div>
+                    <input
+                      value={maid.number}
+                      onChange={(e) => handleMaidChange(index, "number", e)}
+                      type="tel"
+                      name="number"
+                      placeholder="Phone Number"
+                      // Add your styling here
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                    <input
+                      value={maid.cnic}
+                      onChange={(e) => handleMaidChange(index, "cnic", e)}
+                      type="text"
+                      name="cnic"
+                      placeholder="CNIC Number"
+                      // Add your styling here
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {maid.cnicUrl ? maid.cnicUrl.name : "Upload CNIC"}
+                      <input
+                        type="file"
+                        name="cnicFile"
+                        accept="image/* "
+                        onChange={(event) => handleMaidCnicUpload(index, event)}
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {maid.cantPassUrl
+                        ? maid.cantPassUrl.name
+                        : "Upload Cant Pass"}
+                      <input
+                        type="file"
+                        name="cantPassFile"
+                        accept="image/*"
+                        onChange={(event) =>
+                          handleMaidCantPassUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+              </>
+            ))}
+            <div className="text-center my-3">
+              <button
+                type="button"
+                onClick={addMaidField}
+                className="btn btn-outline-primary w-25 m-5 mt-2"
+              >
+                <FaPlus /> Servants
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* vehicle details */}
-        <div className="row text-center">
-          <hr />
-          <h1 className="my-3 fw-bold">Enter vehicle details</h1>
-          {vehicles.map((vehicle, index) => (
-            <>
-              <div className="col-md-6">
-                <div key={index}>
-                  {/* selection */}
+        {showVehicle && (
+          <div className="row text-center">
+            <hr />
+            <h1 className="my-3 fw-bold">Enter vehicle details</h1>
+            {vehicles.map((vehicle, index) => (
+              <>
+                <div className="col-md-6">
+                  <div key={index}>
+                    {/* selection */}
 
-                  <input
-                    value={vehicle.type}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="type"
-                    placeholder="Vehicle Type | Car or Motorcycle"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={vehicle.colour}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="colour"
-                    placeholder="Colour"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-
-                  <input
-                    value={vehicle.make}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="make"
-                    placeholder="Vehicle Make"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={vehicle.model}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="model"
-                    placeholder="Vehicle Model Name"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div>
-                  <input
-                    value={vehicle.year}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="year"
-                    placeholder="Vehicle Year"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={vehicle.stickerNumber}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="stickerNumber"
-                    placeholder="Sticker Number"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={vehicle.registrationNumber}
-                    onChange={(e) => handleVehicleChange(index, e)}
-                    type="text"
-                    name="registrationNumber"
-                    placeholder="Vehicle Registration Number"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {vehicle.paperDocument
-                      ? vehicle.paperDocument.name
-                      : "Upload Document"}
                     <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handlePaperDocumentUpload(event, index)
-                      }
-                      hidden
+                      value={vehicle.type}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="type"
+                      placeholder="Vehicle Type | Car or Motorcycle"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
+                    <input
+                      value={vehicle.colour}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="colour"
+                      placeholder="Colour"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+
+                    <input
+                      value={vehicle.make}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="make"
+                      placeholder="Vehicle Make"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={vehicle.model}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="model"
+                      placeholder="Vehicle Model Name"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            </>
-          ))}
-          <div className="text-center mt-3">
-            <button
-              type="button"
-              onClick={addVehicleField}
-              className="btn btn-outline-primary w-25 m-5 mt-2"
-            >
-              <FaPlus /> Vehicles
-            </button>
+                <div className="col-md-6">
+                  <div>
+                    <input
+                      value={vehicle.year}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="year"
+                      placeholder="Vehicle Year"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={vehicle.stickerNumber}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="stickerNumber"
+                      placeholder="Sticker Number"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={vehicle.registrationNumber}
+                      onChange={(e) => handleVehicleChange(index, e)}
+                      type="text"
+                      name="registrationNumber"
+                      placeholder="Vehicle Registration Number"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {vehicle.paperDocument
+                        ? vehicle.paperDocument.name
+                        : "Upload Document"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/*"
+                        onChange={(event) =>
+                          handlePaperDocumentUpload(event, index)
+                        }
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+              </>
+            ))}
+            <div className="text-center mt-3">
+              <button
+                type="button"
+                onClick={addVehicleField}
+                className="btn btn-outline-primary w-25 m-5 mt-2"
+              >
+                <FaPlus /> Vehicles
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* tanent details */}
-        <div className="row text-center">
-          <hr />
-          <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
-          {tanents.map((tanent, index) => (
-            <>
-              <div className="col-md-6">
-                <div key={index}>
-                  <input
-                    value={tanent.name}
-                    onChange={(e) => handleTanentChange(index, "name", e)}
-                    type="text"
-                    name="name"
-                    placeholder="Tanent Name"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.cnic}
-                    onChange={(e) => handleTanentChange(index, "cnic", e)}
-                    type="text"
-                    name="cnic"
-                    placeholder="CNIC"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.occupation}
-                    onChange={(e) => handleTanentChange(index, "occupation", e)}
-                    type="text"
-                    name="occupation"
-                    placeholder="Occupation"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <input
-                    value={tanent.number}
-                    onChange={(e) => handleTanentChange(index, "number", e)}
-                    type="tel"
-                    name="number"
-                    placeholder="Phone No"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <br />
-                  <label htmlFor="date">Date Of Birth</label>
-                  <br />
-                  <input
-                    value={tanent.dob}
-                    onChange={(e) => handleTanentChange(index, "dob", e)}
-                    type="date"
-                    name="dob"
-                    placeholder="Date Of Birth"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <br />
-                <div>
-                  <label htmlFor="nocIssue">Date Of NOC Issuance</label>
-                  <br />
-                  <input
-                    value={tanent.NOCIssue}
-                    onChange={(e) => handleTanentChange(index, "nocIssue", e)}
-                    type="date"
-                    name="nocIssue"
-                    id="nocIssue"
-                    placeholder="NOC Issueance Date"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />{" "}
-                  <br />
-                  <input
-                    value={tanent.nocNo}
-                    onChange={(e) => handleTanentChange(index, "nocNo", e)}
-                    type="text"
-                    name="nocNo"
-                    id="nocno"
-                    placeholder="NOC Number"
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
+        {showTanent && (
+          <div className="row text-center">
+            <hr />
+            <h1 className="my-3 fw-bold ">Enter Tanent Details</h1>
+            {tanents.map((tanent, index) => (
+              <>
+                <div className="col-md-6">
+                  <div key={index}>
                     <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/*"
-                      onChange={(event) =>
-                        handleTanentPhotoUpload(index, event)
+                      value={tanent.name}
+                      onChange={(e) => handleTanentChange(index, "name", e)}
+                      type="text"
+                      name="name"
+                      placeholder="Tanent Name"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={tanent.cnic}
+                      onChange={(e) => handleTanentChange(index, "cnic", e)}
+                      type="text"
+                      name="cnic"
+                      placeholder="CNIC"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={tanent.occupation}
+                      onChange={(e) =>
+                        handleTanentChange(index, "occupation", e)
                       }
-                      hidden
+                      type="text"
+                      name="occupation"
+                      placeholder="Occupation"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
                     <input
-                      type="file"
-                      name="cnicFile"
-                      accept="image/* "
-                      onChange={(event) => handleTanentCnicUpload(index, event)}
-                      hidden
+                      value={tanent.number}
+                      onChange={(e) => handleTanentChange(index, "number", e)}
+                      type="tel"
+                      name="number"
+                      placeholder="Phone No"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
-                  <label
-                    className="w-75 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  >
-                    {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
+                    <br />
+                    <label htmlFor="date">Date Of Birth</label>
+                    <br />
                     <input
-                      type="file"
-                      name="nocFile"
-                      accept="image/* "
-                      onChange={(event) => handleTanentNocUpload(index, event)}
-                      hidden
+                      value={tanent.dob}
+                      onChange={(e) => handleTanentChange(index, "dob", e)}
+                      type="date"
+                      name="dob"
+                      placeholder="Date Of Birth"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
                     />
-                  </label>
+                  </div>
                 </div>
-              </div>
-            </>
-          ))}
-          <div>
-            <button
-              type="button"
-              onClick={addTanentField}
-              className="btn btn-outline-primary w-25 m-5 mt-2"
-            >
-              <FaPlus /> Tanents
-            </button>
+                <div className="col-md-6">
+                  <br />
+                  <div>
+                    <label htmlFor="nocIssue">Date Of NOC Issuance</label>
+                    <br />
+                    <input
+                      value={tanent.NOCIssue}
+                      onChange={(e) => handleTanentChange(index, "nocIssue", e)}
+                      type="date"
+                      name="nocIssue"
+                      id="nocIssue"
+                      placeholder="NOC Issueance Date"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />{" "}
+                    <br />
+                    <input
+                      value={tanent.nocNo}
+                      onChange={(e) => handleTanentChange(index, "nocNo", e)}
+                      type="text"
+                      name="nocNo"
+                      id="nocno"
+                      placeholder="NOC Number"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/*"
+                        onChange={(event) =>
+                          handleTanentPhotoUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
+                      <input
+                        type="file"
+                        name="cnicFile"
+                        accept="image/* "
+                        onChange={(event) =>
+                          handleTanentCnicUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/* "
+                        onChange={(event) =>
+                          handleTanentNocUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+              </>
+            ))}
+            <div>
+              <button
+                type="button"
+                onClick={addTanentField}
+                className="btn btn-outline-primary w-25 m-5 mt-2"
+              >
+                <FaPlus /> Tanents
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="row text-center justify-content-center pt-2 ">
           {loader ? (
@@ -1676,8 +1743,8 @@ const ResidentForm = () => {
           )}
           <button
             type="submit"
-            className="btn btn-success w-75 mt-1"
-            style={{ borderRadius: "12px" }}
+            className="btn w-75 mt-1 fw-bold"
+            style={{ borderRadius: "12px", backgroundColor: "#03bb50" }}
           >
             SUBMIT
           </button>
