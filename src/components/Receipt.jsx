@@ -46,7 +46,7 @@ const Receipt = () => {
 
   return (
     <div className="main d-flex flex-column vw-100 vh-100 p-3">
-      <div className="w-100 h-50 bg-white d-flex">
+      <div ref={componentRef} className="w-100 h-50 bg-white d-flex">
         <div className="h-100 w-50 border">
           <div className="d-flex w-100 align-items-center justify-content-between px-5">
             {/* <h2 className="text-primary fw-bold">REC</h2> */}
@@ -69,7 +69,7 @@ const Receipt = () => {
             <h5 className="text-dark mt-2">{expense.Title}</h5>
             <h5 className="text-success mt-2">Rs. {expense.Amount}</h5>
           </div>
-          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+          <div className="d-flex w-100 align-items-center justify-content-between px-5 mb-1">
             <div>
               <h5 className="text-danger fw-bold">Date:</h5>
               <span className="px-2 text-danger">
@@ -105,7 +105,7 @@ const Receipt = () => {
             <h5 className="text-dark mt-2">{expense.Title}</h5>
             <h5 className="text-success mt-2">Rs. {expense.Amount}</h5>
           </div>
-          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+          <div className="d-flex w-100 align-items-center justify-content-between px-5 mb-1">
             <div>
               <h5 className="text-danger fw-bold">Date:</h5>
               <span className="px-2 text-danger">
