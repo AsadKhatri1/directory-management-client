@@ -24,7 +24,7 @@ const Invoice = () => {
 
   const invoiceSection = (copyType) => (
     <div
-      className="col-12 col-md-6 border p-4"
+      className="col-12 col-md-6 border px-4"
       style={{ backgroundColor: "white" }}
     >
       <div className="row mb-1">
@@ -94,7 +94,7 @@ const Invoice = () => {
         </div>
       </div>
 
-      <div className="row mb-1 w-100 text-center">
+      <div className="row w-100 text-center">
         <div className="col-12 text-center">
           <p
             className="mb-0"

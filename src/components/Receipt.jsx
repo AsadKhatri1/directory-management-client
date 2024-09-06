@@ -46,58 +46,81 @@ const Receipt = () => {
 
   return (
     <div className="main d-flex flex-column vw-100 vh-100 p-3">
-      <div ref={componentRef} className="border h-89 bg-white rounded w-100">
-        <div className="d-flex align-items-center justify-content-center  w-100 px-5">
-          <div className="col-md-6 d-flex align-items-center justify-content-start">
+      <div className="w-100 h-50 bg-white d-flex">
+        <div className="h-100 w-50 border">
+          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+            {/* <h2 className="text-primary fw-bold">REC</h2> */}
             <img
               src={logo}
               alt="Logo"
-              style={{ width: "150px", height: "200px" }}
+              style={{ height: "100px", width: "80px" }}
             />
-          </div>
-          <div className="col-md-6 d-flex flex-column align-items-end justify-content-center px-5 ">
-            <h2 className="text-primary fw-bold">REC</h2>
+            <span>Office Copy</span>
             <h5 className="text-secondary fw-bold">Email</h5>
           </div>
+          <div className="d-flex justify-content-center">
+            <h3 className="text-dark fw-bold">RECEIPT # {receiptId}</h3>
+          </div>
+          <div className="d-flex w-auto align-items-center justify-content-between px-5 mx-4">
+            <h4 className="text-dark fw-bold">Title</h4>
+            <h4 className="text-success fw-bold">Amount</h4>
+          </div>
+          <div className="d-flex w-auto align-items-center justify-content-between px-5 border m-4">
+            <h5 className="text-dark mt-2">{expense.Title}</h5>
+            <h5 className="text-success mt-2">Rs. {expense.Amount}</h5>
+          </div>
+          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+            <div>
+              <h5 className="text-danger fw-bold">Date:</h5>
+              <span className="px-2 text-danger">
+                {moment(expense?.createdAt).format("MMMM Do, YYYY")}
+              </span>
+            </div>
+            <div>
+              {" "}
+              <h5 className="text-success fw-bold">Total:</h5>
+              <span className="px-2 text-success ">Rs. {expense.Amount}</span>
+            </div>
+          </div>
         </div>
-        <div className="text-center my-2">
-          <h2 className="fw-bold text-dark">RECEIPT</h2>
-          <h6 className="fw-bold text-secondary">ID - {receiptId}</h6>
-        </div>
-        <div className="my-4 mx-3 d-flex align-items-start justify-content-center w-100">
-          <div className="left w-50 px-5 d-flex align-items-start justify-content-center">
-            <h3 className="text-dark fw-bold">Title</h3>
+        <div className="h-100 w-50 border">
+          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+            {/* <h2 className="text-primary fw-bold">REC</h2> */}
+            <img
+              src={logo}
+              alt="Logo"
+              style={{ height: "100px", width: "80px" }}
+            />
+            <span>Resident Copy</span>
+            <h5 className="text-secondary fw-bold">Email</h5>
           </div>
-          <div className="right w-50 d-flex align-items-end justify-content-center">
-            <h3 className="text-dark fw-bold">Amount</h3>
+          <div className="d-flex justify-content-center">
+            <h3 className="text-dark fw-bold">RECEIPT # {receiptId}</h3>
           </div>
-        </div>
-        <hr />
-        <div className="my-4 mx-3 d-flex align-items-start justify-content-center w-100">
-          <div className="left w-50 px-5 d-flex align-items-start justify-content-center">
-            <h5 className="text-dark">{expense.Title}</h5>
+          <div className="d-flex w-auto align-items-center justify-content-between px-5 mx-4">
+            <h4 className="text-dark fw-bold">Title</h4>
+            <h4 className="text-success fw-bold">Amount</h4>
           </div>
-          <div className="right w-50 d-flex align-items-end justify-content-center">
-            <h5 className="text-dark">Rs. {expense.Amount}</h5>
+          <div className="d-flex w-auto align-items-center justify-content-between px-5 border m-4">
+            <h5 className="text-dark mt-2">{expense.Title}</h5>
+            <h5 className="text-success mt-2">Rs. {expense.Amount}</h5>
           </div>
-        </div>
-        <hr />
-
-        <div className="mt-5 d-flex align-items-start justify-content-center ">
-          <div className="left w-50 px-5 d-flex align-items-start justify-content-start mb-5">
-            <h5 className="text-danger fw-bold">Date:</h5>
-            <span className="px-2 text-danger">
-              {moment(expense?.createdAt).format("MMMM Do, YYYY")}
-            </span>
-          </div>
-          <div className="right w-50 d-flex align-items-center justify-content-end mb-5 mx-5">
-            <h2 className="text-success fw-bold ">Total:</h2>
-            <span className="px-2 text-success fw-bold">
-              Rs. {expense.Amount}
-            </span>
+          <div className="d-flex w-100 align-items-center justify-content-between px-5">
+            <div>
+              <h5 className="text-danger fw-bold">Date:</h5>
+              <span className="px-2 text-danger">
+                {moment(expense?.createdAt).format("MMMM Do, YYYY")}
+              </span>
+            </div>
+            <div>
+              {" "}
+              <h5 className="text-success fw-bold">Total:</h5>
+              <span className="px-2 text-success ">Rs. {expense.Amount}</span>
+            </div>
           </div>
         </div>
       </div>
+
       <div className="text-center">
         <ReactToPrint
           trigger={() => (

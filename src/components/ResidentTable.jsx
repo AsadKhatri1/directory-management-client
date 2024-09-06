@@ -225,7 +225,7 @@ const ResidentTable = () => {
                     <tr
                       key={r._id}
                       className="text-center align-middle"
-                      onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                      // onClick={() => navigate(`/dashboard/resident/${r._id}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <td>{r.FullName}</td>
