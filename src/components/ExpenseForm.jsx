@@ -717,7 +717,7 @@ const ExpenseForm = () => {
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e?.Reason}</td>
+                      <td>{e.Reason ? e.reason : "null"}</td>
 
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>

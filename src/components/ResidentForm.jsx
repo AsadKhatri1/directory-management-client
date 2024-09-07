@@ -511,16 +511,19 @@ const ResidentForm = () => {
     <main className="main-container text-center mt-5">
       <h1 className="my-3 fw-bold">Add A New Resident</h1>
       {showForm && (
-        <span
-          style={{
-            fontSize: "24px",
-            cursor: "pointer",
-            color: "red",
-          }}
-          onClick={() => setShowForm(false)}
-        >
-          X
-        </span>
+        <div className="d-flex w-100 align-items-center justify-content-end px-5">
+          {" "}
+          <span
+            style={{
+              fontSize: "24px",
+              cursor: "pointer",
+              color: "red",
+            }}
+            onClick={() => setShowForm(false)}
+          >
+            X
+          </span>
+        </div>
       )}
 
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
@@ -894,7 +897,7 @@ const ResidentForm = () => {
               onClick={() => setShowForm(true)}
               // className="col-md-2 cards my-2"
               style={{
-                fontSize: "24px",
+                fontSize: "34px",
                 cursor: "pointer",
                 color: "green",
               }}
