@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaPlus } from "react-icons/fa";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
 import { Audio } from "react-loader-spinner";
 // Configure Cloudinary with your credentials
 
@@ -61,6 +62,7 @@ const ResidentForm = () => {
   const [showVehicle, setShowVehicle] = useState(false);
   const [showTanent, setShowTanent] = useState(false);
   const [showServant, setShowServant] = useState(false);
+  const [showForm, setShowForm] = useState(true);
 
   // upload single files to cloudinary
   const uploadFileToCloudinary = async (file) => {
@@ -508,375 +510,408 @@ const ResidentForm = () => {
   return (
     <main className="main-container text-center mt-5">
       <h1 className="my-3 fw-bold">Add A New Resident</h1>
+      {showForm && (
+        <span
+          style={{
+            fontSize: "24px",
+            cursor: "pointer",
+            color: "red",
+          }}
+          onClick={() => setShowForm(false)}
+        >
+          X
+        </span>
+      )}
+
       <form action="post" className="w-100 mt-3" onSubmit={submitHandler}>
         {/* new resident starts here */}
-        <div className="row">
-          <div className="col-md-6">
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {Photo ? Photo.name : "Upload image"}
+        {showForm ? (
+          <div className="row">
+            <div className="col-md-6">
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {Photo ? Photo.name : "Upload image"}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => setPhoto(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {cnicFile ? cnicFile.name : "Upload CNIC"}
+                <input
+                  type="file"
+                  name="cnicFile"
+                  accept="image/*, .pdf"
+                  onChange={(e) => setCnicFile(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {nocFile ? nocFile.name : "Upload NOC "}
+                <input
+                  type="file"
+                  name="nocFile"
+                  accept="image/*, .pdf"
+                  onChange={(e) => setNocFile(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {cantPass ? cantPass.name : "Upload Cant Pass"}
+                <input
+                  type="file"
+                  name="nocFile"
+                  accept="image/* ,.pdf"
+                  onChange={(e) => setCantPass(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {policeV ? policeV.name : "Upload Police Verification"}
+                <input
+                  type="file"
+                  name="nocFile"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setPoliceV(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              <label
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {lisence ? lisence.name : "Upload Driving Lisence"}
+                <input
+                  type="file"
+                  name="nocFile"
+                  accept="image/*,.pdf"
+                  onChange={(e) => setLisence(e.target.files[0])}
+                  hidden
+                />
+              </label>
+              {/* </div> */}
               <input
-                type="file"
-                name="photo"
-                accept="image/*"
-                onChange={(e) => setPhoto(e.target.files[0])}
-                hidden
+                value={FullName}
+                onChange={(e) => setFullName(e.target.value)}
+                type="text"
+                name="FullName"
+                id="FullName"
+                placeholder="Full Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </label>
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {cnicFile ? cnicFile.name : "Upload CNIC"}
+              <br />
               <input
-                type="file"
-                name="cnicFile"
-                accept="image/*, .pdf"
-                onChange={(e) => setCnicFile(e.target.files[0])}
-                hidden
+                value={Email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                name="Email"
+                id="Email"
+                placeholder="Email"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </label>
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {nocFile ? nocFile.name : "Upload NOC "}
+              <br />
               <input
-                type="file"
-                name="nocFile"
-                accept="image/*, .pdf"
-                onChange={(e) => setNocFile(e.target.files[0])}
-                hidden
+                value={Profession}
+                onChange={(e) => setProfession(e.target.value)}
+                type="text"
+                name="Profession"
+                id="Profession"
+                placeholder="Profession"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </label>
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {cantPass ? cantPass.name : "Upload Cant Pass"}
+              <br />
               <input
-                type="file"
-                name="nocFile"
-                accept="image/* ,.pdf"
-                onChange={(e) => setCantPass(e.target.files[0])}
-                hidden
+                value={Qualification}
+                onChange={(e) => setQualification(e.target.value)}
+                type="text"
+                name="Profession"
+                id="Profession"
+                placeholder="Qualification"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </label>
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {policeV ? policeV.name : "Upload Police Verification"}
+            </div>
+            <div className="col-md-6">
               <input
-                type="file"
-                name="nocFile"
-                accept="image/*,.pdf"
-                onChange={(e) => setPoliceV(e.target.files[0])}
-                hidden
-              />
-            </label>
-            <label
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            >
-              {lisence ? lisence.name : "Upload Driving Lisence"}
+                value={Phone}
+                onChange={(e) => setPhone(e.target.value)}
+                type="tel"
+                name="Phone"
+                minLength="11"
+                id="Phone"
+                placeholder="Phone Number"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
               <input
-                type="file"
-                name="nocFile"
-                accept="image/*,.pdf"
-                onChange={(e) => setLisence(e.target.files[0])}
-                hidden
+                value={HouseNumber}
+                onChange={(e) => setHouseNumber(e.target.value)}
+                type="text"
+                name="HouseNumber"
+                id="HouseNumber"
+                placeholder="House Number"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
               />
-            </label>
-            {/* </div> */}
-            <input
-              value={FullName}
-              onChange={(e) => setFullName(e.target.value)}
-              type="text"
-              name="FullName"
-              id="FullName"
-              placeholder="Full Name"
-              className="w-75 my-3 text-white py-2"
+              <br />
+              <input
+                value={CNIC}
+                onChange={(e) => setCNIC(e.target.value)}
+                type="text"
+                name="CNIC"
+                id="CNIC"
+                placeholder="CNIC"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <br />
+              <label htmlFor="date">Date Of Birth</label> <br />
+              <input
+                value={DOB}
+                onChange={(e) => setDOB(e.target.value)}
+                type="date"
+                name="date"
+                id="date"
+                placeholder="Date Of Birth"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <input
+                value={officeTel}
+                onChange={(e) => setOfficeTel(e.target.value)}
+                type="tel"
+                name="officeTel"
+                id="office tel"
+                placeholder="Tel (office)"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <br />
+              <textarea
+                value={bAddress}
+                onChange={(e) => setBAddress(e.target.value)}
+                type="text"
+                name="business address"
+                id="business address"
+                placeholder="Business/Office Address"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
+              <input
+                value={NOCHolder}
+                onChange={(e) => setNOCHolder(e.target.value)}
+                type="text"
+                name="noc"
+                id="noc"
+                placeholder="NOC Holder's Name"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
+              <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
+              <input
+                value={NOCIssue}
+                onChange={(e) => setNOCIssue(e.target.value)}
+                type="date"
+                name="nocIssue"
+                id="nocIssue"
+                placeholder="NOC Issueance Date"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />{" "}
+              <br />
+              <input
+                value={NOCNo}
+                onChange={(e) => setNOCNo(e.target.value)}
+                type="text"
+                name="nocno"
+                id="nocno"
+                placeholder="NOC Number"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              />
+              <br />
+            </div>
+          </div>
+        ) : (
+          <div className="w-100 d-flex align-items-center justify-content-center ">
+            <MdKeyboardDoubleArrowDown
+              onClick={() => setShowForm(true)}
+              // className="col-md-2 cards my-2"
               style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <input
-              value={Email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              name="Email"
-              id="Email"
-              placeholder="Email"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <input
-              value={Profession}
-              onChange={(e) => setProfession(e.target.value)}
-              type="text"
-              name="Profession"
-              id="Profession"
-              placeholder="Profession"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <input
-              value={Qualification}
-              onChange={(e) => setQualification(e.target.value)}
-              type="text"
-              name="Profession"
-              id="Profession"
-              placeholder="Qualification"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                fontSize: "24px",
+                cursor: "pointer",
+                color: "green",
               }}
             />
           </div>
-          <div className="col-md-6">
-            <input
-              value={Phone}
-              onChange={(e) => setPhone(e.target.value)}
-              type="tel"
-              name="Phone"
-              minLength="11"
-              id="Phone"
-              placeholder="Phone Number"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={HouseNumber}
-              onChange={(e) => setHouseNumber(e.target.value)}
-              type="text"
-              name="HouseNumber"
-              id="HouseNumber"
-              placeholder="House Number"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <input
-              value={CNIC}
-              onChange={(e) => setCNIC(e.target.value)}
-              type="text"
-              name="CNIC"
-              id="CNIC"
-              placeholder="CNIC"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <label htmlFor="date">Date Of Birth</label> <br />
-            <input
-              value={DOB}
-              onChange={(e) => setDOB(e.target.value)}
-              type="date"
-              name="date"
-              id="date"
-              placeholder="Date Of Birth"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <input
-              value={officeTel}
-              onChange={(e) => setOfficeTel(e.target.value)}
-              type="tel"
-              name="officeTel"
-              id="office tel"
-              placeholder="Tel (office)"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-            <textarea
-              value={bAddress}
-              onChange={(e) => setBAddress(e.target.value)}
-              type="text"
-              name="business address"
-              id="business address"
-              placeholder="Business/Office Address"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCHolder}
-              onChange={(e) => setNOCHolder(e.target.value)}
-              type="text"
-              name="noc"
-              id="noc"
-              placeholder="NOC Holder's Name"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
-            <input
-              value={NOCIssue}
-              onChange={(e) => setNOCIssue(e.target.value)}
-              type="date"
-              name="nocIssue"
-              id="nocIssue"
-              placeholder="NOC Issueance Date"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />{" "}
-            <br />
-            <input
-              value={NOCNo}
-              onChange={(e) => setNOCNo(e.target.value)}
-              type="text"
-              name="nocno"
-              id="nocno"
-              placeholder="NOC Number"
-              className="w-75 my-3 text-white py-2"
-              style={{
-                background: "transparent",
-                border: "none",
-                borderBottom: "1px solid white",
-                borderRadius: "12px",
-                textIndent: "12px",
-                boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-              }}
-            />
-            <br />
-          </div>
-        </div>
+        )}
 
         <div className="row my-3 w-100 d-flex gap-5 justify-content-center">
           <div
             className="col-md-2 cards "
-            onClick={() => setShowFam(!showFam)}
+            onClick={() => {
+              setShowFam(!showFam),
+                setShowForm(false),
+                setShowServant(false),
+                setShowTanent(false),
+                setShowVehicle(false);
+            }}
             style={{
               boxShadow: "0px 1px 7px #03bb50",
               cursor: "pointer",
@@ -886,7 +921,13 @@ const ResidentForm = () => {
           </div>
           <div
             className="col-md-2 cards"
-            onClick={() => setShowServant(!showServant)}
+            onClick={() => {
+              setShowFam(false),
+                setShowForm(false),
+                setShowServant(!showServant),
+                setShowTanent(false),
+                setShowVehicle(false);
+            }}
             style={{
               boxShadow: "0px 1px 7px #03bb50",
               cursor: "pointer",
@@ -896,7 +937,13 @@ const ResidentForm = () => {
           </div>
           <div
             className="col-md-2 cards"
-            onClick={() => setShowVehicle(!showVehicle)}
+            onClick={() => {
+              setShowFam(false),
+                setShowForm(false),
+                setShowServant(false),
+                setShowTanent(false),
+                setShowVehicle(!showVehicle);
+            }}
             style={{
               boxShadow: "0px 1px 7px #03bb50",
               cursor: "pointer",
@@ -906,7 +953,13 @@ const ResidentForm = () => {
           </div>
           <div
             className="col-md-2 cards"
-            onClick={() => setShowTanent(!showTanent)}
+            onClick={() => {
+              setShowFam(false),
+                setShowForm(false),
+                setShowServant(false),
+                setShowTanent(!showTanent),
+                setShowVehicle(false);
+            }}
             style={{
               boxShadow: "0px 1px 7px #03bb50",
               cursor: "pointer",

@@ -695,8 +695,62 @@ const ExpenseForm = () => {
           </div>
         </div>
         <div className="row">
-          <div className="col-md-6">
-            <h4>Expense List</h4>
+          <div className="col-md-12 mt-4">
+            <h2>Income List</h2>
+            <div className="table-responsive rounded inTable">
+              <table className="table table-dark table-hover ">
+                <thead className="bg-light border">
+                  <tr className="text-center">
+                    <th scope="col">Date</th>
+                    <th scope="col">Resident</th>
+                    <th scope="col">House Number</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Residency</th>
+                    <th scope="col">Type</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentIncomes.map((e, i) => (
+                    <tr key={i} className="text-center align-middle">
+                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                      <td>{e?.ResidentName}</td>
+                      <td>{e?.HouseNo}</td>
+                      <td>{e?.Amount}</td>
+                      <td>{e?.Reason}</td>
+
+                      <td>{e?.Ownership}</td>
+                      <td>{e?.Type}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="d-flex justify-content-center my-3">
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateIncomes(currentPageIncome - 1)}
+                disabled={currentPageIncome === 1}
+              >
+                Previous
+              </button>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => paginateIncomes(currentPageIncome + 1)}
+                disabled={
+                  currentPageIncome ===
+                  Math.ceil(filteredIncomeList.length / incomesPerPage)
+                }
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-12 mt-4">
+            <h2>Expense List</h2>
 
             <div className="table-responsive rounded exp-table">
               <table className="table table-dark table-hover ">
@@ -770,59 +824,6 @@ const ExpenseForm = () => {
                 disabled={
                   currentPageExpense ===
                   Math.ceil(filteredExpenseList.length / expensesPerPage)
-                }
-              >
-                Next
-              </button>
-            </div>
-          </div>
-
-          <div className="col-md-6">
-            <h4>Income List</h4>
-            <div className="table-responsive rounded inTable">
-              <table className="table table-dark table-hover ">
-                <thead className="bg-light border">
-                  <tr className="text-center">
-                    <th scope="col">Date</th>
-                    <th scope="col">Resident</th>
-                    <th scope="col">House Number</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Reason</th>
-                    <th scope="col">Residency</th>
-                    <th scope="col">Type</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentIncomes.map((e, i) => (
-                    <tr key={i} className="text-center align-middle">
-                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                      <td>{e?.ResidentName}</td>
-                      <td>{e?.HouseNo}</td>
-                      <td>{e?.Amount}</td>
-                      <td>{e?.Reason}</td>
-
-                      <td>{e?.Ownership}</td>
-                      <td>{e?.Type}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="d-flex justify-content-center my-3">
-              <button
-                className="btn btn-secondary mx-2"
-                onClick={() => paginateIncomes(currentPageIncome - 1)}
-                disabled={currentPageIncome === 1}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-secondary mx-2"
-                onClick={() => paginateIncomes(currentPageIncome + 1)}
-                disabled={
-                  currentPageIncome ===
-                  Math.ceil(filteredIncomeList.length / incomesPerPage)
                 }
               >
                 Next
