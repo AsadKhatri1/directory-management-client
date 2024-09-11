@@ -16,6 +16,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import axios from "axios";
+import moment from "moment";
 const Home = () => {
   // getting masjid & rec balance
   const getMasjidBalance = async () => {
@@ -43,7 +44,8 @@ const Home = () => {
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
   const [residents, setResidents] = useState([]);
-  const [admins, setAdmins] = useState([]);
+  const [incomes, setIncomes] = useState([]);
+  const [expenses, setExpenses] = useState([]);
   const data = [
     {
       name: "Page A",
@@ -89,41 +91,77 @@ const Home = () => {
     },
   ];
   //   calling residents to know total number
-  // const allResidents = async () => {
-  //   const res = await axios.get(
-  //     "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
-  //   );
-  //   if (res?.data?.success) {
-  //     setResidents(res.data.residents);
-  //   }
-  //   try {
-  //   } catch (err) {
-  //     toast(err.response?.data?.message);
-  //   }
-  // };
-
-  // calling admins to know total number
-  const allAdmins = async () => {
+  const allResidents = async () => {
     const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/admin/getAdmin"
+      "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
     );
     if (res?.data?.success) {
-      setAdmins(res.data.admins);
+      setResidents(res.data.residents);
     }
     try {
     } catch (err) {
       toast(err.response?.data?.message);
     }
   };
-  let cars = 0;
+
   useEffect(() => {
-    // allResidents();
-    allAdmins();
+    allResidents();
+    // allAdmins();
   }, []);
 
-  residents.map((item, i) => {
-    cars = cars + item.vehicles.length;
-  });
+  // calling income list
+  const allIncomes = async () => {
+    const res = await axios.get(
+      "https://directory-management-g8gf.onrender.com/api/v1/income/allIncomes"
+    );
+    if (res.data.success) {
+      setIncomes(res.data.incomeList);
+    }
+  };
+
+  const allExpenses = async () => {
+    const res = await axios.get(
+      "https://directory-management-g8gf.onrender.com/api/v1/expense/expenses"
+    );
+    if (res.data.success) {
+      setExpenses(res.data.expenseList);
+    }
+  };
+
+  useEffect(() => {
+    allResidents();
+    allExpenses();
+    allIncomes();
+  }, []);
+
+  // Preprocess the income data
+  const incomeData = Array.from({ length: 12 }, (_, i) => {
+    const month = moment().subtract(i, "months").format("YYYY-MM");
+    const totalIncome = incomes
+      .filter((income) => moment(income.createdAt).format("YYYY-MM") === month)
+      .reduce((sum, income) => sum + Number(income.Amount), 0);
+
+    return {
+      name: moment().subtract(i, "months").format("MMM YYYY"), // e.g., "Sep 2023"
+      income: totalIncome,
+    };
+  }).reverse(); // Reverse to show from oldest to newest
+
+  // Preprocess the expenses data
+  const expenseData = Array.from({ length: 12 }, (_, i) => {
+    const month = moment().subtract(i, "months").format("YYYY-MM");
+    const totalExpenses = expenses
+      .filter(
+        (expense) => moment(expense.createdAt).format("YYYY-MM") === month
+      )
+      .reduce((sum, expense) => sum + Number(expense.Amount), 0);
+
+    return {
+      name: moment().subtract(i, "months").format("MMM YYYY"), // e.g., "Sep 2023"
+      expenses: totalExpenses,
+    };
+  }).reverse(); // Reverse to show from oldest to newest
+  console.log(expenses);
   return (
     <main className="main-container">
       <div className="main-title">
@@ -194,11 +232,11 @@ const Home = () => {
           }}
         >
           <div className="card-inner">
-            <h6 className=" opacity-50">Admins</h6>
+            <h6 className=" opacity-50">Residents</h6>
             <RiAdminFill className="card-icon" />
           </div>
           <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
-            {admins.length < 1 ? (
+            {residents.length < 1 ? (
               <Audio
                 height="50"
                 width="50"
@@ -209,7 +247,7 @@ const Home = () => {
                 wrapperClass
               />
             ) : (
-              admins.length
+              residents.length
             )}
           </h3>
         </div>
@@ -218,11 +256,11 @@ const Home = () => {
 
       <div className="row">
         <div className="charts col-md-6">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart
+              data={incomeData}
               width={500}
               height={300}
-              data={data}
               margin={{
                 top: 5,
                 right: 30,
@@ -230,30 +268,18 @@ const Home = () => {
                 bottom: 5,
               }}
             >
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#03bb50"
-                activeBar={<Rectangle fill="#03c303" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#efc18f"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
+              <Bar dataKey="income" fill="#03bb50" />
             </BarChart>
           </ResponsiveContainer>
+          <h3 className="text-center">INCOME CHART</h3>
         </div>
         <div className="charts col-md-6">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={300}>
             <BarChart
-              width={500}
-              height={300}
-              data={data}
+              data={expenseData}
               margin={{
                 top: 5,
                 right: 30,
@@ -261,89 +287,16 @@ const Home = () => {
                 bottom: 5,
               }}
             >
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#03bb50"
-                activeBar={<Rectangle fill="#03c303" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#efc18f"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
+              <Bar dataKey="expenses" fill="#ef5350" />
             </BarChart>
           </ResponsiveContainer>
+          <h3 className="text-center">EXPENSE CHART</h3>
         </div>
       </div>
-      <div className="row">
-        <div className="charts col-md-6">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#03bb50"
-                activeBar={<Rectangle fill="#03c303" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#efc18f"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <div className="charts col-md-6">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              width={500}
-              height={300}
-              data={data}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
-              }}
-            >
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar
-                dataKey="pv"
-                fill="#03bb50"
-                activeBar={<Rectangle fill="#03c303" stroke="blue" />}
-              />
-              <Bar
-                dataKey="uv"
-                fill="#efc18f"
-                activeBar={<Rectangle fill="gold" stroke="purple" />}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
+      <div className="row"></div>
     </main>
   );
 };
