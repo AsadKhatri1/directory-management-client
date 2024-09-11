@@ -254,7 +254,7 @@ const Home = () => {
       </div>
       {/* graphs */}
 
-      <div className="row">
+      <div className="row mt-5">
         <div className="charts col-md-6">
           <ResponsiveContainer width="100%" height={300}>
             <BarChart
