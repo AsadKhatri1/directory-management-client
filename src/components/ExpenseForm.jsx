@@ -696,18 +696,60 @@ const ExpenseForm = () => {
         </div>
         <div className="row">
           <div className="col-md-12 mt-4">
-            <h2>Income List</h2>
+            <h2 className="mb-3">Incomes</h2>
             <div className="table-responsive rounded inTable">
-              <table className="table table-dark table-hover ">
-                <thead className="bg-light border">
-                  <tr className="text-center">
-                    <th scope="col">Date</th>
-                    <th scope="col">Resident</th>
-                    <th scope="col">House Number</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Reason</th>
-                    <th scope="col">Residency</th>
-                    <th scope="col">Type</th>
+              <table className="table table-dark table-hover table-striped">
+                <thead className="bg-light py-5">
+                  <tr className="text-center py-5">
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Resident
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      House Number
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Amount
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Reason
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Residency
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Type
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -729,9 +771,14 @@ const ExpenseForm = () => {
 
             <div className="d-flex justify-content-center my-3">
               <button
-                className="btn btn-secondary mx-2"
+                className="btn mx-2"
                 onClick={() => paginateIncomes(currentPageIncome - 1)}
                 disabled={currentPageIncome === 1}
+                style={{
+                  color: "rgb(3, 187, 80)",
+                  backgroundColor: "white",
+                  // border: "1px solid #009843",
+                }}
               >
                 Previous
               </button>
@@ -742,6 +789,11 @@ const ExpenseForm = () => {
                   currentPageIncome ===
                   Math.ceil(filteredIncomeList.length / incomesPerPage)
                 }
+                style={{
+                  color: "rgb(3, 187, 80)",
+                  backgroundColor: "white",
+                  // border: "1px solid #009843",
+                }}
               >
                 Next
               </button>
@@ -750,18 +802,54 @@ const ExpenseForm = () => {
         </div>
         <div className="row">
           <div className="col-md-12 mt-4">
-            <h2>Expense List</h2>
+            <h2 className="mb-3">Expenses</h2>
 
             <div className="table-responsive rounded exp-table">
-              <table className="table table-dark table-hover ">
-                <thead className="bg-light border">
-                  <tr className="text-center">
-                    <th scope="col">Date</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Document</th>
-                    <th scope="col">Receipt</th>
+              <table className="table table-dark table-hover table-striped">
+                <thead className="bg-light my-3">
+                  <tr className="text-center my-3">
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Title
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Amount
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Document
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Receipt
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -812,19 +900,29 @@ const ExpenseForm = () => {
 
             <div className="d-flex justify-content-center my-3">
               <button
-                className="btn btn-secondary mx-2"
+                className="btn mx-2"
                 onClick={() => paginateExpenses(currentPageExpense - 1)}
                 disabled={currentPageExpense === 1}
+                style={{
+                  color: "rgb(3, 187, 80)",
+                  backgroundColor: "white",
+                  // border: "1px solid #009843",
+                }}
               >
                 Previous
               </button>
               <button
-                className="btn btn-secondary mx-2"
+                className="btn mx-2"
                 onClick={() => paginateExpenses(currentPageExpense + 1)}
                 disabled={
                   currentPageExpense ===
                   Math.ceil(filteredExpenseList.length / expensesPerPage)
                 }
+                style={{
+                  color: "rgb(3, 187, 80)",
+                  backgroundColor: "white",
+                  // border: "1px solid #009843",
+                }}
               >
                 Next
               </button>

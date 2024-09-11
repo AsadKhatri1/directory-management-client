@@ -153,18 +153,82 @@ const ResidentTable = () => {
         </label>
       </div>
       <div className="main-table w-100 table-responsive mt-2 ">
-        <table className="table table-dark table-hover rounded">
-          <thead className="bg-light border">
-            <tr className="text-center">
-              <th scope="col">Full Name</th>
-              {!showTanentsOnly && <th scope="col">Email</th>}
-              <th scope="col">Phone</th>
-              <th scope="col">House Number</th>
-              <th scope="col">CNIC</th>
-              {!showTanentsOnly && <th scope="col">Payment Status</th>}
-              {!showTanentsOnly && <th scope="col">Payment Slip</th>}
-              {!showTanentsOnly && <th scope="col">Action</th>}
-              {showTanentsOnly && <th scope="col">NOC</th>}
+        <table className="table table-dark table-hover rounded table-striped">
+          <thead className="bg-light">
+            <tr className="text-center align-middle">
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Full Name
+              </th>
+              {!showTanentsOnly && (
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#03bb50" }}
+                >
+                  Email
+                </th>
+              )}
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Phone
+              </th>
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                House Number
+              </th>
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                CNIC
+              </th>
+              {!showTanentsOnly && (
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#03bb50" }}
+                >
+                  Payment Status
+                </th>
+              )}
+              {!showTanentsOnly && (
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#03bb50" }}
+                >
+                  Payment Slip
+                </th>
+              )}
+              {!showTanentsOnly && (
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#03bb50" }}
+                >
+                  Action
+                </th>
+              )}
+              {showTanentsOnly && (
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#03bb50" }}
+                >
+                  NOC
+                </th>
+              )}
             </tr>
           </thead>
           {!residents && (
