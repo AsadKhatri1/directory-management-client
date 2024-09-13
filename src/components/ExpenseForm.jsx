@@ -265,10 +265,14 @@ const ExpenseForm = () => {
   }, []);
 
   const handleNavigate = () => {
-    navigate("/dashboard/income/report", { state: { data: currentIncomes } });
+    navigate("/dashboard/income/report", {
+      state: { data: filteredIncomeList },
+    });
   };
   const handleExpenseNavigate = () => {
-    navigate("/dashboard/expense/report", { state: { data: currentExpenses } });
+    navigate("/dashboard/expense/report", {
+      state: { data: filteredExpenseList },
+    });
   };
   return (
     <>
