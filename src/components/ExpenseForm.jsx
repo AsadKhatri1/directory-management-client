@@ -264,6 +264,12 @@ const ExpenseForm = () => {
     allIncomes();
   }, []);
 
+  const handleNavigate = () => {
+    navigate("/dashboard/income/report", { state: { data: currentIncomes } });
+  };
+  const handleExpenseNavigate = () => {
+    navigate("/dashboard/expense/report", { state: { data: currentExpenses } });
+  };
   return (
     <>
       <main className="main-container text-center mt-3">
@@ -413,10 +419,7 @@ const ExpenseForm = () => {
                   <option value="WARD Withholding Tax">
                     WARD Withholding Tax
                   </option>
-                  <option
-                    value="WARD XERO Monthly Subscription
-"
-                  >
+                  <option value="WARD XERO Monthly Subscription">
                     WARD XERO Monthly Subscription
                   </option>
                   <option value="Qurbani Expense">Qurbani Expense</option>
@@ -768,6 +771,19 @@ const ExpenseForm = () => {
                 </tbody>
               </table>
             </div>
+            <div className="w-100 d-flex align-items-center justify-content-end py-3">
+              <button
+                className="btn btn-light"
+                onClick={handleNavigate}
+                style={{
+                  fontWeight: "bold",
+                  boxShadow: " 0px 2px 3px #03bb50",
+                }}
+              >
+                {" "}
+                View Report
+              </button>
+            </div>
 
             <div className="d-flex justify-content-center my-3">
               <button
@@ -896,6 +912,18 @@ const ExpenseForm = () => {
                   </Modal.Footer>
                 </Modal>
               </table>
+            </div>
+            <div className="w-100 d-flex align-items-center justify-content-end py-3">
+              <button
+                className="btn btn-light"
+                onClick={handleExpenseNavigate}
+                style={{
+                  fontWeight: "bold",
+                  boxShadow: " 0px 2px 3px #03bb50",
+                }}
+              >
+                View Report
+              </button>
             </div>
 
             <div className="d-flex justify-content-center my-3">
