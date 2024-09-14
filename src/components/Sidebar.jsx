@@ -71,7 +71,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           }`}
         >
           <Link to="/dashboard/newResident">
-            <BsFillHouseAddFill className="mx-2 pb-1" /> Add Resident
+            <BsFillHouseAddFill className="mx-2 pb-1" />
+            Add Resident
           </Link>
         </li>
         <li
