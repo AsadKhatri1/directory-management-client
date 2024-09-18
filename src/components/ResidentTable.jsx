@@ -15,9 +15,7 @@ const ResidentTable = () => {
 
   const allResidents = async () => {
     try {
-      const res = await axios.get(
-        "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
-      );
+      const res = await axios.get("/api/v1/resident/getResidents");
       if (res?.data?.success) {
         setResidents(res.data.residents);
       }
@@ -32,14 +30,11 @@ const ResidentTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(
-        `https://directory-management-g8gf.onrender.com/api/v1/resident/deleteResident/${id}`,
-        {
-          headers: {
-            authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await axios.delete(`/api/v1/resident/deleteResident/${id}`, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
       if (res.data.success) {
         toast.success(res.data.message);
         allResidents();
@@ -54,7 +49,7 @@ const ResidentTable = () => {
   const generateFeeSlip = async (residentId) => {
     try {
       const response = await axios.post(
-        `https://directory-management-g8gf.onrender.com/api/v1/resident/generateSlip/${residentId}`,
+        `/api/v1/resident/generateSlip/${residentId}`,
         { numberOfMonths: numberOfMonths },
         {
           headers: {

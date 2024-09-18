@@ -89,7 +89,7 @@ const ExpenseForm = () => {
   // Fetch balance data
   const getMasjidBalance = async () => {
     const res = await axios.get(
-      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+      `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
     );
     if (res.data.success) {
       setMasjidBalance(res.data.acc.Balance);
@@ -98,7 +98,7 @@ const ExpenseForm = () => {
 
   const getRecBalance = async () => {
     const res = await axios.get(
-      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+      `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
     );
     if (res.data.success) {
       setRecBalance(res.data.acc.Balance);
@@ -127,15 +127,12 @@ const ExpenseForm = () => {
         console.log(fileUrl);
       }
 
-      const res = await axios.post(
-        "https://directory-management-g8gf.onrender.com/api/v1/expense/addExpense",
-        {
-          Title,
-          Amount,
-          Type,
-          fileUrl,
-        }
-      );
+      const res = await axios.post("/api/v1/expense/addExpense", {
+        Title,
+        Amount,
+        Type,
+        fileUrl,
+      });
 
       if (res.data.success) {
         toast.success(res.data.message);
@@ -151,11 +148,11 @@ const ExpenseForm = () => {
             return;
           }
           const re1 = await axios.get(
-            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+            `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
           const finalRecBalance = parseFloat(re1.data.acc.Balance) - Amount;
           await axios.put(
-            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+            "/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
             { Balance: finalRecBalance }
           );
         }
@@ -166,11 +163,11 @@ const ExpenseForm = () => {
             return;
           }
           const re = await axios.get(
-            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+            `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance = parseFloat(re.data.acc.Balance) - Amount;
           await axios.put(
-            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+            "/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
             { Balance: finalMasjidBalance }
           );
         }
@@ -192,34 +189,31 @@ const ExpenseForm = () => {
         toast.error("Please enter a valid amount");
         return;
       }
-      const resIn = await axios.post(
-        "https://directory-management-g8gf.onrender.com/api/v1/income/addIncome",
-        {
-          ResidentName: FullName,
-          Amount: fundAmountNumber,
-          Reason,
-          Type: "Donation",
-        }
-      );
+      const resIn = await axios.post("/api/v1/income/addIncome", {
+        ResidentName: FullName,
+        Amount: fundAmountNumber,
+        Reason,
+        Type: "Donation",
+      });
       if (resIn.data.success) {
         if (Account === "rec") {
           const re1 = await axios.get(
-            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+            `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
           const finalRecBalance =
             parseFloat(re1.data.acc.Balance) + fundAmountNumber;
           await axios.put(
-            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
+            "/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9",
             { Balance: finalRecBalance }
           );
         } else if (Account === "masjid") {
           const re = await axios.get(
-            `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+            `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance =
             parseFloat(re.data.acc.Balance) + fundAmountNumber;
           await axios.put(
-            "https://directory-management-g8gf.onrender.com/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
+            "/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da",
             { Balance: finalMasjidBalance }
           );
         }
@@ -239,9 +233,7 @@ const ExpenseForm = () => {
   };
 
   const allExpenses = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/expense/expenses"
-    );
+    const res = await axios.get("/api/v1/expense/expenses");
     if (res.data.success) {
       setExpenseList(res.data.expenseList);
     }
@@ -252,9 +244,7 @@ const ExpenseForm = () => {
   }, []);
 
   const allIncomes = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/income/allIncomes"
-    );
+    const res = await axios.get("/api/v1/income/allIncomes");
     if (res.data.success) {
       setIncomeList(res.data.incomeList);
     }

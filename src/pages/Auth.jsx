@@ -20,13 +20,10 @@ const Auth = () => {
     e.preventDefault();
     setShowLoader(true);
     try {
-      const res = await axios.post(
-        `https://directory-management-g8gf.onrender.com/api/v1/admin/login`,
-        {
-          Email,
-          Password,
-        }
-      );
+      const res = await axios.post(`/api/v1/admin/login`, {
+        Email,
+        Password,
+      });
       if (res?.data?.success) {
         localStorage.setItem("token", res.data.token);
         toast.success(res.data.message);

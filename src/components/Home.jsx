@@ -21,7 +21,7 @@ const Home = () => {
   // getting masjid & rec balance
   const getMasjidBalance = async () => {
     const res = await axios.get(
-      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+      `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
     );
     if (res.data.success) {
       setMasjidBalance(res.data.acc.Balance);
@@ -29,7 +29,7 @@ const Home = () => {
   };
   const getRecBalance = async () => {
     const res = await axios.get(
-      `https://directory-management-g8gf.onrender.com/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+      `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
     );
     if (res.data.success) {
       setRecBalance(res.data.acc.Balance);
@@ -46,55 +46,53 @@ const Home = () => {
   const [residents, setResidents] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  // const data = [
+  //   {
+  //     name: "Page A",
+  //     uv: 4000,
+  //     pv: 2400,
+  //     amt: 2400,
+  //   },
+  //   {
+  //     name: "Page B",
+  //     uv: 3000,
+  //     pv: 1398,
+  //     amt: 2210,
+  //   },
+  //   {
+  //     name: "Page C",
+  //     uv: 2000,
+  //     pv: 9800,
+  //     amt: 2290,
+  //   },
+  //   {
+  //     name: "Page D",
+  //     uv: 2780,
+  //     pv: 3908,
+  //     amt: 2000,
+  //   },
+  //   {
+  //     name: "Page E",
+  //     uv: 1890,
+  //     pv: 4800,
+  //     amt: 2181,
+  //   },
+  //   {
+  //     name: "Page F",
+  //     uv: 2390,
+  //     pv: 3800,
+  //     amt: 2500,
+  //   },
+  //   {
+  //     name: "Page G",
+  //     uv: 3490,
+  //     pv: 4300,
+  //     amt: 2100,
+  //   },
+  // ];
   //   calling residents to know total number
   const allResidents = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/resident/getResidents"
-    );
+    const res = await axios.get("/api/v1/resident/getResidents");
     if (res?.data?.success) {
       setResidents(res.data.residents);
     }
@@ -111,18 +109,14 @@ const Home = () => {
 
   // calling income list
   const allIncomes = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/income/allIncomes"
-    );
+    const res = await axios.get("/api/v1/income/allIncomes");
     if (res.data.success) {
       setIncomes(res.data.incomeList);
     }
   };
 
   const allExpenses = async () => {
-    const res = await axios.get(
-      "https://directory-management-g8gf.onrender.com/api/v1/expense/expenses"
-    );
+    const res = await axios.get("/api/v1/expense/expenses");
     if (res.data.success) {
       setExpenses(res.data.expenseList);
     }
