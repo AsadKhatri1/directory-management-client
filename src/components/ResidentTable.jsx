@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 
 const ResidentTable = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   let token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
@@ -15,7 +16,7 @@ const ResidentTable = () => {
 
   const allResidents = async () => {
     try {
-      const res = await axios.get("/api/v1/resident/getResidents");
+      const res = await axios.get(`${backendURL}/api/v1/resident/getResidents`);
       if (res?.data?.success) {
         setResidents(res.data.residents);
       }
@@ -30,11 +31,14 @@ const ResidentTable = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axios.delete(`/api/v1/resident/deleteResident/${id}`, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.delete(
+        `${backendURL}/api/v1/resident/deleteResident/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res.data.success) {
         toast.success(res.data.message);
         allResidents();
@@ -49,7 +53,7 @@ const ResidentTable = () => {
   const generateFeeSlip = async (residentId) => {
     try {
       const response = await axios.post(
-        `/api/v1/resident/generateSlip/${residentId}`,
+        `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
         { numberOfMonths: numberOfMonths },
         {
           headers: {

@@ -18,10 +18,11 @@ import {
 import axios from "axios";
 import moment from "moment";
 const Home = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   // getting masjid & rec balance
   const getMasjidBalance = async () => {
     const res = await axios.get(
-      `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+      `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
     );
     if (res.data.success) {
       setMasjidBalance(res.data.acc.Balance);
@@ -29,7 +30,7 @@ const Home = () => {
   };
   const getRecBalance = async () => {
     const res = await axios.get(
-      `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+      `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
     );
     if (res.data.success) {
       setRecBalance(res.data.acc.Balance);
@@ -92,7 +93,7 @@ const Home = () => {
   // ];
   //   calling residents to know total number
   const allResidents = async () => {
-    const res = await axios.get("/api/v1/resident/getResidents");
+    const res = await axios.get(`${backendURL}/api/v1/resident/getResidents`);
     if (res?.data?.success) {
       setResidents(res.data.residents);
     }
@@ -109,14 +110,14 @@ const Home = () => {
 
   // calling income list
   const allIncomes = async () => {
-    const res = await axios.get("/api/v1/income/allIncomes");
+    const res = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
     if (res.data.success) {
       setIncomes(res.data.incomeList);
     }
   };
 
   const allExpenses = async () => {
-    const res = await axios.get("/api/v1/expense/expenses");
+    const res = await axios.get(`${backendURL}/api/v1/expense/expenses`);
     if (res.data.success) {
       setExpenses(res.data.expenseList);
     }

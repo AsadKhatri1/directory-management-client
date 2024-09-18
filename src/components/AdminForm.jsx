@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const AdminForm = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const [FullName, setFullName] = useState("");
   const [Email, setEmail] = useState("");
   const [Phone, setPhone] = useState("");
@@ -14,7 +15,7 @@ const AdminForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/v1/admin/add", {
+      const res = await axios.post(`${backendURL}/api/v1/admin/add`, {
         FullName,
         Email,
         Phone,

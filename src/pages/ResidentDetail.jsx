@@ -8,6 +8,7 @@ import moment from "moment";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
 const ResidentDetail = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   // redirect on refresh
   const [paid, setPaid] = useState(false);
   const params = useParams();
@@ -55,7 +56,7 @@ const ResidentDetail = () => {
   const getResident = async () => {
     try {
       const { data } = await axios.get(
-        `/api/v1/resident/getResident/${params.id}`
+        `${backendURL}/api/v1/resident/getResident/${params.id}`
       );
       if (data.success) {
         setResident(data?.resident);
@@ -97,13 +98,16 @@ const ResidentDetail = () => {
           return;
         }
 
-        const resIn = await axios.post("/api/v1/income/addIncome", {
-          ResidentName: resident.FullName ? resident.FullName : "Unknown",
-          HouseNo: resident.HouseNumber,
-          Amount: feeAmountNumber,
-          Ownership: Ownership,
-          Type: "membership",
-        });
+        const resIn = await axios.post(
+          `${backendURL}/api/v1/income/addIncome`,
+          {
+            ResidentName: resident.FullName ? resident.FullName : "Unknown",
+            HouseNo: resident.HouseNumber,
+            Amount: feeAmountNumber,
+            Ownership: Ownership,
+            Type: "membership",
+          }
+        );
         if (resIn.success) {
           toast.success("Income added");
         }
@@ -113,21 +117,27 @@ const ResidentDetail = () => {
 
         // Update the balances
         const re1 = await axios.get(
-          `/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
         );
         const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
-        await axios.put("/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9", {
-          Balance: finalRecBalance,
-        });
+        await axios.put(
+          `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+          {
+            Balance: finalRecBalance,
+          }
+        );
 
         const re = await axios.get(
-          `/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
         );
         const finalMasjidBalance =
           JSON.parse(re.data.acc.Balance) + masjidAmount;
-        await axios.put("/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da", {
-          Balance: finalMasjidBalance,
-        });
+        await axios.put(
+          `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+          {
+            Balance: finalMasjidBalance,
+          }
+        );
       }
 
       // Get the number of months from the user input
@@ -135,7 +145,7 @@ const ResidentDetail = () => {
 
       // Perform the API call to update the resident's paid status
       const { data } = await axios.put(
-        `/api/v1/resident/updateResident/${params.id}`,
+        `${backendURL}/api/v1/resident/updateResident/${params.id}`,
         { paid, numberOfMonths },
         {
           headers: {

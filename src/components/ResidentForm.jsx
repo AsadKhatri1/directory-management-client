@@ -8,6 +8,7 @@ import { Audio } from "react-loader-spinner";
 // Configure Cloudinary with your credentials
 
 const ResidentForm = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const [FullName, setFullName] = useState("");
   const [Email, setEmail] = useState("");
   const [Phone, setPhone] = useState("");
@@ -127,7 +128,7 @@ const ResidentForm = () => {
       }
 
       const response = await axios.post(
-        "/api/v1/resident/add",
+        `${backendURL}/api/v1/resident/add`,
         {
           FullName,
           Email,

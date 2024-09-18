@@ -8,6 +8,7 @@ import Expense from "../pages/Expense";
 import moment from "moment";
 
 const Receipt = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const componentRef = useRef();
   const [expense, setExpense] = useState([]);
   const { id } = useParams();
@@ -16,7 +17,7 @@ const Receipt = () => {
 
   const getExpense = async () => {
     const res = await axios.get(
-      `/api/v1/expense/getExpense/${id}`
+      `${backendURL}/api/v1/expense/getExpense/${id}`
     );
     if (res.data.success) {
       setExpense(res.data.expense);

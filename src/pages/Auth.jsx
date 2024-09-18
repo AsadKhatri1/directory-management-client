@@ -9,6 +9,7 @@ import { IoEyeOffSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { Audio } from "react-loader-spinner";
 const Auth = () => {
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [showLoader, setShowLoader] = useState(false);
@@ -20,7 +21,7 @@ const Auth = () => {
     e.preventDefault();
     setShowLoader(true);
     try {
-      const res = await axios.post(`/api/v1/admin/login`, {
+      const res = await axios.post(`${backendURL}/api/v1/admin/login`, {
         Email,
         Password,
       });
