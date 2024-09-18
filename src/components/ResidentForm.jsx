@@ -127,7 +127,7 @@ const ResidentForm = () => {
       }
 
       const response = await axios.post(
-        "https://directory-management-g8gf.onrender.com/api/v1/resident/add",
+        "/api/v1/resident/add",
         {
           FullName,
           Email,

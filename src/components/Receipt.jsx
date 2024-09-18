@@ -16,7 +16,7 @@ const Receipt = () => {
 
   const getExpense = async () => {
     const res = await axios.get(
-      `https://directory-management-g8gf.onrender.com/api/v1/expense/getExpense/${id}`
+      `/api/v1/expense/getExpense/${id}`
     );
     if (res.data.success) {
       setExpense(res.data.expense);
