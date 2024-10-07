@@ -105,9 +105,9 @@ const ExpenseReport = () => {
           <div className="col-md-6">
             <button
               className="btn btn-primary my-4"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate("/dashboard/expense")}
             >
-              <FaChevronCircleLeft /> Home
+              <FaChevronCircleLeft /> Back
             </button>
           </div>
           <div className="col-md-6">
