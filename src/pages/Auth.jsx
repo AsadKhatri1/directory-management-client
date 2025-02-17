@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import logo from "../assets/logo.png";
 
@@ -14,9 +14,29 @@ const Auth = () => {
   const [Password, setPassword] = useState("");
   const [showLoader, setShowLoader] = useState(false);
   const [inputType, setInputType] = useState("password");
+  const [token, setToken] = useState("")
   const navigate = useNavigate();
+
+
+  
+
+  useEffect(() => {
+    const fetchUserFromStorage = async () => {
+      await setToken(localStorage.getItem("token"));
+     console.log("inside fun")
+     console.log(token)
+    };
+    fetchUserFromStorage();
+  }, []);
+console.log(token)
+
+if(token){
+  navigate("/dashboard")
+}
+
   // -------------- submit form function ----------------------
 
+  console.log("auth page")
   const submitHandler = async (e) => {
     e.preventDefault();
     setShowLoader(true);
@@ -61,7 +81,7 @@ const Auth = () => {
           </h2>
           <form className="w-75" onSubmit={submitHandler}>
             <div className="mb-3">
-              <label htmlFor="exampleInputEmail1" class="form-label">
+              <label htmlFor="exampleInputEmail1" className="form-label">
                 Email address
               </label>
               <input
@@ -74,8 +94,8 @@ const Auth = () => {
                 style={{ boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px" }}
               />
             </div>
-            <div class="mb-3">
-              <label htmlFor="exampleInputPassword1" class="form-label">
+            <div className="mb-3">
+              <label htmlFor="exampleInputPassword1" className="form-label">
                 Password
               </label>
               <div className="pass d-flex align-items-center">

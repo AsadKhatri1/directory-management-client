@@ -14,10 +14,14 @@ import ExpenseReport from "./components/ExpenseReport.jsx";
 import IncomeReport from "./components/IncomeReport.jsx";
 
 function App() {
+
+
+
+ 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Auth />} />
+        <Route path="/" element={ <Auth />}/>
         <Route path="/dashboard/resident/:id" element={<ResidentDetail />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/residents" element={<Residents />} />
