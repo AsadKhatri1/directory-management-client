@@ -129,7 +129,7 @@ const ExpenseForm = () => {
         console.log(fileUrl);
       }
 
-      const res = await axios.post(`http://localhost:4000/api/v1/expense/addExpense`, {
+      const res = await axios.post(`${backendURL}/api/v1/expense/addExpense`, {
         Title,
         Amount,
         Type,
