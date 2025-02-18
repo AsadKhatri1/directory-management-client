@@ -23,6 +23,7 @@ const ExpenseForm = () => {
   const [FullName, setFullName] = useState("");
   const [Reason, setReason] = useState("");
   const [Account, setAccount] = useState("");
+  const [date, setDate] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
   const [selectedStartMonth, setSelectedStartMonth] = useState(
@@ -128,12 +129,13 @@ const ExpenseForm = () => {
         console.log(fileUrl);
       }
 
-      const res = await axios.post(`${backendURL}/api/v1/expense/addExpense`, {
+      const res = await axios.post(`http://localhost:4000/api/v1/expense/addExpense`, {
         Title,
         Amount,
         Type,
+        date:date,
         fileUrl,
-      });
+      },{headers:{}});
 
       if (res.data.success) {
         toast.success(res.data.message);
@@ -141,6 +143,8 @@ const ExpenseForm = () => {
         setAmount("");
         setAccount("");
         setType("");
+        setDate("")
+        setFile("")
         setFile(null);
         if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
@@ -185,6 +189,20 @@ const ExpenseForm = () => {
   const submitFundHandler = async (e) => {
     e.preventDefault();
     try {
+      let fileUrl = "";
+
+      if (File) {
+        const formData = new FormData();
+        formData.append("file", File);
+        formData.append("upload_preset", "images_preset"); // replace with your upload preset
+        const cloudinaryRes = await axios.post(
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
+          formData
+        );
+        fileUrl = await cloudinaryRes.data.secure_url;
+        console.log(fileUrl);
+      }
+
       const fundAmountNumber = parseFloat(FundAmount);
       if (isNaN(fundAmountNumber)) {
         toast.error("Please enter a valid amount");
@@ -195,6 +213,8 @@ const ExpenseForm = () => {
         Amount: fundAmountNumber,
         Reason,
         Type: "Donation",
+        date:date,
+        fileUrl
       });
       if (resIn.data.success) {
         if (Account === "rec") {
@@ -224,6 +244,8 @@ const ExpenseForm = () => {
         setFullName("");
         setReason("");
         allIncomes();
+        setDate("")
+        setFile("")
         getMasjidBalance();
         getRecBalance();
         toast.success("Successfully updated the balance");
@@ -355,6 +377,23 @@ const ExpenseForm = () => {
                 }}
               />{" "}
               <br />
+              <input
+                type="date"
+                placeholder="Date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              ></input>
               {/* type */}
               <div className="w-75 mx-auto">
                 <select
@@ -464,18 +503,7 @@ const ExpenseForm = () => {
                   hidden
                 />
               </label>
-              {/* <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="form-control w-75 mx-auto my-3"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
-              /> */}
+             
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
@@ -555,6 +583,23 @@ const ExpenseForm = () => {
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               ></input>
+              <input
+                type="date"
+                placeholder="Date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              ></input>
               <div className="w-75 mx-auto">
                 <select
                   onChange={(e) => setAccount(e.target.value)}
@@ -573,6 +618,26 @@ const ExpenseForm = () => {
                   <option value="masjid">Masjid</option>
                 </select>
               </div>
+              <label
+                className="w-75 mb-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                {File ? File.name : "Upload Document"}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  hidden
+                />
+              </label>
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
