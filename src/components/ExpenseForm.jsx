@@ -129,13 +129,17 @@ const ExpenseForm = () => {
         console.log(fileUrl);
       }
 
-      const res = await axios.post(`${backendURL}/api/v1/expense/addExpense`, {
-        Title,
-        Amount,
-        Type,
-        date:date,
-        fileUrl,
-      },{headers:{}});
+      const res = await axios.post(
+        `${backendURL}/api/v1/expense/addExpense`,
+        {
+          Title,
+          Amount,
+          Type,
+          date: date,
+          fileUrl,
+        },
+        { headers: {} }
+      );
 
       if (res.data.success) {
         toast.success(res.data.message);
@@ -143,8 +147,8 @@ const ExpenseForm = () => {
         setAmount("");
         setAccount("");
         setType("");
-        setDate("")
-        setFile("")
+        setDate("");
+        setFile("");
         setFile(null);
         if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
@@ -213,8 +217,8 @@ const ExpenseForm = () => {
         Amount: fundAmountNumber,
         Reason,
         Type: "Donation",
-        date:date,
-        fileUrl
+        date: date,
+        fileUrl,
       });
       if (resIn.data.success) {
         if (Account === "rec") {
@@ -244,8 +248,8 @@ const ExpenseForm = () => {
         setFullName("");
         setReason("");
         allIncomes();
-        setDate("")
-        setFile("")
+        setDate("");
+        setFile("");
         getMasjidBalance();
         getRecBalance();
         toast.success("Successfully updated the balance");
@@ -286,6 +290,18 @@ const ExpenseForm = () => {
     navigate("/dashboard/expense/report", {
       state: { data: filteredExpenseList },
     });
+  };
+
+  const [showIncomeModal, setShowIncomeModal] = useState(false);
+  const [selectedIncomeImageUrl, setSelectedIncomeImageUrl] = useState("");
+
+  const handleIncomeImageClick = (url) => {
+    setSelectedIncomeImageUrl(url);
+    setShowIncomeModal(true);
+  };
+
+  const handleCloseIncomeModal = () => {
+    setShowIncomeModal(false);
   };
   return (
     <>
@@ -503,7 +519,6 @@ const ExpenseForm = () => {
                   hidden
                 />
               </label>
-             
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
@@ -516,7 +531,6 @@ const ExpenseForm = () => {
         ) : (
           ""
         )}
-
         {showF ? (
           <div
             className="py-3 rounded"
@@ -650,7 +664,6 @@ const ExpenseForm = () => {
         ) : (
           ""
         )}
-
         <div className="main-finance-cards">
           <div
             className="cards"
@@ -764,54 +777,32 @@ const ExpenseForm = () => {
               <table className="table table-dark table-hover table-striped">
                 <thead className="bg-light py-5">
                   <tr className="text-center py-5">
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Resident
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       House Number
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Amount
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Reason
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                      Date
+                    </th>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Residency
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Type
+                    </th>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                      Document
                     </th>
                   </tr>
                 </thead>
@@ -822,60 +813,47 @@ const ExpenseForm = () => {
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e.Reason ? e.reason : "null"}</td>
-
+                      <td>{e.Reason ? e.Reason : "null"}</td>
+                      <td>
+                        {e.date
+                          ? new Date(e.date).toISOString().split("T")[0]
+                          : "null"}
+                      </td>
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
+                      <td
+                        onClick={() => handleIncomeImageClick(e?.fileUrl)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <IoDocumentsSharp />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="w-100 d-flex align-items-center justify-content-end py-3">
-              <button
-                className="btn btn-light"
-                onClick={handleNavigate}
-                style={{
-                  fontWeight: "bold",
-                  boxShadow: " 0px 2px 3px #03bb50",
-                }}
-              >
-                {" "}
-                View Report
-              </button>
-            </div>
 
-            <div className="d-flex justify-content-center my-3">
-              <button
-                className="btn mx-2"
-                onClick={() => paginateIncomes(currentPageIncome - 1)}
-                disabled={currentPageIncome === 1}
-                style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
-                  // border: "1px solid #009843",
-                }}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-secondary mx-2"
-                onClick={() => paginateIncomes(currentPageIncome + 1)}
-                disabled={
-                  currentPageIncome ===
-                  Math.ceil(filteredIncomeList.length / incomesPerPage)
-                }
-                style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
-                  // border: "1px solid #009843",
-                }}
-              >
-                Next
-              </button>
-            </div>
+            {/* Income Document Modal */}
+            <Modal show={showIncomeModal} onHide={handleCloseIncomeModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Income Document</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <img
+                  src={selectedIncomeImageUrl}
+                  alt="Document"
+                  style={{ width: "75%" }}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseIncomeModal}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
+        );
         <div className="row">
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Expenses</h2>
@@ -917,6 +895,13 @@ const ExpenseForm = () => {
                       className="py-3 fs-5"
                       style={{ color: "#03bb50" }}
                     >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
                       Document
                     </th>
                     <th
@@ -935,6 +920,11 @@ const ExpenseForm = () => {
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
+                      <td>
+                        {e.date
+                          ? new Date(e.date).toISOString().split("T")[0]
+                          : "null"}
+                      </td>
                       <td
                         onClick={() => handleImageClick(e?.fileUrl)}
                         style={{ cursor: "pointer" }}
