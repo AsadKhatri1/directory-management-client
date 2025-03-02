@@ -1,39 +1,40 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { ImCross } from "react-icons/im";
-import { Modal, Button } from "react-bootstrap";
-import moment from "moment";
-import { IoIosWallet } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
-import { Audio } from "react-loader-spinner";
-import { IoDocumentsSharp } from "react-icons/io5";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { ImCross } from 'react-icons/im';
+import { Modal, Button } from 'react-bootstrap';
+import moment from 'moment';
+import { IoIosWallet } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+import { Audio } from 'react-loader-spinner';
+import { IoDocumentsSharp } from 'react-icons/io5';
 const ExpenseForm = () => {
-  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const backendURL = 'http://localhost:4000';
   const [File, setFile] = useState(null);
   const navigate = useNavigate();
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
-  const [Title, setTitle] = useState("");
-  const [Type, setType] = useState("");
+  const [Title, setTitle] = useState('');
+  const [Type, setType] = useState('');
   const [show, setShow] = useState(false);
   const [showF, setShowF] = useState(false);
-  const [Amount, setAmount] = useState("");
-  const [FundAmount, setFundAmount] = useState("");
-  const [FullName, setFullName] = useState("");
-  const [Reason, setReason] = useState("");
-  const [Account, setAccount] = useState("");
+  const [Amount, setAmount] = useState('');
+  const [FundAmount, setFundAmount] = useState('');
+  const [FullName, setFullName] = useState('');
+  const [Reason, setReason] = useState('');
+  const [date, setDate] = useState('');
+  const [Account, setAccount] = useState('');
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
   const [selectedStartMonth, setSelectedStartMonth] = useState(
-    moment().startOf("month").month() - 1
+    moment().startOf('month').month() - 1
   );
   const [selectedEndMonth, setSelectedEndMonth] = useState(
-    moment().endOf("month").month()
+    moment().endOf('month').month()
   );
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
 
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
@@ -42,7 +43,7 @@ const ExpenseForm = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedImageUrl("");
+    setSelectedImageUrl('');
   };
   const [selectedYear, setSelectedYear] = useState(moment().year());
   // Filtered expenses and incomes based on selected month range and year
@@ -114,12 +115,12 @@ const ExpenseForm = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      let fileUrl = "";
+      let fileUrl = '';
 
       if (File) {
         const formData = new FormData();
-        formData.append("file", File);
-        formData.append("upload_preset", "images_preset"); // replace with your upload preset
+        formData.append('file', File);
+        formData.append('upload_preset', 'images_preset'); // replace with your upload preset
         const cloudinaryRes = await axios.post(
           `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
           formData
@@ -132,20 +133,22 @@ const ExpenseForm = () => {
         Title,
         Amount,
         Type,
+        date,
         fileUrl,
       });
 
       if (res.data.success) {
         toast.success(res.data.message);
-        setTitle("");
-        setAmount("");
-        setAccount("");
-        setType("");
+        setTitle('');
+        setAmount('');
+        setAccount('');
+        setDate('');
+        setType('');
         setFile(null);
-        if (Account === "rec") {
+        if (Account === 'rec') {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
-            toast.error("Please enter a valid amount");
+            toast.error('Please enter a valid amount');
             return;
           }
           const re1 = await axios.get(
@@ -157,10 +160,10 @@ const ExpenseForm = () => {
             { Balance: finalRecBalance }
           );
         }
-        if (Account === "masjid") {
+        if (Account === 'masjid') {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
-            toast.error("Please enter a valid amount");
+            toast.error('Please enter a valid amount');
             return;
           }
           const re = await axios.get(
@@ -182,22 +185,96 @@ const ExpenseForm = () => {
     }
   };
 
+  // const submitFundHandler = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const fundAmountNumber = parseFloat(FundAmount);
+  //     if (isNaN(fundAmountNumber)) {
+  //       toast.error('Please enter a valid amount');
+  //       return;
+  //     }
+  //     const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
+  //       ResidentName: FullName,
+  //       Amount: fundAmountNumber,
+  //       Reason,
+  //       date,
+  //       Type: 'Donation',
+  //     });
+  //     if (resIn.data.success) {
+  //       if (Account === 'rec') {
+  //         const re1 = await axios.get(
+  //           `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+  //         );
+  //         const finalRecBalance =
+  //           parseFloat(re1.data.acc.Balance) + fundAmountNumber;
+  //         await axios.put(
+  //           `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+  //           { Balance: finalRecBalance }
+  //         );
+  //       } else if (Account === 'masjid') {
+  //         const re = await axios.get(
+  //           `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+  //         );
+  //         const finalMasjidBalance =
+  //           parseFloat(re.data.acc.Balance) + fundAmountNumber;
+  //         await axios.put(
+  //           `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+  //           { Balance: finalMasjidBalance }
+  //         );
+  //       }
+  //       setShowF(false);
+  //       allExpenses();
+  //       setFundAmount('');
+  //       setFullName('');
+  //       setReason('');
+  //       setDate('');
+  //       allIncomes();
+  //       getMasjidBalance();
+  //       getRecBalance();
+  //       toast.success('Successfully updated the balance');
+  //     }
+  //   } catch (err) {
+  //     toast.error('Error in adding fund');
+  //   }
+  // };
+
   const submitFundHandler = async (e) => {
     e.preventDefault();
     try {
+      let incomeFileUrl = ''; // Initialize file URL
+
+      // File upload to Cloudinary
+      if (File) {
+        const formData = new FormData();
+        formData.append('file', File);
+        formData.append('upload_preset', 'images_preset'); // Replace with your Cloudinary upload preset
+        const cloudinaryRes = await axios.post(
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // Replace with your Cloudinary URL
+          formData
+        );
+        incomeFileUrl = cloudinaryRes.data.secure_url; // Retrieve the uploaded file's URL
+        console.log(fileUrl);
+      }
+
       const fundAmountNumber = parseFloat(FundAmount);
       if (isNaN(fundAmountNumber)) {
-        toast.error("Please enter a valid amount");
+        toast.error('Please enter a valid amount');
         return;
       }
+      console.log(fileUrl);
+      // Add income with file URL
       const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
         ResidentName: FullName,
         Amount: fundAmountNumber,
         Reason,
-        Type: "Donation",
+        date,
+        Type: 'Donation',
+        fileUrl: incomeFileUrl, // Include the file URL in the API request
       });
+
       if (resIn.data.success) {
-        if (Account === "rec") {
+        // Update balances based on the account type
+        if (Account === 'rec') {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
@@ -207,7 +284,7 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
             { Balance: finalRecBalance }
           );
-        } else if (Account === "masjid") {
+        } else if (Account === 'masjid') {
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
@@ -218,18 +295,21 @@ const ExpenseForm = () => {
             { Balance: finalMasjidBalance }
           );
         }
+
+        // Reset form states and fetch updated data
         setShowF(false);
-        allExpenses();
-        setFundAmount("");
-        setFullName("");
-        setReason("");
+        setFundAmount('');
+        setFullName('');
+        setReason('');
+        setDate('');
+        setFile(null); // Reset file input
         allIncomes();
         getMasjidBalance();
         getRecBalance();
-        toast.success("Successfully updated the balance");
+        toast.success('Successfully added donation and updated balance');
       }
     } catch (err) {
-      toast.error("Error in adding fund");
+      toast.error('Error in adding donation');
     }
   };
 
@@ -256,12 +336,12 @@ const ExpenseForm = () => {
   }, []);
 
   const handleNavigate = () => {
-    navigate("/dashboard/income/report", {
+    navigate('/dashboard/income/report', {
       state: { data: filteredIncomeList },
     });
   };
   const handleExpenseNavigate = () => {
-    navigate("/dashboard/expense/report", {
+    navigate('/dashboard/expense/report', {
       state: { data: filteredExpenseList },
     });
   };
@@ -273,7 +353,7 @@ const ExpenseForm = () => {
             {showF ? (
               <ImCross
                 onClick={() => setShowF(!showF)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               />
             ) : (
               <button
@@ -291,7 +371,7 @@ const ExpenseForm = () => {
             {show ? (
               <ImCross
                 onClick={() => setShow(!show)}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
               />
             ) : (
               <button
@@ -310,7 +390,7 @@ const ExpenseForm = () => {
             className="py-3 rounded"
             style={{
               boxShadow:
-                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+                'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
             }}
           >
             <h5>Add Expense</h5>
@@ -328,12 +408,12 @@ const ExpenseForm = () => {
                 placeholder="Title"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
               />
               <br />
@@ -346,14 +426,14 @@ const ExpenseForm = () => {
                 placeholder="Amount"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              />{" "}
+              />{' '}
               <br />
               {/* type */}
               <div className="w-75 mx-auto">
@@ -361,12 +441,12 @@ const ExpenseForm = () => {
                   onChange={(e) => setType(e.target.value)}
                   className="form-select my-3 w-100 py-2"
                   style={{
-                    backgroundColor: "transparent",
-                    color: "black",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    backgroundColor: 'transparent',
+                    color: 'black',
+                    borderBottom: '1px solid white',
+                    borderRadius: '12px',
+                    textIndent: '12px',
+                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                   }}
                 >
                   <option>Select Type</option>
@@ -430,12 +510,12 @@ const ExpenseForm = () => {
                   onChange={(e) => setAccount(e.target.value)}
                   className="form-select mt-4 w-100 py-2"
                   style={{
-                    backgroundColor: "transparent",
-                    color: "black",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    backgroundColor: 'transparent',
+                    color: 'black',
+                    borderBottom: '1px solid white',
+                    borderRadius: '12px',
+                    textIndent: '12px',
+                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                   }}
                 >
                   <option>Select Account</option>
@@ -447,15 +527,15 @@ const ExpenseForm = () => {
               <label
                 className="w-75 mb-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
               >
-                {File ? File.name : "Upload Document"}
+                {File ? File.name : 'Upload Document'}
                 <input
                   type="file"
                   name="photo"
@@ -464,29 +544,34 @@ const ExpenseForm = () => {
                   hidden
                 />
               </label>
-              {/* <input
-                type="file"
-                onChange={(e) => setFile(e.target.files[0])}
-                className="form-control w-75 mx-auto my-3"
+              <input
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                type="date"
+                name="date"
+                id="date"
+                placeholder="Date"
+                className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              /> */}
+              />{' '}
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: "12px" }}
+                style={{ borderRadius: '12px' }}
               >
                 ADD
               </button>
             </form>
           </div>
         ) : (
-          ""
+          ''
         )}
 
         {showF ? (
@@ -494,7 +579,7 @@ const ExpenseForm = () => {
             className="py-3 rounded"
             style={{
               boxShadow:
-                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
+                'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
             }}
           >
             <h5>Add Donation</h5>
@@ -512,14 +597,14 @@ const ExpenseForm = () => {
                 placeholder="Full Name"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              />{" "}
+              />{' '}
               <br />
               <input
                 value={FundAmount}
@@ -530,14 +615,14 @@ const ExpenseForm = () => {
                 placeholder="Amount"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              />{" "}
+              />{' '}
               <input
                 type="text"
                 placeholder="Reason for donations"
@@ -547,25 +632,42 @@ const ExpenseForm = () => {
                 id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              ></input>
+              ></input>{' '}
+              <input
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                type="date"
+                name="date"
+                id="date"
+                placeholder="Date"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                }}
+              />{' '}
               <div className="w-75 mx-auto">
                 <select
                   onChange={(e) => setAccount(e.target.value)}
                   className="form-select my-3 w-100 py-2"
                   style={{
-                    backgroundColor: "transparent",
-                    color: "black",
-                    borderBottom: "1px solid white",
-                    borderRadius: "12px",
-                    textIndent: "12px",
-                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    backgroundColor: 'transparent',
+                    color: 'black',
+                    borderBottom: '1px solid white',
+                    borderRadius: '12px',
+                    textIndent: '12px',
+                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                   }}
                 >
                   <option>Select Account</option>
@@ -573,17 +675,37 @@ const ExpenseForm = () => {
                   <option value="masjid">Masjid</option>
                 </select>
               </div>
+              <label
+                className="w-75 mb-3 text-white py-2"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                }}
+              >
+                {File ? File.name : 'Upload Document'}
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  hidden
+                />
+              </label>
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: "12px" }}
+                style={{ borderRadius: '12px' }}
               >
                 ADD
               </button>
             </form>
           </div>
         ) : (
-          ""
+          ''
         )}
 
         <div className="main-finance-cards">
@@ -591,14 +713,14 @@ const ExpenseForm = () => {
             className="cards"
             style={{
               boxShadow:
-                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+                'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
             }}
           >
             <div className="card-inner">
               <h6 className="opacity-50">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h3 style={{ color: "#03bb50" }}>
+            <h3 style={{ color: '#03bb50' }}>
               {!recBalance ? (
                 <Audio
                   height="50"
@@ -619,14 +741,14 @@ const ExpenseForm = () => {
             className="cards"
             style={{
               boxShadow:
-                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+                'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
             }}
           >
             <div className="card-inner">
               <h6 className="opacity-50">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h2 style={{ color: "#03bb50" }}>
+            <h2 style={{ color: '#03bb50' }}>
               {!masjidBalance ? (
                 <Audio
                   height="50"
@@ -647,17 +769,17 @@ const ExpenseForm = () => {
         <div
           className="my-4 p-3"
           style={{
-            backgroundColor: "#263043",
-            borderRadius: "12px",
+            backgroundColor: '#263043',
+            borderRadius: '12px',
 
             boxShadow:
-              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+              'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
           }}
         >
           {/* <h3 className="my-3">Filter By Range</h3> */}
           <div className="row">
             <div className="col-md-6">
-              {" "}
+              {' '}
               <div className="form-group">
                 <label htmlFor="startMonth" className="mb-3">
                   Start Month:
@@ -666,7 +788,7 @@ const ExpenseForm = () => {
                   type="month"
                   className="form-control"
                   id="startMonth"
-                  value={moment().month(selectedStartMonth).format("YYYY-MM")}
+                  value={moment().month(selectedStartMonth).format('YYYY-MM')}
                   onChange={(e) =>
                     setSelectedStartMonth(moment(e.target.value).month())
                   }
@@ -674,7 +796,7 @@ const ExpenseForm = () => {
               </div>
             </div>
             <div className="col-md-6">
-              {" "}
+              {' '}
               <div className="form-group">
                 <label htmlFor="endMonth" className="mb-3">
                   End Month:
@@ -683,7 +805,7 @@ const ExpenseForm = () => {
                   type="month"
                   className="form-control"
                   id="endMonth"
-                  value={moment().month(selectedEndMonth).format("YYYY-MM")}
+                  value={moment().month(selectedEndMonth).format('YYYY-MM')}
                   onChange={(e) =>
                     setSelectedEndMonth(moment(e.target.value).month())
                   }
@@ -702,49 +824,49 @@ const ExpenseForm = () => {
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Date
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Resident
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       House Number
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Amount
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Reason
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Residency
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Type
                     </th>
@@ -753,11 +875,11 @@ const ExpenseForm = () => {
                 <tbody>
                   {currentIncomes.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                      <td>{moment(e?.createdAt).format('MMMM Do, YYYY')}</td>
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e.Reason ? e.reason : "null"}</td>
+                      <td>{e.Reason ? e.reason : 'null'}</td>
 
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
@@ -771,11 +893,11 @@ const ExpenseForm = () => {
                 className="btn btn-light"
                 onClick={handleNavigate}
                 style={{
-                  fontWeight: "bold",
-                  boxShadow: " 0px 2px 3px #03bb50",
+                  fontWeight: 'bold',
+                  boxShadow: ' 0px 2px 3px #03bb50',
                 }}
               >
-                {" "}
+                {' '}
                 View Report
               </button>
             </div>
@@ -786,8 +908,8 @@ const ExpenseForm = () => {
                 onClick={() => paginateIncomes(currentPageIncome - 1)}
                 disabled={currentPageIncome === 1}
                 style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
+                  color: 'rgb(3, 187, 80)',
+                  backgroundColor: 'white',
                   // border: "1px solid #009843",
                 }}
               >
@@ -801,8 +923,8 @@ const ExpenseForm = () => {
                   Math.ceil(filteredIncomeList.length / incomesPerPage)
                 }
                 style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
+                  color: 'rgb(3, 187, 80)',
+                  backgroundColor: 'white',
                   // border: "1px solid #009843",
                 }}
               >
@@ -822,42 +944,42 @@ const ExpenseForm = () => {
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Date
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Title
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Type
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Amount
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Document
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
+                      style={{ color: '#03bb50' }}
                     >
                       Receipt
                     </th>
@@ -866,13 +988,13 @@ const ExpenseForm = () => {
                 <tbody>
                   {currentExpenses.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
+                      <td>{moment(e?.createdAt).format('MMMM Do, YYYY')}</td>
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
                       <td
                         onClick={() => handleImageClick(e?.fileUrl)}
-                        style={{ cursor: "pointer" }}
+                        style={{ cursor: 'pointer' }}
                       >
                         <IoDocumentsSharp />
                       </td>
@@ -897,7 +1019,7 @@ const ExpenseForm = () => {
                     <img
                       src={selectedImageUrl}
                       alt="Document"
-                      style={{ width: "75%" }}
+                      style={{ width: '75%' }}
                     />
                   </Modal.Body>
                   <Modal.Footer>
@@ -913,8 +1035,8 @@ const ExpenseForm = () => {
                 className="btn btn-light"
                 onClick={handleExpenseNavigate}
                 style={{
-                  fontWeight: "bold",
-                  boxShadow: " 0px 2px 3px #03bb50",
+                  fontWeight: 'bold',
+                  boxShadow: ' 0px 2px 3px #03bb50',
                 }}
               >
                 View Report
@@ -927,8 +1049,8 @@ const ExpenseForm = () => {
                 onClick={() => paginateExpenses(currentPageExpense - 1)}
                 disabled={currentPageExpense === 1}
                 style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
+                  color: 'rgb(3, 187, 80)',
+                  backgroundColor: 'white',
                   // border: "1px solid #009843",
                 }}
               >
@@ -942,8 +1064,8 @@ const ExpenseForm = () => {
                   Math.ceil(filteredExpenseList.length / expensesPerPage)
                 }
                 style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
+                  color: 'rgb(3, 187, 80)',
+                  backgroundColor: 'white',
                   // border: "1px solid #009843",
                 }}
               >
