@@ -732,7 +732,7 @@ const ExpenseForm = () => {
               "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
           }}
         >
-          {/* <h3 className="my-3">Filter By Range</h3> */}
+          <h3 className="my-3">Filter By Range</h3>
           <div className="row">
             <div className="col-md-6">
               {" "}
@@ -769,6 +769,46 @@ const ExpenseForm = () => {
               </div>
             </div>
           </div>
+          {/* <div className="row">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="startMonth" className="mb-3">
+                  Start Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="startMonth"
+                  value={moment()
+                    .year(selectedStartMonth.year()) // Use selected year
+                    .month(selectedStartMonth.month()) // Use selected month
+                    .format("YYYY-MM")} // Format as YYYY-MM
+                  onChange={(e) =>
+                    setSelectedStartMonth(moment(e.target.value, "YYYY-MM"))
+                  }
+                />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="endMonth" className="mb-3">
+                  End Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="endMonth"
+                  value={moment()
+                    .year(selectedEndMonth.year()) // Use selected year
+                    .month(selectedEndMonth.month()) // Use selected month
+                    .format("YYYY-MM")} // Format as YYYY-MM
+                  onChange={(e) =>
+                    setSelectedEndMonth(moment(e.target.value, "YYYY-MM"))
+                  }
+                />
+              </div>
+            </div>
+          </div> */}
         </div>
         <div className="row">
           <div className="col-md-12 mt-4">
