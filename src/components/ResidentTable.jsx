@@ -340,6 +340,14 @@ const ResidentTable = () => {
                         >
                           Details
                         </button>
+                        <button
+                          className="btn btn-outline-info m-1"
+                          onClick={() =>
+                            navigate(`/dashboard/updateResident/${r?._id}`)
+                          }
+                        >
+                          Edit
+                        </button>
                       </td>
                     </tr>
                   );
