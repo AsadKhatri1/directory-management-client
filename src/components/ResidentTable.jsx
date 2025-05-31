@@ -80,28 +80,6 @@ const ResidentTable = () => {
     }
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  const records = residents.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(residents.length / recordsPerPage);
-  const numbers = [...Array(npage + 1).keys()].slice(1);
-
-  const prevPage = () => {
-    if (currentPage !== 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-  const nextPage = () => {
-    if (currentPage !== npage) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-  const changeCPage = (id) => {
-    setCurrentPage(id);
-  };
-
   return (
     <main className="main-container text-center">
       <div className="header-left d-flex mb-4">
@@ -242,10 +220,8 @@ const ResidentTable = () => {
             />
           )}
           <tbody>
-            {records
+            {residents
               .filter((item) => {
-                // Log the item to check its structure
-
                 const matchesSearch =
                   search.toLowerCase() === "" ||
                   item.FullName.toLowerCase().includes(search) ||
@@ -259,14 +235,10 @@ const ResidentTable = () => {
                 return matchesSearch && matchesUnpaid;
               })
               .flatMap((r) => {
-                // Log the tenant data to check its structure
-
                 if (showTanentsOnly) {
                   const validTenants = r.tanents.filter(
                     (tenant) => tenant.name.length > 1
                   );
-
-                  // Log the filtered tenants
 
                   return validTenants.length > 0
                     ? validTenants.map((tenant) => (
@@ -275,7 +247,6 @@ const ResidentTable = () => {
                           className="text-center align-middle"
                         >
                           <td>{tenant.name || "N/A"}</td>
-
                           <td>{tenant.number || "N/A"}</td>
                           <td>{r.HouseNumber}</td>
                           <td>{tenant.cnic || "N/A"}</td>
@@ -288,7 +259,6 @@ const ResidentTable = () => {
                     <tr
                       key={r._id}
                       className="text-center align-middle"
-                      // onClick={() => navigate(`/dashboard/resident/${r._id}`)}
                       style={{ cursor: "pointer" }}
                     >
                       <td>{r.FullName}</td>
@@ -355,50 +325,6 @@ const ResidentTable = () => {
               })}
           </tbody>
         </table>
-        <nav>
-          <ul className="pagination">
-            <li className="page-item">
-              <a
-                className="page-link"
-                href="#"
-                onClick={prevPage}
-                style={{ color: "rgb(3, 187, 80)" }}
-              >
-                Prev
-              </a>
-            </li>
-            {numbers.map((n, i) => (
-              <li
-                className={`page-item-dark ${
-                  currentPage === n ? "active" : ""
-                }`}
-                key={i}
-              >
-                <a
-                  href="#"
-                  className="page-link border-none"
-                  onClick={() => changeCPage(n)}
-                  style={{
-                    backgroundColor: "rgb(3, 187, 80)",
-                    border: "1px solid #009843",
-                  }}
-                >
-                  {n}
-                </a>
-              </li>
-            ))}
-            <li className="page-item">
-              <a
-                className="page-link"
-                href="#"
-                onClick={nextPage}
-                style={{ color: "rgb(3, 187, 80)" }}
-              >
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
       </div>
     </main>
   );
