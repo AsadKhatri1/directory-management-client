@@ -13,8 +13,10 @@ const ResidentTable = () => {
   const [numberOfMonths, setNumberOfMonths] = useState(0);
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTanentsOnly, setShowTanentsOnly] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const allResidents = async () => {
+    setLoading(true);
     try {
       const res = await axios.get(`${backendURL}/api/v1/resident/getResidents`);
       if (res?.data?.success) {
@@ -22,6 +24,8 @@ const ResidentTable = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,6 +34,7 @@ const ResidentTable = () => {
   }, []);
 
   const handleDelete = async (id) => {
+    setLoading(true);
     try {
       const res = await axios.delete(
         `${backendURL}/api/v1/resident/deleteResident/${id}`,
@@ -47,10 +52,13 @@ const ResidentTable = () => {
       }
     } catch (err) {
       toast.error(err.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const generateFeeSlip = async (residentId) => {
+    setLoading(true);
     try {
       const response = await axios.post(
         `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
@@ -77,6 +85,8 @@ const ResidentTable = () => {
       }
     } catch (error) {
       console.error("Error generating fee slip:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -126,9 +136,10 @@ const ResidentTable = () => {
               setShowTanentsOnly(e.target.checked);
             }}
           />
-          Tanents
+          Tenants
         </label>
       </div>
+
       <div className="main-table w-100 table-responsive mt-2 ">
         <table className="table table-dark table-hover rounded table-striped">
           <thead className="bg-light">
@@ -208,121 +219,130 @@ const ResidentTable = () => {
               )}
             </tr>
           </thead>
-          {!residents && (
-            <Audio
-              height="60"
-              width="50"
-              radius="9"
-              color="rgba(255, 255, 255, 0.2)"
-              ariaLabel="loading"
-              wrapperStyle
-              wrapperClass
-            />
+          {loading && (
+            <tbody>
+              <tr>
+                <td colSpan={showTanentsOnly ? 5 : 8} className="text-center">
+                  <div className="d-flex justify-content-center my-3">
+                    <Audio
+                      height="60"
+                      width="50"
+                      radius="9"
+                      color="rgba(255, 255, 255, 0.2)"
+                      ariaLabel="loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
           )}
           <tbody>
-            {residents
-              .filter((item) => {
-                const matchesSearch =
-                  search.toLowerCase() === "" ||
-                  item.FullName.toLowerCase().includes(search) ||
-                  item.Email.toLowerCase().includes(search) ||
-                  item.Phone.toLowerCase().includes(search) ||
-                  item.HouseNumber.toLowerCase().includes(search) ||
-                  item.CNIC.toLowerCase().includes(search);
+            {!loading &&
+              residents
+                .filter((item) => {
+                  const matchesSearch =
+                    search.toLowerCase() === "" ||
+                    item.FullName.toLowerCase().includes(search) ||
+                    item.Email.toLowerCase().includes(search) ||
+                    item.Phone.toLowerCase().includes(search) ||
+                    item.HouseNumber.toLowerCase().includes(search) ||
+                    item.CNIC.toLowerCase().includes(search);
 
-                const matchesUnpaid = !showUnpaidOnly || !item.paid;
+                  const matchesUnpaid = !showUnpaidOnly || !item.paid;
 
-                return matchesSearch && matchesUnpaid;
-              })
-              .flatMap((r) => {
-                if (showTanentsOnly) {
-                  const validTenants = r.tanents.filter(
-                    (tenant) => tenant.name.length > 1
-                  );
+                  return matchesSearch && matchesUnpaid;
+                })
+                .flatMap((r) => {
+                  if (showTanentsOnly) {
+                    const validTenants = r.tanents.filter(
+                      (tenant) => tenant.name.length > 1
+                    );
 
-                  return validTenants.length > 0
-                    ? validTenants.map((tenant) => (
-                        <tr
-                          key={tenant._id || Math.random()}
-                          className="text-center align-middle"
-                        >
-                          <td>{tenant.name || "N/A"}</td>
-                          <td>{tenant.number || "N/A"}</td>
-                          <td>{r.HouseNumber}</td>
-                          <td>{tenant.cnic || "N/A"}</td>
-                          <td>{tenant.nocNo || "N/A"}</td>
-                        </tr>
-                      ))
-                    : [];
-                } else {
-                  return (
-                    <tr
-                      key={r._id}
-                      className="text-center align-middle"
-                      style={{ cursor: "pointer" }}
-                    >
-                      <td>{r.FullName}</td>
-                      <td>{r.Email}</td>
-                      <td>{r.Phone}</td>
-                      <td>{r.HouseNumber}</td>
-                      <td>{r.CNIC}</td>
-                      <td style={{ color: r.paid ? "green" : "red" }}>
-                        {r.paid ? "Paid" : "Unpaid"}
-                      </td>
-                      <td>
-                        <select
-                          onChange={(e) => setNumberOfMonths(e.target.value)}
-                          className="form-select fs-6"
-                        >
-                          <option>Months</option>
-                          <option value="1">1 Month</option>
-                          <option value="2">2 Months</option>
-                          <option value="6">6 Months</option>
-                          <option value="12">1 year</option>
-                        </select>
-                        <button
-                          className={
-                            !r.paid
-                              ? "btn btn-outline-info m-1"
-                              : "btn btn-outline-secondary m-1 disabled"
-                          }
-                          onClick={() => generateFeeSlip(r._id)}
-                        >
-                          Generate
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-outline-danger "
-                          onClick={() => {
-                            if (confirm("Are you sure you want to delete?")) {
-                              handleDelete(r._id);
+                    return validTenants.length > 0
+                      ? validTenants.map((tenant) => (
+                          <tr
+                            key={tenant._id || Math.random()}
+                            className="text-center align-middle"
+                          >
+                            <td>{tenant.name || "N/A"}</td>
+                            <td>{tenant.number || "N/A"}</td>
+                            <td>{r.HouseNumber}</td>
+                            <td>{tenant.cnic || "N/A"}</td>
+                            <td>{tenant.nocNo || "N/A"}</td>
+                          </tr>
+                        ))
+                      : [];
+                  } else {
+                    return (
+                      <tr
+                        key={r._id}
+                        className="text-center align-middle"
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td>{r.FullName}</td>
+                        <td>{r.Email}</td>
+                        <td>{r.Phone}</td>
+                        <td>{r.HouseNumber}</td>
+                        <td>{r.CNIC}</td>
+                        <td style={{ color: r.paid ? "green" : "red" }}>
+                          {r.paid ? "Paid" : "Unpaid"}
+                        </td>
+                        <td>
+                          <select
+                            onChange={(e) => setNumberOfMonths(e.target.value)}
+                            className="form-select fs-6"
+                          >
+                            <option>Months</option>
+                            <option value="1">1 Month</option>
+                            <option value="2">2 Months</option>
+                            <option value="6">6 Months</option>
+                            <option value="12">1 year</option>
+                          </select>
+                          <button
+                            className={
+                              !r.paid
+                                ? "btn btn-outline-info m-1"
+                                : "btn btn-outline-secondary m-1 disabled"
                             }
-                          }}
-                        >
-                          Delete
-                        </button>
-                        <button
-                          className="btn btn-outline-info m-1"
-                          onClick={() =>
-                            navigate(`/dashboard/resident/${r._id}`)
-                          }
-                        >
-                          Details
-                        </button>
-                        <button
-                          className="btn btn-outline-info m-1"
-                          onClick={() =>
-                            navigate(`/dashboard/updateResident/${r?._id}`)
-                          }
-                        >
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                }
-              })}
+                            onClick={() => generateFeeSlip(r._id)}
+                          >
+                            Generate
+                          </button>
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-outline-danger "
+                            onClick={() => {
+                              if (confirm("Are you sure you want to delete?")) {
+                                handleDelete(r._id);
+                              }
+                            }}
+                          >
+                            Delete
+                          </button>
+                          <button
+                            className="btn btn-outline-info m-1"
+                            onClick={() =>
+                              navigate(`/dashboard/resident/${r._id}`)
+                            }
+                          >
+                            Details
+                          </button>
+                          <button
+                            className="btn btn-outline-info m-1"
+                            onClick={() =>
+                              navigate(`/dashboard/updateResident/${r?._id}`)
+                            }
+                          >
+                            Edit
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  }
+                })}
           </tbody>
         </table>
       </div>
