@@ -11,6 +11,7 @@ const NewResident = () => {
   const [sidebaropen, setSidebaropen] = useState(false);
   const [isAuth, setIsAuth] = useState(false);
   const navigate = useNavigate();
+<<<<<<< HEAD
   useEffect(() => {
     const auth = localStorage.getItem("token");
     if (auth) {
@@ -20,6 +21,9 @@ const NewResident = () => {
       navigate("/");
     }
   }, []);
+=======
+ 
+>>>>>>> Fench
   // function for toggling sidebar
   const sideBarToggle = () => {
     setSidebaropen(!sidebaropen);

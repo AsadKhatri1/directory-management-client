@@ -14,7 +14,15 @@ const ResidentTable = () => {
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTanentsOnly, setShowTanentsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
+<<<<<<< HEAD
 
+=======
+  const [residentId, setResidentsId] = useState("")
+
+  const [isOpen, setIsOpen] = useState(false)
+  const [houseSearch, setHouseSearch] = useState("")
+  let paymentMode = "";
+>>>>>>> Fench
   const allResidents = async () => {
     setLoading(true);
     try {
@@ -57,8 +65,20 @@ const ResidentTable = () => {
     }
   };
 
+<<<<<<< HEAD
   const generateFeeSlip = async (residentId) => {
     setLoading(true);
+=======
+  const Slippopup = async (iD) => {
+    setIsOpen(true);
+    setResidentsId(iD)
+  };
+
+
+  const generateFeeSlip = async (residentId, paymentMode) => {
+    setLoading(true);
+    localStorage.setItem("PaymentMode", paymentMode)
+>>>>>>> Fench
     try {
       const response = await axios.post(
         `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
@@ -93,7 +113,11 @@ const ResidentTable = () => {
   return (
     <main className="main-container text-center">
       <div className="header-left d-flex mb-4">
+<<<<<<< HEAD
         <form action="post" className="mx-2 rounded w-100">
+=======
+        <form action="post" className="mx-2 rounded w-100 d-flex gap-2">
+>>>>>>> Fench
           <input
             placeholder="Search for residents"
             type="text"
@@ -103,6 +127,17 @@ const ResidentTable = () => {
               border: "2px solid #009843",
             }}
           />
+<<<<<<< HEAD
+=======
+          <input
+            value={houseSearch}
+            placeholder="Search by House Number"
+            type="text"
+            className="input py-2"
+            onChange={(e) => setHouseSearch(e.target.value)}
+            style={{ border: "2px solid #0d6efd" }}
+          />
+>>>>>>> Fench
         </form>
       </div>
 
@@ -138,6 +173,10 @@ const ResidentTable = () => {
           />
           Tenants
         </label>
+<<<<<<< HEAD
+=======
+        <p>Total Resident :  { residents.length}</p>
+>>>>>>> Fench
       </div>
 
       <div className="main-table w-100 table-responsive mt-2 ">
@@ -242,6 +281,7 @@ const ResidentTable = () => {
             {!loading &&
               residents
                 .filter((item) => {
+<<<<<<< HEAD
                   const matchesSearch =
                     search.toLowerCase() === "" ||
                     item.FullName.toLowerCase().includes(search) ||
@@ -254,6 +294,25 @@ const ResidentTable = () => {
 
                   return matchesSearch && matchesUnpaid;
                 })
+=======
+                  const houseMatch =
+                    houseSearch.trim() === "" ||
+                    item.HouseNumber.toLowerCase().includes(houseSearch.toLowerCase());
+
+                  const generalMatch =
+                    search.trim() === "" ||
+                    item.FullName.toLowerCase().includes(search.toLowerCase()) ||
+                    item.Email.toLowerCase().includes(search.toLowerCase()) ||
+                    item.Phone.toLowerCase().includes(search.toLowerCase()) ||
+                    item.CNIC.toLowerCase().includes(search.toLowerCase());
+
+                  const matchesUnpaid = !showUnpaidOnly || !item.paid;
+
+                  // Show only if both match
+                  return houseMatch && generalMatch && matchesUnpaid;
+                })
+
+>>>>>>> Fench
                 .flatMap((r) => {
                   if (showTanentsOnly) {
                     const validTenants = r.tanents.filter(
@@ -262,6 +321,7 @@ const ResidentTable = () => {
 
                     return validTenants.length > 0
                       ? validTenants.map((tenant) => (
+<<<<<<< HEAD
                           <tr
                             key={tenant._id || Math.random()}
                             className="text-center align-middle"
@@ -273,6 +333,19 @@ const ResidentTable = () => {
                             <td>{tenant.nocNo || "N/A"}</td>
                           </tr>
                         ))
+=======
+                        <tr
+                          key={tenant._id || Math.random()}
+                          className="text-center align-middle"
+                        >
+                          <td>{tenant.name || "N/A"}</td>
+                          <td>{tenant.number || "N/A"}</td>
+                          <td>{r.HouseNumber}</td>
+                          <td>{tenant.cnic || "N/A"}</td>
+                          <td>{tenant.nocNo || "N/A"}</td>
+                        </tr>
+                      ))
+>>>>>>> Fench
                       : [];
                   } else {
                     return (
@@ -306,7 +379,12 @@ const ResidentTable = () => {
                                 ? "btn btn-outline-info m-1"
                                 : "btn btn-outline-secondary m-1 disabled"
                             }
+<<<<<<< HEAD
                             onClick={() => generateFeeSlip(r._id)}
+=======
+                            onClick={() => Slippopup(r._id)}
+                          // onClick={() => generateFeeSlip(r._id)}
+>>>>>>> Fench
                           >
                             Generate
                           </button>
@@ -345,7 +423,34 @@ const ResidentTable = () => {
                 })}
           </tbody>
         </table>
+<<<<<<< HEAD
       </div>
+=======
+
+
+      </div>
+      {isOpen && (
+        <div className="popup-overlay">
+          <div className="popup-content bg-white p-4 rounded shadow text-dark">
+            <h4>Generate Fee Slip</h4>
+            <p>Confirm generating a slip for <strong>{numberOfMonths}</strong> month(s)?</p>
+            <div className="d-flex justify-content-end">
+
+              <button className="btn btn-success mx-2" onClick={() => generateFeeSlip(residentId, paymentMode = "Cheque")}>
+                Cheque
+              </button>
+              <button className="btn btn-success mx-2" onClick={() => generateFeeSlip(residentId, paymentMode = "Cash")}>
+                Cash
+              </button>
+              <button className="btn btn-secondary mx-2" onClick={() => setIsOpen(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+>>>>>>> Fench
     </main>
   );
 };

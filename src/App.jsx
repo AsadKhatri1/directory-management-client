@@ -12,12 +12,17 @@ import Receipt from "./components/Receipt.jsx";
 import ExpenseReport from "./components/ExpenseReport.jsx";
 import IncomeReport from "./components/IncomeReport.jsx";
 import ResidentUpdate from "./pages/ResidentUpdate.jsx";
+<<<<<<< HEAD
+=======
+import PrivateRoute from "./privateroute/PrivateRoute.jsx";
+>>>>>>> Fench
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Auth />} />
+<<<<<<< HEAD
         <Route path="/dashboard/resident/:id" element={<ResidentDetail />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/residents" element={<Residents />} />
@@ -32,6 +37,75 @@ function App() {
         <Route path="/dashboard/expense/report" element={<ExpenseReport />} />
         <Route path="/dashboard/income/report" element={<IncomeReport />} />
         <Route path="/dashboard/expense/receipt/:id" element={<Receipt />} />
+=======
+        <Route path="/dashboard/resident/:id" element={
+          <ResidentDetail />
+        } />
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/residents" element={
+          <PrivateRoute>
+            <Residents />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/newResident" element={
+          <PrivateRoute>
+            <NewResident />
+          </PrivateRoute>
+
+        } />
+        <Route
+          path="/dashboard/updateResident/:id"
+          element={
+            <PrivateRoute>
+              <ResidentUpdate />
+            </PrivateRoute>
+
+          }
+        />
+        <Route path="/dashboard/addAdmin" element={
+          <PrivateRoute>
+            <AddAdmin />
+          </PrivateRoute>
+
+        }
+        />
+        <Route path="/dashboard/resident/invoice" element={
+          <PrivateRoute>
+            <Invoice />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/expense" element={
+          <PrivateRoute>
+            <Expense />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/expense/report" element={
+          <PrivateRoute>
+            <ExpenseReport />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/income/report" element={
+          <PrivateRoute>
+            <IncomeReport />
+          </PrivateRoute>
+
+        } />
+        <Route path="/dashboard/expense/receipt/:id" element={
+          <PrivateRoute>
+            <Receipt />
+          </PrivateRoute>
+
+        } />
+>>>>>>> Fench
       </Routes>
     </Router>
   );
