@@ -18,7 +18,7 @@ const ResidentTable = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [houseSearch, setHouseSearch] = useState("");
-
+  let paymentMode = ""
   const allResidents = async () => {
     setLoading(true);
     try {
@@ -66,9 +66,11 @@ const ResidentTable = () => {
     setResidentsId(iD);
   };
 
-  const generateFeeSlip = async (residentId, paymentMode) => {
-    setLoading(true);
-    localStorage.setItem("PaymentMode", paymentMode);
+  const generateFeeSlip = async (residentId,paymentMode) => {
+       setLoading(true);
+    localStorage.setItem("PaymentMode", paymentMode)
+ 
+    
     try {
       const response = await axios.post(
         `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
@@ -156,11 +158,11 @@ const ResidentTable = () => {
           />
           Tenants
         </label>
-        <p>Total Resident : {residents.length}</p>
+        <p style={{ color: "#03bb50" , fontSize:"1.24em", padding:"12px"}}>Total Resident : {residents.length}</p>
       </div>
 
       <div className="main-table w-100 table-responsive mt-2 ">
-        <table className="table table-dark table-hover rounded table-striped">
+        <table className="table table-dark table-hover rounded table-striped ">
           <thead className="bg-light">
             <tr className="text-center align-middle">
               <th
@@ -378,6 +380,19 @@ const ResidentTable = () => {
       {isOpen && (
         <div className="popup-overlay">
           <div className="popup-content bg-white p-4 rounded shadow text-dark">
+            {loading && (
+              <div className="d-flex justify-content-center my-3">
+                <Audio
+                  height="60"
+                  width="50"
+                  radius="9"
+                  color="rgba(0, 0, 0, 0.2)"
+                  ariaLabel="loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              </div>
+            )}
             <h4>Generate Fee Slip</h4>
             <p>
               Confirm generating a slip for <strong>{numberOfMonths}</strong>{" "}
@@ -386,17 +401,18 @@ const ResidentTable = () => {
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-success mx-2"
-                onClick={() =>
-                  generateFeeSlip(residentId, (paymentMode = "Cheque"))
-                }
+               onClick={() => {
+  generateFeeSlip(residentId, "Cheque");
+}}
+
               >
                 Cheque
               </button>
               <button
                 className="btn btn-success mx-2"
-                onClick={() =>
-                  generateFeeSlip(residentId, (paymentMode = "Cash"))
-                }
+                onClick={() => {
+                  generateFeeSlip(residentId, "Cash");
+                }}
               >
                 Cash
               </button>
@@ -406,6 +422,7 @@ const ResidentTable = () => {
               >
                 Cancel
               </button>
+      
             </div>
           </div>
         </div>
