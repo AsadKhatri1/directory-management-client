@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
+import { ToastContainer } from "react-bootstrap";
 
 const ResidentTable = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
@@ -65,12 +66,21 @@ const ResidentTable = () => {
     setIsOpen(true);
     setResidentsId(iD);
   };
-
-  const generateFeeSlip = async (residentId,paymentMode) => {
-       setLoading(true);
-    localStorage.setItem("PaymentMode", paymentMode)
  
-    
+  const generateFeeSlip = async (residentId,paymentMode) => {
+          setLoading(true);
+          console.log(numberOfMonths);
+          
+     localStorage.setItem("PaymentMode", paymentMode)
+     localStorage.setItem("NumberOfMonths", numberOfMonths)
+ 
+       if(numberOfMonths === 0){
+        toast.warn("Please Select Month to Generate Slip");
+        setLoading(false);
+        setIsOpen(false);
+        return;
+       }
+           
     try {
       const response = await axios.post(
         `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
@@ -402,7 +412,7 @@ const ResidentTable = () => {
               <button
                 className="btn btn-success mx-2"
                onClick={() => {
-  generateFeeSlip(residentId, "Cheque");
+               generateFeeSlip(residentId, "Cheque")
 }}
 
               >
@@ -427,6 +437,7 @@ const ResidentTable = () => {
           </div>
         </div>
       )}
+      <ToastContainer/>
     </main>
   );
 };
