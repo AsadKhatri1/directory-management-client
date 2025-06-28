@@ -29,6 +29,7 @@ const ResidentForm = () => {
   const [policeV, setPoliceV] = useState("");
   const [lisence, setLisence] = useState("");
   const [loader, setLoader] = useState(false);
+  const [residentType, setResidentType] = useState("");
 
   const [vehicles, setVehicles] = useState([
     {
@@ -153,6 +154,7 @@ const ResidentForm = () => {
           CantFile: cantUrl,
           VerificationFile: polUrl,
           LisenceFile: lUrl,
+          residentType,
         },
         {
           headers: {
@@ -170,6 +172,7 @@ const ResidentForm = () => {
         setProfession("");
         setQualification("");
         setPhone("");
+        setResidentType("");
         navigate("/dashboard/residents");
       }
     } catch (err) {
@@ -762,6 +765,32 @@ const ResidentForm = () => {
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
+              <br />
+              <select
+                value={residentType}
+                onChange={(e) => setResidentType(e.target.value)}
+                name="residentType"
+                id="residentType"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                <option value="" style={{ background: "black" }} disabled>
+                  Select Resident Type
+                </option>
+                <option value="owner" style={{ background: "black" }}>
+                  Owner
+                </option>
+                <option value="tenant" style={{ background: "black" }}>
+                  Tenant
+                </option>
+              </select>
               <br />
               <input
                 value={CNIC}

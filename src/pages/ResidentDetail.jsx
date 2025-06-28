@@ -8,9 +8,9 @@ import { Audio } from "react-loader-spinner";
 import moment from "moment";
 import axios from "axios";
 import { Modal, Button } from "react-bootstrap";
+
 const ResidentDetail = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
-  // redirect on refresh
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
@@ -28,27 +28,21 @@ const ResidentDetail = () => {
   const [feeAmount, setFeeAmount] = useState("");
   const [Ownership, setOwnership] = useState("");
   const navigate = useNavigate();
-
-  // modal work
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
-
-
-  // Add family member
   const [addMember, setAddMember] = useState(false);
-   const [showFam, setShowFam] = useState(false);
-const {id} = useParams();
+  const { id } = useParams();
 
- const [relatives, setRelatives] = useState([
+  const [relatives, setRelatives] = useState([
     {
       name: "",
       relation: "",
       dob: "",
       occupation: "",
-      cnic: "", // Existing CNIC property
+      cnic: "",
       number: "",
-      photoUrl: "", // New property for photo URL
-      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+      photoUrl: "",
+      cnicUrl: "",
     },
   ]);
 
@@ -59,21 +53,14 @@ const {id} = useParams();
     setRelatives(updatedRelatives);
   };
 
-  
-  // upload single files to cloudinary
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", "images_preset");
-
     const response = await fetch(
       "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
-      {
-        method: "POST",
-        body: formData,
-      }
+      { method: "POST", body: formData }
     );
-
     if (response.ok) {
       const data = await response.json();
       return data.secure_url;
@@ -82,22 +69,11 @@ const {id} = useParams();
     }
   };
 
-  // uploading relative cnic and photo
   const handleRelativePhotoUpload = async (index, event) => {
     const file = event.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
+    if (!file) return;
     try {
-      let uploadedUrl;
-
-      // Upload photo to Cloudinary based on file type
-
-      uploadedUrl = await uploadFileToCloudinary(file);
-
-      // Update relatives array with uploaded photo URL
+      const uploadedUrl = await uploadFileToCloudinary(file);
       setRelatives((prevRelatives) => {
         const updatedRelatives = [...prevRelatives];
         updatedRelatives[index].photoUrl = uploadedUrl;
@@ -111,19 +87,9 @@ const {id} = useParams();
 
   const handleRelativeCnicUpload = async (index, event) => {
     const file = event.target.files[0];
-
-    if (!file) {
-      return;
-    }
-
+    if (!file) return;
     try {
-      let uploadedUrl;
-
-      // Upload photo to Cloudinary based on file type
-
-      uploadedUrl = await uploadFileToCloudinary(file);
-
-      // Update relatives array with uploaded photo URL
+      const uploadedUrl = await uploadFileToCloudinary(file);
       setRelatives((prevRelatives) => {
         const updatedRelatives = [...prevRelatives];
         updatedRelatives[index].cnicUrl = uploadedUrl;
@@ -135,40 +101,85 @@ const {id} = useParams();
     }
   };
 
-  const addRelativeField = async() => {
-  // Add a new relative field
-try {
-  const response = await axios.post(
-    `${backendURL}/api/v1/resident/${id}/family-members`,
-    relatives[0] // assuming `relatives` is a single object representing one family member
-  );
-  console.log(response.data.message);
-
-} catch (error) {
-  console.error("Error adding relative field:", error);
-  toast.error("Failed to add family member");
-}
-
+  const addNewRelativeField = () => {
+    setRelatives([
+      ...relatives,
+      {
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
+      },
+    ]);
   };
 
-  const deleteMember = (mid) => async () => {  
-    try {     
-      const response = await axios.delete(
-        ` ${backendURL}/api/v1/resident/${id}/family-members/${mid}`,
+  const addRelativeField = async () => {
+    try {
+      const response = await axios.post(
+        `${backendURL}/api/v1/resident/${id}/family-members`,
+        relatives[relatives.length - 1],
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
-      console.log(response);
-      
+      if (response.data) {
+        toast.success("Family member added successfully");
+        setRelatives([
+          {
+            name: "",
+            relation: "",
+            dob: "",
+            occupation: "",
+            cnic: "",
+            number: "",
+            photoUrl: "",
+            cnicUrl: "",
+          },
+        ]);
+        setAddMember(false);
+        setShowM(true);
+        await getResident();
+      } else {
+        toast.error(response.data.message || "Failed to add family member");
+      }
+    } catch (error) {
+      console.error("Error adding relative field:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to add family member"
+      );
+    }
+  };
+
+  const deleteMember = (mid) => async () => {
+    try {
+      const response = await axios.delete(
+        `${backendURL}/api/v1/resident/${id}/family-members/${mid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       if (response.data) {
         toast.success("Family member deleted successfully");
-       setMembers((prevMembers) => prevMembers.filter((member) => member.id !== mid));
+        await getResident();
       } else {
         toast.error("Failed to delete family member");
       }
     } catch (error) {
       console.error("Error deleting family member:", error);
-      toast.error("Failed to delete family member");
+      toast.error(
+        error.response?.data?.message || "Failed to delete family member"
+      );
     }
-  }
+  };
+
   const [addVehicle, setAddVehicle] = useState(false);
   const [addMaid, setAddMaid] = useState(false);
 
@@ -191,25 +202,32 @@ try {
     />
   );
 
-  // fetching single resident
-
   const getResident = async () => {
     try {
       const { data } = await axios.get(
-        `${backendURL}/api/v1/resident/getResident/${params.id}`
+        `${backendURL}/api/v1/resident/getResident/${params.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
       );
-      
       if (data.success) {
-        setResident(data?.resident);
-        setVehicle(data?.resident?.vehicles);
-        setMembers(data?.resident?.relatives);
-        setMaids(data?.resident?.maids);
-        setTanents(data?.resident?.tanents);
+        setResident(data?.resident || {});
+        setVehicle(data?.resident?.vehicles || []);
+        setMembers(data?.resident?.relatives || []);
+        setMaids(data?.resident?.maids || []);
+        setTanents(data?.resident?.tanents || []);
+      } else {
+        toast.error(data.message || "Failed to fetch resident data");
       }
     } catch (err) {
-      toast.error(err.response.message);
+      toast.error(
+        err.response?.data?.message || "Error fetching resident data"
+      );
     }
   };
+
   useEffect(() => {
     getResident();
   }, []);
@@ -220,25 +238,18 @@ try {
 
   const birthDate =
     resident.DOB && moment(resident?.DOB).format("MMMM Do, YYYY");
-
   const nocdate =
     resident.NOCIssue && moment(resident?.NOCIssue).format("MMMM Do, YYYY");
-
-  // updating payment status
 
   const updateHandler = async (e) => {
     e.preventDefault();
     try {
       if (feeAmount) {
-        // Ensure feeAmount is parsed as a number
         const feeAmountNumber = parseFloat(feeAmount);
-
-        // Check if feeAmount is a valid number
         if (isNaN(feeAmountNumber)) {
           toast.error("Please enter a valid amount");
           return;
         }
-
         const resIn = await axios.post(
           `${backendURL}/api/v1/income/addIncome`,
           {
@@ -252,22 +263,16 @@ try {
         if (resIn.success) {
           toast.success("Income added");
         }
-
         const recAmount = feeAmountNumber / 2;
         const masjidAmount = feeAmountNumber / 2;
-
-        // Update the balances
         const re1 = await axios.get(
           `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
         );
         const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
         await axios.put(
           `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
-          {
-            Balance: finalRecBalance,
-          }
+          { Balance: finalRecBalance }
         );
-
         const re = await axios.get(
           `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
         );
@@ -275,30 +280,22 @@ try {
           JSON.parse(re.data.acc.Balance) + masjidAmount;
         await axios.put(
           `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
-          {
-            Balance: finalMasjidBalance,
-          }
+          { Balance: finalMasjidBalance }
         );
       }
-
-      // Get the number of months from the user input
-      const numberOfMonths = parseInt(monthsInput); // Replace monthsInput with your actual input field
-
-      // Perform the API call to update the resident's paid status
+      const numberOfMonths = parseInt(monthsInput);
       const { data } = await axios.put(
         `${backendURL}/api/v1/resident/updateResident/${params.id}`,
         { paid, numberOfMonths },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-
       if (data.success) {
         toast.success(data.message);
-        console.log(data.resident);
-        setPaid(false); // Assuming you want to reset this state after successful update
+        setPaid(false);
         navigate("/dashboard/residents");
       }
     } catch (err) {
@@ -308,7 +305,7 @@ try {
   };
 
   return (
-    <div className="grid-container ">
+    <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
       <Sidebar
         sideBarToggle={sidebaropen}
@@ -326,11 +323,11 @@ try {
                   color: "white",
                   transition: "all 0.5s",
                 }}
-                onClick={(e) => {
-                  setShowM(!showM),
-                    setShowS(false),
-                    setShowV(false),
-                    setShowT(false);
+                onClick={() => {
+                  setShowM(!showM);
+                  setShowS(false);
+                  setShowV(false);
+                  setShowT(false);
                 }}
               >
                 {!showM ? "View Family Members" : "Hide Family Members"}
@@ -340,11 +337,11 @@ try {
               <button
                 className="btn mt-2 mb-2 border"
                 style={{ backgroundColor: "#263043", color: "white" }}
-                onClick={(e) => {
-                  setShowS(!showS),
-                    setShowM(false),
-                    setShowV(false),
-                    setShowT(false);
+                onClick={() => {
+                  setShowS(!showS);
+                  setShowM(false);
+                  setShowV(false);
+                  setShowT(false);
                 }}
               >
                 {!showS ? "View Servant Details" : "Hide Servant details"}
@@ -354,21 +351,19 @@ try {
               <button
                 className="btn mt-2 mb-2 border"
                 style={{ backgroundColor: "#263043", color: "white" }}
-                onClick={(e) => {
-                  setShowV(!showV),
-                    setShowM(false),
-                    setShowS(false),
-                    setShowT(false);
+                onClick={() => {
+                  setShowV(!showV);
+                  setShowM(false);
+                  setShowS(false);
+                  setShowT(false);
                 }}
               >
                 {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
               </button>
             </div>
-           
           </div>
-
           {resident.length < 1 ? (
-            <div className=" d-flex align-items-center justify-content-center">
+            <div className="d-flex align-items-center justify-content-center">
               <Audio
                 height="80"
                 width="100"
@@ -382,7 +377,7 @@ try {
           ) : (
             <>
               <br />
-              {showM && members[0].name.length > 0 ? (
+              {showM && members.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
                     <h2 className="my-5 text-secondary">Family Members</h2>
@@ -408,25 +403,40 @@ try {
                               className="text-center align-middle"
                             >
                               <td>
-                                {r.photoUrl ? renderImage(r.photoUrl) : null}
+                                {r.photoUrl ? renderImage(r.photoUrl) : "N/A"}
                               </td>
-                              <td>{r.name}</td>
-                              <td>{r.relation}</td>
-                              <td>{r.number}</td>
+                              <td>{r.name || "N/A"}</td>
+                              <td>{r.relation || "N/A"}</td>
+                              <td>{r.number || "N/A"}</td>
                               <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
+                                {r.dob
+                                  ? moment(r.dob).format("MMMM Do, YYYY")
+                                  : "N/A"}
                               </td>
-                              <td>{r.occupation}</td>
-                              <td>{r.cnic}</td>
+                              <td>{r.occupation || "N/A"}</td>
+                              <td>{r.cnic || "N/A"}</td>
                               <td>
-                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
+                                {r.cnicUrl ? renderImage(r.cnicUrl) : "N/A"}
                               </td>
-                              <button className="text-center btn btn-outline-primary m-1 " onClick={deleteMember(r._id)}>delete</button>
+                              <td>
+                                <button
+                                  className="text-center btn btn-outline-primary m-1"
+                                  onClick={deleteMember(r._id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
-                      <button className="btn btn-outline-secondary mb-3" onClick={()=>{setAddMember(true) , setShowM(false)}}>
+                      <button
+                        className="btn btn-outline-secondary mb-3"
+                        onClick={() => {
+                          setAddMember(true);
+                          setShowM(false);
+                        }}
+                      >
                         Add Family Member
                       </button>
                     </div>
@@ -438,258 +448,244 @@ try {
                   style={{ backgroundColor: "#263043", borderRadius: "12px" }}
                 >
                   <h3 className="text-light">No Family Members To Show</h3>
+                  <button
+                    className="btn btn-outline-secondary mb-3"
+                    onClick={() => {
+                      setAddMember(true);
+                      setShowM(false);
+                    }}
+                  >
+                    Add Family Member
+                  </button>
                 </div>
               ) : null}
-              {
-                addMember && (<>
-          
-   {/* family members starts here */}
-        {addMember && (
-          <div className="row">
-            <hr />
-            <h1 className="my-3 fw-bold text-center">Enter Family Members</h1>
-            {relatives.map((relative, index) => (
-              <>
-                <div className="col-md-6">
-                  <div key={index}>
-                    <input
-                      value={relative.name}
-                      onChange={(e) => handleRelativeChange(index, "name", e)}
-                      type="text"
-                      name="name"
-                      placeholder="Faily Member Name"
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    />
-                    <select
-                      value={relative.relation}
-                      onChange={(e) =>
-                        handleRelativeChange(index, "relation", e)
-                      }
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
+              {addMember && (
+                <div className="row">
+                  <hr />
+                  <h1 className="my-3 fw-bold text-center">
+                    Enter Family Members
+                  </h1>
+                  {relatives.map((relative, index) => (
+                    <React.Fragment key={index}>
+                      <div className="col-md-6">
+                        <div>
+                          <input
+                            value={relative.name}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "name", e)
+                            }
+                            type="text"
+                            name="name"
+                            placeholder="Family Member Name"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <select
+                            value={relative.relation}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "relation", e)
+                            }
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          >
+                            <option value="" style={{ background: "black" }}>
+                              Select Relation
+                            </option>
+                            <option
+                              value="Father"
+                              style={{ background: "black" }}
+                            >
+                              Father
+                            </option>
+                            <option
+                              value="Mother"
+                              style={{ background: "black" }}
+                            >
+                              Mother
+                            </option>
+                            <option
+                              value="Husband/Wife"
+                              style={{ background: "black" }}
+                            >
+                              Husband/Wife
+                            </option>
+                            <option
+                              value="Child"
+                              style={{ background: "black" }}
+                            >
+                              Child
+                            </option>
+                          </select>
+                          <input
+                            value={relative.cnic}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "cnic", e)
+                            }
+                            type="text"
+                            name="cnic"
+                            placeholder="CNIC"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <input
+                            value={relative.occupation}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "occupation", e)
+                            }
+                            type="text"
+                            name="occupation"
+                            placeholder="Occupation"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div>
+                          <input
+                            value={relative.number}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "number", e)
+                            }
+                            type="tel"
+                            name="number"
+                            placeholder="Phone No"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <label htmlFor="date">Date Of Birth</label>
+                          <input
+                            value={relative.dob}
+                            onChange={(e) =>
+                              handleRelativeChange(index, "dob", e)
+                            }
+                            type="date"
+                            name="dob"
+                            placeholder="Date Of Birth"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <label
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          >
+                            {relative.photoUrl
+                              ? relative.photoUrl.name
+                              : "Upload Photo"}
+                            <input
+                              type="file"
+                              name="nocFile"
+                              accept="image/*"
+                              onChange={(event) =>
+                                handleRelativePhotoUpload(index, event)
+                              }
+                              hidden
+                            />
+                          </label>
+                          <label
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          >
+                            {relative.cnicUrl
+                              ? relative.cnicUrl.name
+                              : "Upload CNIC"}
+                            <input
+                              type="file"
+                              name="nocFile"
+                              accept="image/*"
+                              onChange={(event) =>
+                                handleRelativeCnicUpload(index, event)
+                              }
+                              hidden
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </React.Fragment>
+                  ))}
+                  <div className="w-100 text-center">
+                    <button
+                      type="button"
+                      onClick={addNewRelativeField}
+                      className="btn btn-outline-primary m-5 mt-2 w-25"
                     >
-                      <option
-                        value=""
-                        style={{
-                          background: "black",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Select Relation
-                      </option>
-                      <option
-                        style={{
-                          background: "black",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                        value="Father"
-                      >
-                        Father
-                      </option>
-                      <option
-                        value="Mother"
-                        style={{
-                          background: "black",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Mother
-                      </option>
-                      <option
-                        value="Husband/Wife"
-                        style={{
-                          background: "black",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Husband/Wife
-                      </option>
-                      <option
-                        value="Child"
-                        style={{
-                          background: "black",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Child
-                      </option>
-                      {/* Add other relation options */}
-                    </select>
-                    <input
-                      value={relative.cnic}
-                      onChange={(e) => handleRelativeChange(index, "cnic", e)}
-                      type="text"
-                      name="cnic"
-                      placeholder="CNIC"
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    />
-                    <input
-                      value={relative.occupation}
-                      onChange={(e) =>
-                        handleRelativeChange(index, "occupation", e)
-                      }
-                      type="text"
-                      name="occupation"
-                      placeholder="Occupation"
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    />
+                      <FaPlus /> Add Another Member
+                    </button>
+                    <button
+                      type="button"
+                      onClick={addRelativeField}
+                      className="btn btn-outline-success m-5 mt-2 w-25"
+                    >
+                      Submit Members
+                    </button>
                   </div>
                 </div>
-                <div className="col-md-6">
-                  <div>
-                    <input
-                      value={relative.number}
-                      onChange={(e) => handleRelativeChange(index, "number", e)}
-                      type="tel"
-                      name="number"
-                      placeholder="Phone No"
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    />
-                    <br />
-                    <label htmlFor="date">Date Of Birth</label>
-                    <br />
-                    <input
-                      value={relative.dob}
-                      onChange={(e) => handleRelativeChange(index, "dob", e)}
-                      type="date"
-                      name="dob"
-                      placeholder="Date Of Birth"
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    />
-                    <label
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      {relative.photoUrl
-                        ? relative.photoUrl.name
-                        : "Upload Photo"}
-                      <input
-                        type="file"
-                        name="nocFile"
-                        accept="image/*"
-                        onChange={(event) =>
-                          handleRelativePhotoUpload(index, event)
-                        }
-                        hidden
-                      />
-                    </label>
-                    <label
-                      className="w-75 my-3 text-white py-2"
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
-                      <input
-                        type="file"
-                        name="nocFile"
-                        accept="image/* "
-                        onChange={(event) =>
-                          handleRelativeCnicUpload(index, event)
-                        }
-                        hidden
-                      />
-                    </label>
-                  </div>
-                </div>
-              </>
-            ))}
-            <div className="w-100 text-center">
-              <button
-                type="button"
-                onClick={addRelativeField}
-                className="btn btn-outline-primary m-5 mt-2 w-25 "
-              >
-                <FaPlus /> Members
-              </button>
-            </div>
-          </div>
-        )}
-                </>)
-              }
-
-              {/* maid details */}
-              <br />
-              {showS && maids[0].name.length > 0 ? (
+              )}
+              {showS && maids.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
                     <h2 className="my-5 text-secondary">Servant Details</h2>
@@ -713,21 +709,23 @@ try {
                               key={r._id}
                               className="text-center align-middle"
                             >
-                              <td>{r.name}</td>
+                              <td>{r.name || "N/A"}</td>
                               <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
+                                {r.dob
+                                  ? moment(r.dob).format("MMMM Do, YYYY")
+                                  : "N/A"}
                               </td>
-                              <td>{r.number}</td>
-                              <td>{r.cnic}</td>
-                              <td>{r.address}</td>
-                              <td>{r.guardian}</td>
+                              <td>{r.number || "N/A"}</td>
+                              <td>{r.cnic || "N/A"}</td>
+                              <td>{r.address || "N/A"}</td>
+                              <td>{r.guardian || "N/A"}</td>
                               <td>
-                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
+                                {r.cnicUrl ? renderImage(r.cnicUrl) : "N/A"}
                               </td>
                               <td>
                                 {r.cantPassUrl
                                   ? renderImage(r.cantPassUrl)
-                                  : null}
+                                  : "N/A"}
                               </td>
                             </tr>
                           ))}
@@ -744,9 +742,7 @@ try {
                   <h3 className="text-light">No Servant Details To Show</h3>
                 </div>
               ) : null}
-
-              {/* vehicle details */}
-              {showV && vehicle[0].make.length > 0 ? (
+              {showV && vehicle.length > 0 ? (
                 <div className="text-center">
                   <h2 className="my-5 text-secondary">Vehicle Details</h2>
                   <div className="table-responsive">
@@ -766,17 +762,17 @@ try {
                       <tbody>
                         {vehicle.map((r) => (
                           <tr key={r._id} className="text-center align-middle">
-                            <td>{r.type}</td>
-                            <td>{r.make}</td>
-                            <td>{r.model}</td>
-                            <td>{r.year}</td>
-                            <td>{r.colour}</td>
-                            <td>{r.registrationNumber}</td>
-                            <td>{r.stickerNumber}</td>
+                            <td>{r.type || "N/A"}</td>
+                            <td>{r.make || "N/A"}</td>
+                            <td>{r.model || "N/A"}</td>
+                            <td>{r.year || "N/A"}</td>
+                            <td>{r.colour || "N/A"}</td>
+                            <td>{r.registrationNumber || "N/A"}</td>
+                            <td>{r.stickerNumber || "N/A"}</td>
                             <td>
                               {r.paperDocument
                                 ? renderImage(r.paperDocument)
-                                : null}
+                                : "N/A"}
                             </td>
                           </tr>
                         ))}
@@ -792,10 +788,6 @@ try {
                   <h3 className="text-light">No Vehicle Details To Show</h3>
                 </div>
               ) : null}
-
-              
-
-              {/* Modal */}
               <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                   <Modal.Title>Document</Modal.Title>
@@ -813,47 +805,6 @@ try {
                   </Button>
                 </Modal.Footer>
               </Modal>
-
-              {/* <div className="mt-2 mb-5">
-                <img
-                  src={resident?.Photo}
-                  alt="image"
-                  style={{
-                    borderRadius: "100%",
-                    height: "200px",
-                    width: "200px",
-                  }}
-                />
-                <h1 className="my-3">{resident?.FullName}</h1>
-
-                <div
-                  className="row my-3 py-3 mx-3"
-                  style={{
-                    backgroundColor: "#263043",
-                    borderRadius: "12px",
-                    boxShadow:
-                      "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-                  }}
-                >
-                  <div className="col-md-6">
-                    <h5>EMAIL : {resident?.Email}</h5>
-                    <h5>Phone # {resident?.Phone}</h5>
-                    <h5>House # {resident?.HouseNumber}</h5>
-                    <h5>DOB : {birthDate}</h5>
-                    <h5>CNIC # {resident?.CNIC}</h5>
-                    <h5>NOC # {resident?.NOCNo}</h5>
-                  </div>
-
-                  <div className="col-md-6 ">
-                    <h5>Profession : {resident?.Profession}</h5>
-                    <h5>Qualification : {resident?.Qualification}</h5>
-                    <h5>Business Address : {resident?.bAddress}</h5>
-                    <h5>NOC Holder : {resident?.NOCHolder}</h5>
-                    <h5>NOC Issue Date : {nocdate}</h5>
-                  </div>
-                </div>
-              </div> */}
-
               <div className="mt-2 mb-5">
                 <img
                   src={resident?.Photo}
@@ -937,7 +888,6 @@ try {
                       </h5>
                     </div>
                   </div>
-
                   <div className="col-md-6 px-4">
                     <div className="mb-3">
                       <h5
@@ -990,8 +940,6 @@ try {
                     </div>
                   </div>
                 </div>
-                {/* New Section for Uploaded Files */}
-
                 <div
                   className="my-4 py-4 mx-3 px-4"
                   style={{
@@ -1164,156 +1112,141 @@ try {
                   </div>
                 </div>
               </div>
-              {/* <div className="my-5"> */}
-
-              {/* </div> */}
+              <form action="PUT" onSubmit={updateHandler}>
+                <div className="form-check">
+                  <div className="form-check form-switch">
+                    <input
+                      className="form-check-input form-check-input-yes"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckDefault"
+                      onClick={() => {
+                        setPaid(true);
+                        setShowAmountInput(true);
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexSwitchCheckDefault"
+                    >
+                      Payment Received?
+                    </label>
+                    <br />
+                    {showAmountInput ? (
+                      <>
+                        <input
+                          value={feeAmount}
+                          onChange={(e) => setFeeAmount(e.target.value)}
+                          type="number"
+                          name="Fee Amount"
+                          id="FeeAmount"
+                          placeholder="Received Amount"
+                          className="w-50 my-3 text-white py-2"
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            borderBottom: "1px solid white",
+                            borderRadius: "12px",
+                            textIndent: "12px",
+                            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                          }}
+                        />
+                        <br />
+                        <input
+                          value={monthsInput}
+                          onChange={(e) => setMonthsInput(e.target.value)}
+                          type="number"
+                          name="Number"
+                          id="FeeAmount"
+                          placeholder="Number of Months"
+                          className="w-50 my-3 text-white py-2"
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            borderBottom: "1px solid white",
+                            borderRadius: "12px",
+                            textIndent: "12px",
+                            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                          }}
+                        />
+                        <div className="form-group">
+                          <select
+                            className="w-50 my-3 text-white py-2"
+                            id="account"
+                            value={Ownership}
+                            onChange={(e) => setOwnership(e.target.value)}
+                            required
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          >
+                            <option
+                              value=""
+                              style={{
+                                background: "transparent",
+                                color: "black",
+                              }}
+                            >
+                              Ownership
+                            </option>
+                            <option
+                              value="owner"
+                              style={{
+                                background: "transparent",
+                                color: "black",
+                              }}
+                            >
+                              Owner
+                            </option>
+                            <option
+                              value="tanent"
+                              style={{
+                                background: "transparent",
+                                color: "black",
+                              }}
+                            >
+                              Tanent
+                            </option>
+                          </select>
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <br />
+                    <input
+                      className="form-check-input form-check-input-no"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckDefault"
+                      onClick={() => {
+                        setPaid(false);
+                      }}
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="flexSwitchCheckDefault"
+                    >
+                      Payment Not Received?
+                    </label>
+                  </div>
+                  <button
+                    type="submit"
+                    className="btn btn-outline-success mt-2"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
             </>
           )}
         </div>
-
-        <form action="PUT" onSubmit={updateHandler}>
-          <div className="form-check">
-            <div className="form-check form-switch">
-              <input
-                className="form-check-input form-check-input-yes"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-                onClick={(e) => {
-                  setPaid(true);
-                  setShowAmountInput(true);
-                }}
-              />
-              <label
-                className="form-check-label"
-                htmlFor="flexSwitchCheckDefault"
-              >
-                Payment Received?
-              </label>
-              <br />
-              {showAmountInput ? (
-                <>
-                  <input
-                    value={feeAmount}
-                    onChange={(e) => setFeeAmount(e.target.value)}
-                    type="number"
-                    name="Fee Amount"
-                    id="FeeAmount"
-                    placeholder="Received Amount"
-                    className="w-50 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />{" "}
-                  <br />
-                  <input
-                    value={monthsInput}
-                    onChange={(e) => setMonthsInput(e.target.value)}
-                    type="number"
-                    name="Number"
-                    id="FeeAmount"
-                    placeholder="Number of Months"
-                    className="w-50 my-3 text-white py-2"
-                    style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                    }}
-                  />
-                  <div className="form-group">
-                    <select
-                      className="w-50 my-3 text-white py-2"
-                      id="account"
-                      value={Ownership}
-                      onChange={(e) => setOwnership(e.target.value)}
-                      required
-                      style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                      }}
-                    >
-                      <option
-                        value=""
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Ownership
-                      </option>
-                      <option
-                        value="owner"
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Owner
-                      </option>
-                      <option
-                        value="tanent"
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                        }}
-                      >
-                        Tanent
-                      </option>
-                    </select>
-                  </div>
-                </>
-              ) : (
-                <></>
-              )}
-              <br />
-              <input
-                className="form-check-input form-check-input-no"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-                onClick={(e) => {
-                  setPaid(false);
-                }}
-              />
-              <label
-                className="form-check-label"
-                htmlFor="flexSwitchCheckDefault"
-              >
-                Payment Not Received?
-              </label>
-            </div>
-            <button type="submit" className="btn btn-outline-success mt-2">
-              Save Changes
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   );

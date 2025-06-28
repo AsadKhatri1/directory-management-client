@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
@@ -13,21 +13,28 @@ const ResidentTable = () => {
   const [search, setSearch] = useState("");
   const [numberOfMonths, setNumberOfMonths] = useState(0);
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
-  const [showTanentsOnly, setShowTanentsOnly] = useState(false);
+  const [showTenantsOnly, setShowTenantsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentId, setResidentsId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [houseSearch, setHouseSearch] = useState("");
-  let paymentMode = "";
+
   const allResidents = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${backendURL}/api/v1/resident/getResidents`);
+      const res = await axios.get(
+        `${backendURL}/api/v1/resident/getResidents`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       if (res?.data?.success) {
         setResidents(res.data.residents);
       }
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Error fetching residents");
     } finally {
       setLoading(false);
     }
@@ -44,7 +51,7 @@ const ResidentTable = () => {
         `${backendURL}/api/v1/resident/deleteResident/${id}`,
         {
           headers: {
-            authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -52,10 +59,10 @@ const ResidentTable = () => {
         toast.success(res.data.message);
         allResidents();
       } else {
-        toast.error(res?.data?.message);
+        toast.error(res?.data?.message || "Failed to delete resident");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message);
+      toast.error(err.response?.data?.message || "Error deleting resident");
     } finally {
       setLoading(false);
     }
@@ -103,13 +110,40 @@ const ResidentTable = () => {
         navigate("/dashboard/resident/invoice");
       } else {
         console.error("Failed to generate fee slip:", response.data.message);
+        toast.error(response.data.message || "Failed to generate fee slip");
       }
     } catch (error) {
       console.error("Error generating fee slip:", error);
+      toast.error(error.response?.data?.message || "Error generating fee slip");
     } finally {
       setLoading(false);
     }
   };
+
+  const filteredResidents = useMemo(() => {
+    if (showTenantsOnly) {
+      // When Tenants checkbox is checked, only filter by residentType: "tenant"
+      return residents.filter(
+        (item) => (item.residentType || "").toLowerCase() === "tenant"
+      );
+    }
+    // Otherwise, apply other filters (search, houseSearch, unpaid)
+    return residents.filter((item) => {
+      const houseMatch =
+        houseSearch.trim() === "" ||
+        (item.HouseNumber || "")
+          .toLowerCase()
+          .includes(houseSearch.toLowerCase());
+      const generalMatch =
+        search.trim() === "" ||
+        (item.FullName || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Email || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Phone || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.CNIC || "").toLowerCase().includes(search.toLowerCase());
+      const matchesUnpaid = !showUnpaidOnly || !item.paid;
+      return houseMatch && generalMatch && matchesUnpaid;
+    });
+  }, [residents, search, houseSearch, showUnpaidOnly, showTenantsOnly]);
 
   return (
     <main className="main-container text-center">
@@ -120,9 +154,7 @@ const ResidentTable = () => {
             type="text"
             className="input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
-            style={{
-              border: "2px solid #009843",
-            }}
+            style={{ border: "2px solid #009843" }}
           />
           <input
             value={houseSearch}
@@ -135,7 +167,7 @@ const ResidentTable = () => {
         </form>
       </div>
 
-      <h1 className="mx-5 mt-3 ">Resident Table</h1>
+      <h1 className="mx-5 mt-3">Resident Table</h1>
 
       <div
         className="my-3 py-3"
@@ -160,13 +192,13 @@ const ResidentTable = () => {
           <input
             type="checkbox"
             className="mx-2"
-            checked={showTanentsOnly}
-            onChange={(e) => setShowTanentsOnly(e.target.checked)}
+            checked={showTenantsOnly}
+            onChange={(e) => setShowTenantsOnly(e.target.checked)}
           />
           Tenants
         </label>
         <p style={{ color: "#03bb50", fontSize: "1.24em", padding: "12px" }}>
-          Total Resident : {residents.length}
+          Total Residents: {filteredResidents.length}
         </p>
       </div>
 
@@ -214,6 +246,13 @@ const ResidentTable = () => {
                 className="py-3 fs-6"
                 style={{ color: "#03bb50" }}
               >
+                Type
+              </th>
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
                 Payment Status
               </th>
               <th
@@ -253,95 +292,71 @@ const ResidentTable = () => {
           )}
           <tbody>
             {!loading &&
-              residents
-                .filter((item) => {
-                  const houseMatch =
-                    houseSearch.trim() === "" ||
-                    item.HouseNumber.toLowerCase().includes(
-                      houseSearch.toLowerCase()
-                    );
-
-                  const generalMatch =
-                    search.trim() === "" ||
-                    item.FullName.toLowerCase().includes(
-                      search.toLowerCase()
-                    ) ||
-                    item.Email.toLowerCase().includes(search.toLowerCase()) ||
-                    item.Phone.toLowerCase().includes(search.toLowerCase()) ||
-                    item.CNIC.toLowerCase().includes(search.toLowerCase());
-
-                  const matchesUnpaid = !showUnpaidOnly || !item.paid;
-                  const matchesTenant =
-                    !showTanentsOnly || item.residentType === "tanent";
-
-                  return (
-                    houseMatch && generalMatch && matchesUnpaid && matchesTenant
-                  );
-                })
-                .map((r) => (
-                  <tr
-                    key={r._id}
-                    className="text-center align-middle"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <td>{r.FullName}</td>
-                    <td>{r.Email}</td>
-                    <td>{r.Phone}</td>
-                    <td>{r.HouseNumber}</td>
-                    <td>{r.CNIC}</td>
-                    <td style={{ color: r.paid ? "green" : "red" }}>
-                      {r.paid ? "Paid" : "Unpaid"}
-                    </td>
-                    <td>
-                      <select
-                        onChange={(e) => setNumberOfMonths(e.target.value)}
-                        className="form-select fs-6"
-                      >
-                        <option>Months</option>
-                        <option value="1">1 Month</option>
-                        <option value="2">2 Months</option>
-                        <option value="6">6 Months</option>
-                        <option value="12">1 year</option>
-                      </select>
-                      <button
-                        className={
-                          !r.paid
-                            ? "btn btn-outline-info m-1"
-                            : "btn btn-outline-secondary m-1 disabled"
+              filteredResidents.map((r) => (
+                <tr
+                  key={r._id}
+                  className="text-center align-middle"
+                  style={{ cursor: "pointer" }}
+                >
+                  <td>{r.FullName || "N/A"}</td>
+                  <td>{r.Email || "N/A"}</td>
+                  <td>{r.Phone || "N/A"}</td>
+                  <td>{r.HouseNumber || "N/A"}</td>
+                  <td>{r.CNIC || "N/A"}</td>
+                  <td>{r.residentType || "N/A"}</td>
+                  <td style={{ color: r.paid ? "green" : "red" }}>
+                    {r.paid ? "Paid" : "Unpaid"}
+                  </td>
+                  <td>
+                    <select
+                      onChange={(e) => setNumberOfMonths(e.target.value)}
+                      className="form-select fs-6"
+                    >
+                      <option>Months</option>
+                      <option value="1">1 Month</option>
+                      <option value="2">2 Months</option>
+                      <option value="6">6 Months</option>
+                      <option value="12">1 Year</option>
+                    </select>
+                    <button
+                      className={
+                        !r.paid
+                          ? "btn btn-outline-info m-1"
+                          : "btn btn-outline-secondary m-1 disabled"
+                      }
+                      onClick={() => Slippopup(r._id)}
+                    >
+                      Generate
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-outline-danger"
+                      onClick={() => {
+                        if (confirm("Are you sure you want to delete?")) {
+                          handleDelete(r._id);
                         }
-                        onClick={() => Slippopup(r._id)}
-                      >
-                        Generate
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-outline-danger"
-                        onClick={() => {
-                          if (confirm("Are you sure you want to delete?")) {
-                            handleDelete(r._id);
-                          }
-                        }}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="btn btn-outline-info m-1"
-                        onClick={() => navigate(`/dashboard/resident/${r._id}`)}
-                      >
-                        Details
-                      </button>
-                      <button
-                        className="btn btn-outline-info m-1"
-                        onClick={() =>
-                          navigate(`/dashboard/updateResident/${r._id}`)
-                        }
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className="btn btn-outline-info m-1"
+                      onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                    >
+                      Details
+                    </button>
+                    <button
+                      className="btn btn-outline-info m-1"
+                      onClick={() =>
+                        navigate(`/dashboard/update-resident/${r._id}`)
+                      }
+                    >
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -369,17 +384,13 @@ const ResidentTable = () => {
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-success mx-2"
-                onClick={() => {
-                  generateFeeSlip(residentId, "Cheque");
-                }}
+                onClick={() => generateFeeSlip(residentId, "Cheque")}
               >
                 Cheque
               </button>
               <button
                 className="btn btn-success mx-2"
-                onClick={() => {
-                  generateFeeSlip(residentId, "Cash");
-                }}
+                onClick={() => generateFeeSlip(residentId, "Cash")}
               >
                 Cash
               </button>
