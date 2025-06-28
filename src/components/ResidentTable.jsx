@@ -61,7 +61,6 @@ const ResidentTable = () => {
     }
   };
 
-  let paymentMode = "";
   const Slippopup = async (iD) => {
     setIsOpen(true);
     setResidentsId(iD);
