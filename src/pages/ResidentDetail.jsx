@@ -421,7 +421,7 @@ try {
                               <td>
                                 {r.cnicUrl ? renderImage(r.cnicUrl) : null}
                               </td>
-                              <button onClick={deleteMember(r._id)}>delete</button>
+                              <button className="text-center btn btn-outline-primary m-1 " onClick={deleteMember(r._id)}>delete</button>
                             </tr>
                           ))}
                         </tbody>
