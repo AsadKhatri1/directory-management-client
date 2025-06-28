@@ -495,7 +495,7 @@ const ResidentDetail = () => {
                 </Modal.Footer>
               </Modal>
 
-              <div className="mt-2 mb-5">
+              {/* <div className="mt-2 mb-5">
                 <img
                   src={resident?.Photo}
                   alt="image"
@@ -533,14 +533,325 @@ const ResidentDetail = () => {
                     <h5>NOC Issue Date : {nocdate}</h5>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
+              <div className="mt-2 mb-5">
+                <img
+                  src={resident?.Photo}
+                  alt="image"
+                  style={{
+                    borderRadius: "100%",
+                    height: "200px",
+                    width: "200px",
+                  }}
+                />
+                <h1 className="my-3">{resident?.FullName}</h1>
+                <div
+                  className="row my-4 py-4 mx-3"
+                  style={{
+                    backgroundColor: "#2A354A",
+                    borderRadius: "16px",
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
+                    transition: "transform 0.2s ease-in-out",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.01)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
+                >
+                  <div className="col-md-6 px-4">
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>Email:</span>{" "}
+                        {resident?.Email || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>Phone #:</span>{" "}
+                        {resident?.Phone || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>House #:</span>{" "}
+                        {resident?.HouseNumber || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>DOB:</span>{" "}
+                        {birthDate || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>CNIC #:</span>{" "}
+                        {resident?.CNIC || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>NOC #:</span>{" "}
+                        {resident?.NOCNo || "N/A"}
+                      </h5>
+                    </div>
+                  </div>
+
+                  <div className="col-md-6 px-4">
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>Profession:</span>{" "}
+                        {resident?.Profession || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>Qualification:</span>{" "}
+                        {resident?.Qualification || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>
+                          Business Address:
+                        </span>{" "}
+                        {resident?.bAddress || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>NOC Holder:</span>{" "}
+                        {resident?.NOCHolder || "N/A"}
+                      </h5>
+                    </div>
+                    <div className="mb-3">
+                      <h5
+                        className="text-light"
+                        style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                      >
+                        <span style={{ color: "#A0AEC0" }}>
+                          NOC Issue Date:
+                        </span>{" "}
+                        {nocdate || "N/A"}
+                      </h5>
+                    </div>
+                  </div>
+                </div>
+                {/* New Section for Uploaded Files */}
+
+                <div
+                  className="my-4 py-4 mx-3 px-4"
+                  style={{
+                    backgroundColor: "#2A354A",
+                    borderRadius: "16px",
+                    boxShadow:
+                      "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
+                  }}
+                >
+                  <h2
+                    className="text-center text-secondary mb-4"
+                    style={{ fontSize: "1.8rem", fontWeight: "600" }}
+                  >
+                    Uploaded Files
+                  </h2>
+                  <div className="row justify-content-center g-3">
+                    {resident?.CnicFile && (
+                      <div className="col-md-4 col-sm-6 text-center">
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "#33415C",
+                            borderRadius: "12px",
+                            transition: "transform 0.2s ease-in-out",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.03)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                        >
+                          <h5
+                            className="text-light mb-3"
+                            style={{ fontSize: "1.2rem" }}
+                          >
+                            CNIC
+                          </h5>
+                          <img
+                            src={resident.CnicFile}
+                            alt="CNIC Document"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                              border: "2px solid #ffffff33",
+                              cursor: "pointer",
+                              transition: "border-color 0.2s",
+                            }}
+                            onClick={() => handleImageClick(resident.CnicFile)}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff66")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff33")
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {resident?.NocFile && (
+                      <div className="col-md-4 col-sm-6 text-center">
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "#33415C",
+                            borderRadius: "12px",
+                            transition: "transform 0.2s ease-in-out",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.03)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                        >
+                          <h5
+                            className="text-light mb-3"
+                            style={{ fontSize: "1.2rem" }}
+                          >
+                            NOC
+                          </h5>
+                          <img
+                            src={resident.NocFile}
+                            alt="NOC Document"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                              border: "2px solid #ffffff33",
+                              cursor: "pointer",
+                              transition: "border-color 0.2s",
+                            }}
+                            onClick={() => handleImageClick(resident.NocFile)}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff66")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff33")
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {resident?.CantFile && (
+                      <div className="col-md-4 col-sm-6 text-center">
+                        <div
+                          className="p-3"
+                          style={{
+                            backgroundColor: "#33415C",
+                            borderRadius: "12px",
+                            transition: "transform 0.2s ease-in-out",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.transform = "scale(1.03)")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.transform = "scale(1)")
+                          }
+                        >
+                          <h5
+                            className="text-light mb-3"
+                            style={{ fontSize: "1.2rem" }}
+                          >
+                            Cant Pass
+                          </h5>
+                          <img
+                            src={resident.CantFile}
+                            alt="Cant Pass Document"
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              objectFit: "cover",
+                              borderRadius: "8px",
+                              border: "2px solid #ffffff33",
+                              cursor: "pointer",
+                              transition: "border-color 0.2s",
+                            }}
+                            onClick={() => handleImageClick(resident.CantFile)}
+                            onMouseEnter={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff66")
+                            }
+                            onMouseLeave={(e) =>
+                              (e.currentTarget.style.borderColor = "#ffffff33")
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                    {!resident?.CnicFile &&
+                      !resident?.NocFile &&
+                      !resident?.CantFile && (
+                        <div className="text-center py-3">
+                          <h5
+                            className="text-light"
+                            style={{
+                              fontSize: "1.3rem",
+                              backgroundColor: "#33415C",
+                              borderRadius: "8px",
+                              padding: "15px",
+                              display: "inline-block",
+                            }}
+                          >
+                            No Uploaded Files Available
+                          </h5>
+                        </div>
+                      )}
+                  </div>
+                </div>
+              </div>
               {/* <div className="my-5"> */}
 
               {/* </div> */}
             </>
           )}
         </div>
+
         <form action="PUT" onSubmit={updateHandler}>
           <div className="form-check">
             <div className="form-check form-switch">

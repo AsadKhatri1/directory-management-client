@@ -15,7 +15,6 @@ const ResidentTable = () => {
   const [showTanentsOnly, setShowTanentsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentId, setResidentsId] = useState("");
-
   const [isOpen, setIsOpen] = useState(false);
   const [houseSearch, setHouseSearch] = useState("");
 
@@ -61,6 +60,7 @@ const ResidentTable = () => {
     }
   };
 
+  let paymentMode = "";
   const Slippopup = async (iD) => {
     setIsOpen(true);
     setResidentsId(iD);
@@ -150,16 +150,14 @@ const ResidentTable = () => {
             type="checkbox"
             className="mx-2"
             checked={showTanentsOnly}
-            onChange={(e) => {
-              setShowTanentsOnly(e.target.checked);
-            }}
+            onChange={(e) => setShowTanentsOnly(e.target.checked)}
           />
           Tenants
         </label>
         <p>Total Resident : {residents.length}</p>
       </div>
 
-      <div className="main-table w-100 table-responsive mt-2 ">
+      <div className="main-table w-100 table-responsive mt-2">
         <table className="table table-dark table-hover rounded table-striped">
           <thead className="bg-light">
             <tr className="text-center align-middle">
@@ -170,15 +168,13 @@ const ResidentTable = () => {
               >
                 Full Name
               </th>
-              {!showTanentsOnly && (
-                <th
-                  scope="col"
-                  className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
-                >
-                  Email
-                </th>
-              )}
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Email
+              </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
@@ -200,54 +196,39 @@ const ResidentTable = () => {
               >
                 CNIC
               </th>
-              {!showTanentsOnly && (
-                <th
-                  scope="col"
-                  className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
-                >
-                  Payment Status
-                </th>
-              )}
-              {!showTanentsOnly && (
-                <th
-                  scope="col"
-                  className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
-                >
-                  Payment Slip
-                </th>
-              )}
-              {!showTanentsOnly && (
-                <th
-                  scope="col"
-                  className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
-                >
-                  Action
-                </th>
-              )}
-              {showTanentsOnly && (
-                <th
-                  scope="col"
-                  className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
-                >
-                  NOC
-                </th>
-              )}
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Payment Status
+              </th>
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Payment Slip
+              </th>
+              <th
+                scope="col"
+                className="py-3 fs-6"
+                style={{ color: "#03bb50" }}
+              >
+                Action
+              </th>
             </tr>
           </thead>
           {loading && (
             <tbody>
               <tr>
-                <td colSpan={showTanentsOnly ? 5 : 8} className="text-center">
+                <td colSpan={8} className="text-center">
                   <div className="d-flex justify-content-center my-3">
                     <Audio
                       height="60"
                       width="50"
                       radius="9"
-                      color="rgba(255, 255, 255, 0.2)"
+                      color="rgba(255, 255, 0.2)"
                       ariaLabel="loading"
                       wrapperStyle={{}}
                       wrapperClass=""
@@ -277,101 +258,77 @@ const ResidentTable = () => {
                     item.CNIC.toLowerCase().includes(search.toLowerCase());
 
                   const matchesUnpaid = !showUnpaidOnly || !item.paid;
+                  const matchesTenant =
+                    !showTanentsOnly || item.residentType === "tanent";
 
-                  // Show only if both match
-                  return houseMatch && generalMatch && matchesUnpaid;
+                  return (
+                    houseMatch && generalMatch && matchesUnpaid && matchesTenant
+                  );
                 })
-
-                .flatMap((r) => {
-                  if (showTanentsOnly) {
-                    const validTenants = r.tanents.filter(
-                      (tenant) => tenant.name.length > 1
-                    );
-
-                    return validTenants.length > 0
-                      ? validTenants.map((tenant) => (
-                          <tr
-                            key={tenant._id || Math.random()}
-                            className="text-center align-middle"
-                          >
-                            <td>{tenant.name || "N/A"}</td>
-                            <td>{tenant.number || "N/A"}</td>
-                            <td>{r.HouseNumber}</td>
-                            <td>{tenant.cnic || "N/A"}</td>
-                            <td>{tenant.nocNo || "N/A"}</td>
-                          </tr>
-                        ))
-                      : [];
-                  } else {
-                    return (
-                      <tr
-                        key={r._id}
-                        className="text-center align-middle"
-                        style={{ cursor: "pointer" }}
+                .map((r) => (
+                  <tr
+                    key={r._id}
+                    className="text-center align-middle"
+                    style={{ cursor: "pointer" }}
+                  >
+                    <td>{r.FullName}</td>
+                    <td>{r.Email}</td>
+                    <td>{r.Phone}</td>
+                    <td>{r.HouseNumber}</td>
+                    <td>{r.CNIC}</td>
+                    <td style={{ color: r.paid ? "green" : "red" }}>
+                      {r.paid ? "Paid" : "Unpaid"}
+                    </td>
+                    <td>
+                      <select
+                        onChange={(e) => setNumberOfMonths(e.target.value)}
+                        className="form-select fs-6"
                       >
-                        <td>{r.FullName}</td>
-                        <td>{r.Email}</td>
-                        <td>{r.Phone}</td>
-                        <td>{r.HouseNumber}</td>
-                        <td>{r.CNIC}</td>
-                        <td style={{ color: r.paid ? "green" : "red" }}>
-                          {r.paid ? "Paid" : "Unpaid"}
-                        </td>
-                        <td>
-                          <select
-                            onChange={(e) => setNumberOfMonths(e.target.value)}
-                            className="form-select fs-6"
-                          >
-                            <option>Months</option>
-                            <option value="1">1 Month</option>
-                            <option value="2">2 Months</option>
-                            <option value="6">6 Months</option>
-                            <option value="12">1 year</option>
-                          </select>
-                          <button
-                            className={
-                              !r.paid
-                                ? "btn btn-outline-info m-1"
-                                : "btn btn-outline-secondary m-1 disabled"
-                            }
-                            onClick={() => Slippopup(r._id)}
-                            // onClick={() => generateFeeSlip(r._id)}
-                          >
-                            Generate
-                          </button>
-                        </td>
-                        <td>
-                          <button
-                            className="btn btn-outline-danger "
-                            onClick={() => {
-                              if (confirm("Are you sure you want to delete?")) {
-                                handleDelete(r._id);
-                              }
-                            }}
-                          >
-                            Delete
-                          </button>
-                          <button
-                            className="btn btn-outline-info m-1"
-                            onClick={() =>
-                              navigate(`/dashboard/resident/${r._id}`)
-                            }
-                          >
-                            Details
-                          </button>
-                          <button
-                            className="btn btn-outline-info m-1"
-                            onClick={() =>
-                              navigate(`/dashboard/updateResident/${r?._id}`)
-                            }
-                          >
-                            Edit
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  }
-                })}
+                        <option>Months</option>
+                        <option value="1">1 Month</option>
+                        <option value="2">2 Months</option>
+                        <option value="6">6 Months</option>
+                        <option value="12">1 year</option>
+                      </select>
+                      <button
+                        className={
+                          !r.paid
+                            ? "btn btn-outline-info m-1"
+                            : "btn btn-outline-secondary m-1 disabled"
+                        }
+                        onClick={() => Slippopup(r._id)}
+                      >
+                        Generate
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-outline-danger"
+                        onClick={() => {
+                          if (confirm("Are you sure you want to delete?")) {
+                            handleDelete(r._id);
+                          }
+                        }}
+                      >
+                        Delete
+                      </button>
+                      <button
+                        className="btn btn-outline-info m-1"
+                        onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                      >
+                        Details
+                      </button>
+                      <button
+                        className="btn btn-outline-info m-1"
+                        onClick={() =>
+                          navigate(`/dashboard/updateResident/${r._id}`)
+                        }
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
           </tbody>
         </table>
       </div>
