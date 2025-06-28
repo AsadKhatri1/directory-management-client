@@ -19,90 +19,122 @@ const Invoice = () => {
     localStorage.setItem("receiptNumber", receiptNumber);
   }, [receiptNumber]);
 
+    const NumberofMonth =localStorage.getItem("NumberOfMonths") || 0;
   const paymentMode = localStorage.getItem("PaymentMode") || "";
 
   const invoiceSection = (copyType) => (
-    <div className="border p-3 mb-4" style={{ backgroundColor: "white" }}>
-      {/* Header Row */}
-      <div className="d-flex justify-content-between mb-3">
-        <p>
+    <div 
+      className="border p-3" 
+      style={{ 
+        backgroundColor: "white",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Header Row - Reduced margin to accommodate larger logo */}
+      <div className="d-flex justify-content-between" style={{ marginBottom: "5px" }}>
+        <p style={{ margin: 0, fontSize: "13px" }}>
           <strong>Date:</strong> {now.format("DD-MM-YYYY")}
         </p>
-        <p style={{ opacity: 0.6 }}>
+        <p style={{ opacity: 0.6, margin: 0, fontSize: "13px" }}>
           <strong>{copyType}</strong>
         </p>
-        <p>
+        <p style={{ margin: 0, fontSize: "13px" }}>
           <strong>Receipt #</strong> {receiptNumber}
         </p>
       </div>
 
-      {/* Logo Centered */}
-      <div className="text-center mb-3">
-        <img src={logo} alt="Logo" style={{ height: "90px", width: "auto" }} />
+      {/* Logo with 190px height */}
+      <div className="text-center" style={{ margin: "5px 0" }}>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ 
+            height: "190px",
+            width: "auto",
+            maxWidth: "100%",
+            objectFit: "contain"
+          }}
+        />
       </div>
 
-      {/* Title */}
-      <h5 className="text-center mb-4">
+      {/* Title - Adjusted spacing */}
+      <h5 className="text-center" style={{ 
+        margin: "5px 0 8px 0", 
+        fontSize: "16px", 
+        fontWeight: "bold" 
+      }}>
         Received with thanks Member Contribution / Others
       </h5>
-      {/* Resident Info */}
-      <div className="row text-center mb-2">
+      
+      {/* Paid Months */}
+      <p style={{ 
+        margin: "0 0 8px 0", 
+        fontSize: "13px", 
+        textAlign: "center" 
+      }}>
+        <strong>Paid Months : {NumberofMonth} </strong>
+      </p>
+
+      {/* Resident Info - Compact layout */}
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>From:</strong> Mr. / Mrs. {resident?.FullName}
           </p>
         </div>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>House No.:</strong> {resident?.HouseNumber}
           </p>
         </div>
       </div>
 
       {/* Additional Fields */}
-      <div className="row text-center mb-2">
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>Cash / Cheque No.:</strong> ___________________
           </p>
         </div>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>Received By:</strong> ___________________
           </p>
         </div>
       </div>
 
       {/* Amount Breakdown */}
-      <div className="row text-center mb-3">
+      <div className="row text-center" style={{ marginBottom: "12px" }}>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>REC Amount:</strong> Rs. {amount / 2}
           </p>
         </div>
         <div className="col-6">
-          <p>
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
             <strong>Masjid Amount:</strong> Rs. {amount / 2}
           </p>
         </div>
       </div>
 
       {/* Total */}
-      <div className="text-center mb-2">
-        <p style={{ fontSize: "1.3rem", fontWeight: "bold" }}>
-          Total Amount: Rs. {amount}
+      <div className="text-center" style={{ margin: "8px 0" }}>
+        <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
+          Total Amount : {amount}
         </p>
       </div>
 
       {/* Payment Mode */}
       <div className="text-end">
-        <p>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
           <strong>Payment Mode:</strong> {paymentMode}
         </p>
       </div>
     </div>
   );
-
+ 
   return (
     <>
       <div
@@ -110,8 +142,8 @@ const Invoice = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh", // full viewport height
-          backgroundColor: "#f8f9fa", // optional light background
+          minHeight: "100vh",
+          backgroundColor: "#f8f9fa",
         }}
       >
         <div
@@ -120,14 +152,15 @@ const Invoice = () => {
             backgroundColor: "white",
             color: "black",
             boxShadow: "0 0 10px rgba(0,0,0,0.1)",
-            width: "210mm", // A4 width
-            height: "297mm", // A4 height
+            width: "210mm",
+            height: "297mm",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             boxSizing: "border-box",
           }}
         >
+          {/* Office Copy with adjusted padding */}
           <div
             style={{
               height: "148.5mm",
@@ -137,7 +170,14 @@ const Invoice = () => {
           >
             {invoiceSection("Office Copy")}
           </div>
-          <div style={{ height: "148.5mm", padding: "10mm" }}>
+          
+          {/* Resident Copy with adjusted padding */}
+          <div
+            style={{
+              height: "148.5mm",
+              padding: "10mm",
+            }}
+          >
             {invoiceSection("Resident Copy")}
           </div>
         </div>
