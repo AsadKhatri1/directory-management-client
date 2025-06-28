@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
 import { Audio } from "react-loader-spinner";
 import moment from "moment";
 import axios from "axios";
@@ -32,6 +33,145 @@ const ResidentDetail = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
+
+  // Add family member
+  const [addMember, setAddMember] = useState(false);
+   const [showFam, setShowFam] = useState(false);
+const {id} = useParams();
+
+ const [relatives, setRelatives] = useState([
+    {
+      name: "",
+      relation: "",
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+    },
+  ]);
+
+  const handleRelativeChange = (index, name, event) => {
+    const { value } = event.target;
+    const updatedRelatives = [...relatives];
+    updatedRelatives[index][name] = value;
+    setRelatives(updatedRelatives);
+  };
+
+  
+  // upload single files to cloudinary
+  const uploadFileToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "images_preset");
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+      return data.secure_url;
+    } else {
+      throw new Error(`Failed to upload file: ${file.name}`);
+    }
+  };
+
+  // uploading relative cnic and photo
+  const handleRelativePhotoUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setRelatives((prevRelatives) => {
+        const updatedRelatives = [...prevRelatives];
+        updatedRelatives[index].photoUrl = uploadedUrl;
+        return updatedRelatives;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+
+  const handleRelativeCnicUpload = async (index, event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return;
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload photo to Cloudinary based on file type
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update relatives array with uploaded photo URL
+      setRelatives((prevRelatives) => {
+        const updatedRelatives = [...prevRelatives];
+        updatedRelatives[index].cnicUrl = uploadedUrl;
+        return updatedRelatives;
+      });
+    } catch (error) {
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
+    }
+  };
+
+  const addRelativeField = async() => {
+  // Add a new relative field
+try {
+  const response = await axios.post(
+    `${backendURL}/api/v1/resident/${id}/family-members`,
+    relatives[0] // assuming `relatives` is a single object representing one family member
+  );
+  console.log(response.data.message);
+
+} catch (error) {
+  console.error("Error adding relative field:", error);
+  toast.error("Failed to add family member");
+}
+
+  };
+
+  const deleteMember = (mid) => async () => {  
+    try {     
+      const response = await axios.delete(
+        ` ${backendURL}/api/v1/resident/${id}/family-members/${mid}`,
+      );
+      console.log(response);
+      
+      if (response.data) {
+        toast.success("Family member deleted successfully");
+       setMembers((prevMembers) => prevMembers.filter((member) => member.id !== mid));
+      } else {
+        toast.error("Failed to delete family member");
+      }
+    } catch (error) {
+      console.error("Error deleting family member:", error);
+      toast.error("Failed to delete family member");
+    }
+  }
+  const [addVehicle, setAddVehicle] = useState(false);
+  const [addMaid, setAddMaid] = useState(false);
+
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
     setShowModal(true);
@@ -58,6 +198,7 @@ const ResidentDetail = () => {
       const { data } = await axios.get(
         `${backendURL}/api/v1/resident/getResident/${params.id}`
       );
+      
       if (data.success) {
         setResident(data?.resident);
         setVehicle(data?.resident?.vehicles);
@@ -223,20 +364,7 @@ const ResidentDetail = () => {
                 {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
               </button>
             </div>
-            <div className="col-md-3">
-              <button
-                className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: "#263043", color: "white" }}
-                onClick={(e) => {
-                  setShowT(!showT),
-                    setShowM(false),
-                    setShowS(false),
-                    setShowV(false);
-                }}
-              >
-                {!showT ? "View Tanent Details" : "Hide Tanent details"}
-              </button>
-            </div>
+           
           </div>
 
           {resident.length < 1 ? (
@@ -270,6 +398,7 @@ const ResidentDetail = () => {
                             <th scope="col">OCCUPATION</th>
                             <th scope="col">CNIC Number</th>
                             <th scope="col">CNIC</th>
+                            <th scope="col">ACTIONS</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -292,10 +421,14 @@ const ResidentDetail = () => {
                               <td>
                                 {r.cnicUrl ? renderImage(r.cnicUrl) : null}
                               </td>
+                              <button onClick={deleteMember(r._id)}>delete</button>
                             </tr>
                           ))}
                         </tbody>
                       </table>
+                      <button className="btn btn-outline-secondary mb-3" onClick={()=>{setAddMember(true) , setShowM(false)}}>
+                        Add Family Member
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -307,6 +440,252 @@ const ResidentDetail = () => {
                   <h3 className="text-light">No Family Members To Show</h3>
                 </div>
               ) : null}
+              {
+                addMember && (<>
+          
+   {/* family members starts here */}
+        {addMember && (
+          <div className="row">
+            <hr />
+            <h1 className="my-3 fw-bold text-center">Enter Family Members</h1>
+            {relatives.map((relative, index) => (
+              <>
+                <div className="col-md-6">
+                  <div key={index}>
+                    <input
+                      value={relative.name}
+                      onChange={(e) => handleRelativeChange(index, "name", e)}
+                      type="text"
+                      name="name"
+                      placeholder="Faily Member Name"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <select
+                      value={relative.relation}
+                      onChange={(e) =>
+                        handleRelativeChange(index, "relation", e)
+                      }
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      <option
+                        value=""
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Select Relation
+                      </option>
+                      <option
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                        value="Father"
+                      >
+                        Father
+                      </option>
+                      <option
+                        value="Mother"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Mother
+                      </option>
+                      <option
+                        value="Husband/Wife"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Husband/Wife
+                      </option>
+                      <option
+                        value="Child"
+                        style={{
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        }}
+                      >
+                        Child
+                      </option>
+                      {/* Add other relation options */}
+                    </select>
+                    <input
+                      value={relative.cnic}
+                      onChange={(e) => handleRelativeChange(index, "cnic", e)}
+                      type="text"
+                      name="cnic"
+                      placeholder="CNIC"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <input
+                      value={relative.occupation}
+                      onChange={(e) =>
+                        handleRelativeChange(index, "occupation", e)
+                      }
+                      type="text"
+                      name="occupation"
+                      placeholder="Occupation"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  <div>
+                    <input
+                      value={relative.number}
+                      onChange={(e) => handleRelativeChange(index, "number", e)}
+                      type="tel"
+                      name="number"
+                      placeholder="Phone No"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <br />
+                    <label htmlFor="date">Date Of Birth</label>
+                    <br />
+                    <input
+                      value={relative.dob}
+                      onChange={(e) => handleRelativeChange(index, "dob", e)}
+                      type="date"
+                      name="dob"
+                      placeholder="Date Of Birth"
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    />
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {relative.photoUrl
+                        ? relative.photoUrl.name
+                        : "Upload Photo"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/*"
+                        onChange={(event) =>
+                          handleRelativePhotoUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      }}
+                    >
+                      {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
+                      <input
+                        type="file"
+                        name="nocFile"
+                        accept="image/* "
+                        onChange={(event) =>
+                          handleRelativeCnicUpload(index, event)
+                        }
+                        hidden
+                      />
+                    </label>
+                  </div>
+                </div>
+              </>
+            ))}
+            <div className="w-100 text-center">
+              <button
+                type="button"
+                onClick={addRelativeField}
+                className="btn btn-outline-primary m-5 mt-2 w-25 "
+              >
+                <FaPlus /> Members
+              </button>
+            </div>
+          </div>
+        )}
+                </>)
+              }
 
               {/* maid details */}
               <br />
@@ -414,67 +793,7 @@ const ResidentDetail = () => {
                 </div>
               ) : null}
 
-              {/* tanents detals */}
-              {showT && tanents[0].name.length > 0 ? (
-                <div className="text-center">
-                  <div className="my-5">
-                    <h2 className="my-5 text-secondary">Tanent Details</h2>
-                    <div className="table-responsive">
-                      <table className="table table-dark table-bordered table-hover">
-                        <thead className="bg-light">
-                          <tr className="text-center">
-                            <th scope="col">PHOTO</th>
-                            <th scope="col">NAME</th>
-                            <th scope="col">NOC NUMBER</th>
-                            <th scope="col">NOC ISSUE DATE</th>
-                            <th scope="col">MOBILE NUMBER</th>
-                            <th scope="col">DOB</th>
-                            <th scope="col">OCCUPATION</th>
-                            <th scope="col">CNIC NUMBER</th>
-                            <th scope="col">CNIC </th>
-                            <th scope="col">NOC </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {tanents.map((r) => (
-                            <tr
-                              key={r._id}
-                              className="text-center align-middle"
-                            >
-                              <td>
-                                {r.photoUrl ? renderImage(r.photoUrl) : null}
-                              </td>
-                              <td>{r.name}</td>
-                              <td>{r.nocNo}</td>
-                              <td>
-                                {r.nocIssue &&
-                                  moment(r.nocIssue).format("MMMM Do, YYYY")}
-                              </td>
-                              <td>{r.number}</td>
-                              <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
-                              </td>
-                              <td>{r.occupation}</td>
-                              <td>{r.cnic}</td>
-                              <td>
-                                {r.cnicUrl ? renderImage(r.cnicUrl) : null}
-                              </td>{" "}
-                              <td>{r.nocUrl ? renderImage(r.nocUrl) : null}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              ) : showT ? (
-                <div
-                  className="text-center py-3 pt-4"
-                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
-                >
-                  <h3 className="text-light">No Tanents To Show</h3>
-                </div>
-              ) : null}
+              
 
               {/* Modal */}
               <Modal show={showModal} onHide={handleCloseModal}>
