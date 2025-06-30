@@ -22,6 +22,7 @@ const ResidentUpdateForm = () => {
   const [Photo, setPhoto] = useState("");
   const [cnicFile, setCnicFile] = useState("");
   const [nocFile, setNocFile] = useState("");
+  const [residentType, setResidentType] = useState(""); // Added residentType state
   const [loader, setLoader] = useState(false);
 
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ const ResidentUpdateForm = () => {
         setPhoto(resident.Photo || "");
         setCnicFile(resident.CnicFile || "");
         setNocFile(resident.NocFile || "");
+        setResidentType(resident.residentType || ""); // Set residentType
       } catch (error) {
         toast.error("Failed to load resident data");
       }
@@ -122,6 +124,7 @@ const ResidentUpdateForm = () => {
           Photo: photoUrl,
           CnicFile: cnicUrl,
           NocFile: nocUrl,
+          residentType, // Include residentType in the update
         },
         {
           headers: {
@@ -141,23 +144,22 @@ const ResidentUpdateForm = () => {
   };
 
   return (
-    <main className="main-container text-center mt-5">
-      <h1 className="my-3 fw-bold">Update Resident Details</h1>
+    <main className="main-container text-center py-5">
+      <h1 className="mb-4 fw-bold">Update Resident Details</h1>
 
-      <form action="put" className="w-100 mt-3" onSubmit={submitHandler}>
-        <div className="row">
+      <form action="put" className="w-75 mx-auto mt-4" onSubmit={submitHandler}>
+        <div className="row g-4">
           <div className="col-md-6">
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="photo"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 {Photo
                   ? typeof Photo === "string"
                     ? "Current Photo"
                     : Photo.name
-                  : "Upload new image"}
+                  : "Upload Photo"}
               </label>
               <input
                 type="file"
@@ -165,29 +167,29 @@ const ResidentUpdateForm = () => {
                 name="photo"
                 accept="image/*"
                 onChange={(e) => setPhoto(e.target.files[0])}
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="cnicFile"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 {cnicFile
                   ? typeof cnicFile === "string"
                     ? "Current CNIC"
                     : cnicFile.name
-                  : "Upload new CNIC"}
+                  : "Upload CNIC"}
               </label>
               <input
                 type="file"
@@ -195,29 +197,29 @@ const ResidentUpdateForm = () => {
                 name="cnicFile"
                 accept="image/*, .pdf"
                 onChange={(e) => setCnicFile(e.target.files[0])}
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="nocFile"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 {nocFile
                   ? typeof nocFile === "string"
                     ? "Current NOC"
                     : nocFile.name
-                  : "Upload new NOC"}
+                  : "Upload NOC"}
               </label>
               <input
                 type="file"
@@ -225,23 +227,23 @@ const ResidentUpdateForm = () => {
                 name="nocFile"
                 accept="image/*, .pdf"
                 onChange={(e) => setNocFile(e.target.files[0])}
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="FullName"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Full Name
               </label>
@@ -251,23 +253,23 @@ const ResidentUpdateForm = () => {
                 type="text"
                 id="FullName"
                 name="FullName"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="Email"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Email
               </label>
@@ -277,23 +279,23 @@ const ResidentUpdateForm = () => {
                 type="email"
                 id="Email"
                 name="Email"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="Profession"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Profession
               </label>
@@ -303,23 +305,23 @@ const ResidentUpdateForm = () => {
                 type="text"
                 id="Profession"
                 name="Profession"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="Qualification"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Qualification
               </label>
@@ -329,13 +331,14 @@ const ResidentUpdateForm = () => {
                 type="text"
                 id="Qualification"
                 name="Qualification"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
@@ -343,11 +346,45 @@ const ResidentUpdateForm = () => {
           </div>
 
           <div className="col-md-6">
-            <div className="w-75 my-3">
+            <div className="mb-4">
+              <label
+                htmlFor="residentType"
+                className="d-block text-start mb-2 fw-bold"
+              >
+                Resident Type
+              </label>
+              <select
+                value={residentType}
+                onChange={(e) => setResidentType(e.target.value)}
+                id="residentType"
+                name="residentType"
+                className="w-100 py-2"
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                }}
+              >
+                <option value="" style={{ color: "black" }}>
+                  Select Resident Type
+                </option>
+                <option value="tenant" style={{ color: "black" }}>
+                  Tenant
+                </option>
+                <option value="owner" style={{ color: "black" }}>
+                  Owner
+                </option>
+              </select>
+            </div>
+
+            <div className="mb-4">
               <label
                 htmlFor="Phone"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Phone Number
               </label>
@@ -358,23 +395,23 @@ const ResidentUpdateForm = () => {
                 id="Phone"
                 name="Phone"
                 minLength="11"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="HouseNumber"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 House Number
               </label>
@@ -384,24 +421,21 @@ const ResidentUpdateForm = () => {
                 type="text"
                 id="HouseNumber"
                 name="HouseNumber"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
-              <label
-                htmlFor="CNIC"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
-              >
+            <div className="mb-4">
+              <label htmlFor="CNIC" className="d-block text-start mb-2 fw-bold">
                 CNIC
               </label>
               <input
@@ -410,25 +444,22 @@ const ResidentUpdateForm = () => {
                 type="text"
                 id="CNIC"
                 name="CNIC"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
-              <label
-                htmlFor="date"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
-              >
-                Date Of Birth
+            <div className="mb-4">
+              <label htmlFor="date" className="d-block text-start mb-2 fw-bold">
+                Date of Birth
               </label>
               <input
                 value={DOB}
@@ -436,25 +467,25 @@ const ResidentUpdateForm = () => {
                 type="date"
                 id="date"
                 name="date"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="officeTel"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
-                Tel (office)
+                Office Telephone
               </label>
               <input
                 value={officeTel}
@@ -462,23 +493,23 @@ const ResidentUpdateForm = () => {
                 type="tel"
                 id="officeTel"
                 name="officeTel"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="businessAddress"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 Business/Office Address
               </label>
@@ -486,52 +517,53 @@ const ResidentUpdateForm = () => {
                 value={bAddress}
                 onChange={(e) => setBAddress(e.target.value)}
                 id="businessAddress"
-                name="business address"
-                className="w-100 text-white py-2"
+                name="businessAddress"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  minHeight: "80px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="nocHolder"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
-                NOC Holders Name
+                NOC Holder Name
               </label>
               <input
                 value={NOCHolder}
                 onChange={(e) => setNOCHolder(e.target.value)}
                 type="text"
                 id="nocHolder"
-                name="noc"
-                className="w-100 text-white py-2"
+                name="nocHolder"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="nocIssue"
-                className="d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
-                Date Of NOC Issuance
+                Date of NOC Issuance
               </label>
               <input
                 value={NOCIssue}
@@ -539,23 +571,23 @@ const ResidentUpdateForm = () => {
                 type="date"
                 id="nocIssue"
                 name="nocIssue"
-                className="w-100 text-white py-2"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
 
-            <div className="w-75 my-3">
+            <div className="mb-4">
               <label
                 htmlFor="nocNo"
-                className=" d-block text-left mb-1"
-                style={{ textAlign: "left" }}
+                className="d-block text-start mb-2 fw-bold"
               >
                 NOC Number
               </label>
@@ -564,14 +596,15 @@ const ResidentUpdateForm = () => {
                 onChange={(e) => setNOCNo(e.target.value)}
                 type="text"
                 id="nocNo"
-                name="nocno"
-                className="w-100 text-white py-2"
+                name="nocNo"
+                className="w-100 py-2"
                 style={{
                   background: "transparent",
                   border: "none",
                   borderBottom: "1px solid white",
-                  borderRadius: "12px",
-                  textIndent: "12px",
+                  borderRadius: "4px",
+                  color: "white",
+                  textIndent: "8px",
                   boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
@@ -579,12 +612,12 @@ const ResidentUpdateForm = () => {
           </div>
         </div>
 
-        <div className="row text-center justify-content-center pt-2">
+        <div className="text-center mt-4">
           {loader ? (
-            <div className="text-center d-flex align-items-center my-3 justify-content-center">
+            <div className="d-flex justify-content-center align-items-center">
               <Audio
-                height="80"
-                width="80"
+                height="60"
+                width="60"
                 radius="9"
                 color="rgba(255, 255, 255, 0.2)"
                 ariaLabel="loading"
@@ -593,8 +626,12 @@ const ResidentUpdateForm = () => {
           ) : (
             <button
               type="submit"
-              className="btn w-75 mt-1 fw-bold"
-              style={{ borderRadius: "12px", backgroundColor: "#03bb50" }}
+              className="btn fw-bold px-5 py-3"
+              style={{
+                borderRadius: "8px",
+                backgroundColor: "#03bb50",
+                fontSize: "1.1rem",
+              }}
             >
               UPDATE
             </button>

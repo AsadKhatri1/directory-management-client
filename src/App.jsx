@@ -45,7 +45,7 @@ function App() {
           }
         />
         <Route
-          path="/dashboard/updateResident/:id"
+          path="/dashboard/update-resident/:id"
           element={
             <PrivateRoute>
               <ResidentUpdate />
