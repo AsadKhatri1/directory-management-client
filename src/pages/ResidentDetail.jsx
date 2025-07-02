@@ -670,17 +670,10 @@ const ResidentDetail = () => {
                   <div className="w-100 text-center">
                     <button
                       type="button"
-                      onClick={addNewRelativeField}
-                      className="btn btn-outline-primary m-5 mt-2 w-25"
-                    >
-                      <FaPlus /> Add Another Member
-                    </button>
-                    <button
-                      type="button"
                       onClick={addRelativeField}
                       className="btn btn-outline-success m-5 mt-2 w-25"
                     >
-                      Submit Members
+                      Submit Member
                     </button>
                   </div>
                 </div>
