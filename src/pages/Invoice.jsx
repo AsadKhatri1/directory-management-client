@@ -9,6 +9,7 @@ const Invoice = () => {
 
   const resident = JSON.parse(localStorage.getItem("resident"));
   const amount = JSON.parse(localStorage.getItem("amount"));
+  const months = JSON.parse(localStorage.getItem("months")) || [];
 
   const [receiptNumber, setReceiptNumber] = useState(() => {
     const lastReceiptNumber = localStorage.getItem("receiptNumber");
@@ -19,7 +20,6 @@ const Invoice = () => {
     localStorage.setItem("receiptNumber", receiptNumber);
   }, [receiptNumber]);
 
-  const NumberofMonth = localStorage.getItem("NumberOfMonths") || 0;
   const paymentMode = localStorage.getItem("PaymentMode") || "";
 
   const invoiceSection = (copyType) => (
@@ -32,7 +32,7 @@ const Invoice = () => {
         flexDirection: "column",
       }}
     >
-      {/* Header Row - Reduced margin to accommodate larger logo */}
+      {/* Header Row */}
       <div
         className="d-flex justify-content-between"
         style={{ marginBottom: "5px" }}
@@ -48,7 +48,7 @@ const Invoice = () => {
         </p>
       </div>
 
-      {/* Logo with 190px height */}
+      {/* Logo */}
       <div className="text-center" style={{ margin: "5px 0px 2px 0px" }}>
         <img
           src={logo}
@@ -62,7 +62,7 @@ const Invoice = () => {
         />
       </div>
 
-      {/* Title - Adjusted spacing */}
+      {/* Title */}
       <h5
         className="text-center"
         style={{
@@ -82,7 +82,11 @@ const Invoice = () => {
           textAlign: "center",
         }}
       >
-        <strong>Paid Months: {NumberofMonth}</strong>
+        <strong>
+          Paid Months: {months.length > 0
+            ? months.map((month) => moment(month, "YYYY-MM").format("MMMM YYYY")).join(", ")
+            : "N/A"}
+        </strong>
       </p>
 
       {/* Resident Info */}
@@ -175,7 +179,7 @@ const Invoice = () => {
             boxSizing: "border-box",
           }}
         >
-          {/* Office Copy with adjusted padding */}
+          {/* Office Copy */}
           <div
             style={{
               height: "148.5mm",
@@ -186,7 +190,7 @@ const Invoice = () => {
             {invoiceSection("Office Copy")}
           </div>
 
-          {/* Resident Copy with adjusted padding */}
+          {/* Resident Copy */}
           <div
             style={{
               height: "148.5mm",

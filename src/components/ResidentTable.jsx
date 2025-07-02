@@ -4,20 +4,30 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import { ToastContainer } from "react-bootstrap";
+import moment from "moment";
 
 const ResidentTable = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
-  let token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
-  const [numberOfMonths, setNumberOfMonths] = useState(0);
+  const [selectedMonths, setSelectedMonths] = useState({});
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTenantsOnly, setShowTenantsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [residentId, setResidentsId] = useState("");
+  const [residentId, setResidentId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [houseSearch, setHouseSearch] = useState("");
+
+  // Generate a list of months from 12 months prior to 12 months after the current date
+  const monthsOptions = Array.from({ length: 24 }, (_, i) => {
+    const date = moment().subtract(12, "months").add(i, "months");
+    return {
+      value: date.format("YYYY-MM"),
+      label: date.format("MMMM YYYY"),
+    };
+  });
 
   const allResidents = async () => {
     setLoading(true);
@@ -32,6 +42,13 @@ const ResidentTable = () => {
       );
       if (res?.data?.success) {
         setResidents(res.data.residents);
+        // Initialize selectedMonths for each resident
+        setSelectedMonths(
+          res.data.residents.reduce((acc, resident) => {
+            acc[resident._id] = [];
+            return acc;
+          }, {})
+        );
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Error fetching residents");
@@ -68,20 +85,21 @@ const ResidentTable = () => {
     }
   };
 
-  const Slippopup = async (iD) => {
+  const Slippopup = (id) => {
     setIsOpen(true);
-    setResidentsId(iD);
+    setResidentId(id);
   };
 
   const generateFeeSlip = async (residentId, paymentMode) => {
     setLoading(true);
-    console.log(numberOfMonths);
+    const months = selectedMonths[residentId] || [];
+    const numberOfMonths = months.length;
 
     localStorage.setItem("PaymentMode", paymentMode);
-    localStorage.setItem("NumberOfMonths", numberOfMonths);
+    localStorage.setItem("NumberOfMonths", JSON.stringify(months));
 
     if (numberOfMonths === 0) {
-      toast.warn("Please Select Month to Generate Slip");
+      toast.warn("Please select at least one month to generate slip");
       setLoading(false);
       setIsOpen(false);
       return;
@@ -90,7 +108,7 @@ const ResidentTable = () => {
     try {
       const response = await axios.post(
         `${backendURL}/api/v1/resident/generateSlip/${residentId}`,
-        { numberOfMonths: numberOfMonths },
+        { numberOfMonths },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -103,17 +121,12 @@ const ResidentTable = () => {
           "resident",
           JSON.stringify(response.data.resident)
         );
-        localStorage.setItem(
-          "months",
-          JSON.stringify(response.data.numberOfMonths)
-        );
+        localStorage.setItem("months", JSON.stringify(months));
         navigate("/dashboard/resident/invoice");
       } else {
-        console.error("Failed to generate fee slip:", response.data.message);
         toast.error(response.data.message || "Failed to generate fee slip");
       }
     } catch (error) {
-      console.error("Error generating fee slip:", error);
       toast.error(error.response?.data?.message || "Error generating fee slip");
     } finally {
       setLoading(false);
@@ -122,12 +135,10 @@ const ResidentTable = () => {
 
   const filteredResidents = useMemo(() => {
     if (showTenantsOnly) {
-      // When Tenants checkbox is checked, only filter by residentType: "tenant"
       return residents.filter(
         (item) => (item.residentType || "").toLowerCase() === "tenant"
       );
     }
-    // Otherwise, apply other filters (search, houseSearch, unpaid)
     return residents.filter((item) => {
       const houseMatch =
         houseSearch.trim() === "" ||
@@ -274,7 +285,7 @@ const ResidentTable = () => {
           {loading && (
             <tbody>
               <tr>
-                <td colSpan={8} className="text-center">
+                <td colSpan={9} className="text-center">
                   <div className="d-flex justify-content-center my-3">
                     <Audio
                       height="60"
@@ -308,16 +319,53 @@ const ResidentTable = () => {
                     {r.paid ? "Paid" : "Unpaid"}
                   </td>
                   <td>
-                    <select
-                      onChange={(e) => setNumberOfMonths(e.target.value)}
-                      className="form-select fs-6"
-                    >
-                      <option>Months</option>
-                      <option value="1">1 Month</option>
-                      <option value="2">2 Months</option>
-                      <option value="6">6 Months</option>
-                      <option value="12">1 Year</option>
-                    </select>
+                    <div className="dropdown">
+                      <button
+                        className="btn btn-outline-info dropdown-toggle fs-6"
+                        type="button"
+                        id={`monthsDropdown-${r._id}`}
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Select Months
+                      </button>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby={`monthsDropdown-${r._id}`}
+                        style={{ maxHeight: "200px", overflowY: "auto" }}
+                      >
+                        {monthsOptions.map((month) => (
+                          <li key={month.value}>
+                            <label className="dropdown-item">
+                              <input
+                                type="checkbox"
+                                value={month.value}
+                                checked={(selectedMonths[r._id] || []).includes(
+                                  month.value
+                                )}
+                                onChange={(e) => {
+                                  const months = selectedMonths[r._id] || [];
+                                  if (e.target.checked) {
+                                    setSelectedMonths({
+                                      ...selectedMonths,
+                                      [r._id]: [...months, month.value],
+                                    });
+                                  } else {
+                                    setSelectedMonths({
+                                      ...selectedMonths,
+                                      [r._id]: months.filter(
+                                        (m) => m !== month.value
+                                      ),
+                                    });
+                                  }
+                                }}
+                              />
+                              <span className="ms-2">{month.label}</span>
+                            </label>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                     <button
                       className={
                         !r.paid
@@ -378,15 +426,22 @@ const ResidentTable = () => {
             )}
             <h4>Generate Fee Slip</h4>
             <p>
-              Confirm generating a slip for <strong>{numberOfMonths}</strong>{" "}
-              month(s)?
+              Confirm generating a slip for{" "}
+              <strong>
+                {(selectedMonths[residentId] || []).length} month(s)
+              </strong>
+              :{" "}
+              {(selectedMonths[residentId] || [])
+                .map((month) => moment(month, "YYYY-MM").format("MMMM YYYY"))
+                .join(", ") || "None selected"}
+              ?
             </p>
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-success mx-2"
-                onClick={() => generateFeeSlip(residentId, "Cheque")}
+                onClick={() => generateFeeSlip(residentId, "IBFT")}
               >
-                Cheque
+                IBFT
               </button>
               <button
                 className="btn btn-success mx-2"
