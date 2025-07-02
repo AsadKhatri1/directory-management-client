@@ -19,7 +19,6 @@ const ResidentDetail = () => {
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
   const [tanents, setTanents] = useState([]);
-  const [maids, setMaids] = useState([]);
   const [showM, setShowM] = useState(false);
   const [showV, setShowV] = useState(false);
   const [showS, setShowS] = useState(false);
@@ -101,22 +100,6 @@ const ResidentDetail = () => {
     }
   };
 
-  const addNewRelativeField = () => {
-    setRelatives([
-      ...relatives,
-      {
-        name: "",
-        relation: "",
-        dob: "",
-        occupation: "",
-        cnic: "",
-        number: "",
-        photoUrl: "",
-        cnicUrl: "",
-      },
-    ]);
-  };
-
   const addRelativeField = async () => {
     try {
       const response = await axios.post(
@@ -180,8 +163,135 @@ const ResidentDetail = () => {
     }
   };
 
-  const [addVehicle, setAddVehicle] = useState(false);
-  const [addMaid, setAddMaid] = useState(false);
+  const [maids, setMaids] = useState([
+    {
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
+    },
+  ]);
+
+  const [showServant, setShowServant] = useState(false); // Set true to show form initially
+
+  const [maid, setMaid] = useState([
+    {
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
+    },
+  ]);
+
+  const handleMaidChange = (name, value) => {
+    setMaid((prevMaid) => ({
+      ...prevMaid,
+      [name]: value,
+    }));
+  };
+
+  const handleMaidCnicUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+      const uploadedUrl = await uploadFileToCloudinary(file);
+      setMaid((prev) => ({
+        ...prev,
+        cnicUrl: uploadedUrl,
+      }));
+    } catch (error) {
+      console.error("Error uploading CNIC:", error);
+      alert("Error uploading CNIC. Please try again.");
+    }
+  };
+
+  const handleMaidCantPassUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      const uploadedUrl = await uploadFileToCloudinary(file);
+      setMaid((prev) => ({
+        ...prev,
+        cantPassUrl: uploadedUrl,
+      }));
+    } catch (error) {
+      console.error("Error uploading Cant Pass:", error);
+      alert("Error uploading Cant Pass. Please try again.");
+    }
+  };
+
+  const addMaidField = async () => {
+    try {
+      const response = await axios.post(
+        `${backendURL}/api/v1/resident/${id}/maids`,
+        maid,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response) {
+        toast.success("Servant added successfully");
+
+        // Reset only if needed
+        setMaid({
+          name: "",
+          dob: "",
+          address: "",
+          guardian: "",
+          number: "",
+          cnic: "",
+          cnicUrl: "",
+          cantPassUrl: "",
+        });
+
+        setShowServant(false);
+        setShowS(true);
+      } else {
+        toast.error("Failed to add Servant member");
+      }
+    } catch (error) {
+      console.error("Error adding Servant field:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to add Servant member"
+      );
+    }
+  };
+
+  const deleteServant = (sid) => async () => {
+    try {
+      const response = await axios.delete(
+        `${backendURL}/api/v1/resident/${id}/maids/${sid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        toast.success("Servant deleted successfully");
+      } else {
+        toast.error("Failed to delete Servant member");
+      }
+    } catch (error) {
+      console.error("Error deleting Servant member:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to delete Servant member"
+      );
+    }
+  };
 
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
@@ -224,6 +334,92 @@ const ResidentDetail = () => {
     } catch (err) {
       toast.error(
         err.response?.data?.message || "Error fetching resident data"
+      );
+    }
+  };
+  // Vehicle
+  const [showVehicle, setShowVehicle] = useState(false);
+  const [vehicles, setVehicles] = useState([
+    {
+      type: "",
+      make: "",
+      model: "",
+      year: "",
+      colour: "",
+      stickerNumber: "",
+      registrationNumber: "",
+      paperDocument: "",
+    },
+  ]);
+
+  // uploading car papers to cloudinary
+  const handlePaperDocumentUpload = async (event, index) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      return; // No file selected, do nothing
+    }
+
+    try {
+      let uploadedUrl;
+
+      // Upload image to Cloudinary if it's an image (optional):
+
+      uploadedUrl = await uploadFileToCloudinary(file);
+
+      // Update vehicle array with uploaded URL
+      setVehicles((prevVehicles) => {
+        const updatedVehicles = [...prevVehicles];
+        updatedVehicles[index].paperDocument = uploadedUrl;
+        return updatedVehicles;
+      });
+    } catch (error) {
+      console.error("Error uploading document:", error);
+      alert("Error uploading document. Please try again.");
+    }
+  };
+
+  const handleVehicleChange = (index, event) => {
+    const updatedVehicles = [...vehicles];
+    updatedVehicles[index][event.target.name] = event.target.value;
+    setVehicles(updatedVehicles);
+  };
+
+  const addVehicleField = async () => {
+    try {
+      const vehicleToAdd = vehicles[0];
+      const response = await axios.post(
+        `${backendURL}/api/v1/resident/${id}/vehicles`,
+        vehicleToAdd,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response) {
+        toast.success("Vehicle added successfully");
+
+        setVehicle({
+          type: "",
+          make: "",
+          model: "",
+          year: "",
+          colour: "",
+          stickerNumber: "",
+          registrationNumber: "",
+          paperDocument: "",
+        });
+        setShowVehicle(false);
+        setShowV(true);
+      } else {
+        toast.error("Failed to add Vehicle member");
+      }
+    } catch (error) {
+      console.error("Error adding Vehicle field:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to add Vehicle member"
       );
     }
   };
@@ -315,7 +511,7 @@ const ResidentDetail = () => {
         <div className="text-center">
           <h1 className="mb-5">RESIDENT DETAILS</h1>
           <div className="row my-1">
-            <div className="col-md-3">
+            <div className="col-md-4 ">
               <button
                 className="btn mt-2 mb-2 border"
                 style={{
@@ -333,7 +529,7 @@ const ResidentDetail = () => {
                 {!showM ? "View Family Members" : "Hide Family Members"}
               </button>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
               <button
                 className="btn mt-2 mb-2 border"
                 style={{ backgroundColor: "#263043", color: "white" }}
@@ -347,7 +543,7 @@ const ResidentDetail = () => {
                 {!showS ? "View Servant Details" : "Hide Servant details"}
               </button>
             </div>
-            <div className="col-md-3">
+            <div className="col-md-4">
               <button
                 className="btn mt-2 mb-2 border"
                 style={{ backgroundColor: "#263043", color: "white" }}
@@ -678,6 +874,7 @@ const ResidentDetail = () => {
                   </div>
                 </div>
               )}
+
               {showS && maids.length > 0 ? (
                 <div className="text-center">
                   <div className="my-5">
@@ -694,6 +891,7 @@ const ResidentDetail = () => {
                             <th scope="col">GUARDIAN'S NAME</th>
                             <th scope="col">CNIC</th>
                             <th scope="col">CANT PASS</th>
+                            <th scope="col">Action</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -720,11 +918,28 @@ const ResidentDetail = () => {
                                   ? renderImage(r.cantPassUrl)
                                   : "N/A"}
                               </td>
+                              <td>
+                                <button
+                                  className="text-center btn btn-outline-primary m-1"
+                                  onClick={deleteServant(r._id)}
+                                >
+                                  Delete
+                                </button>
+                              </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
+                    <button
+                      className="btn btn-outline-success m-5 mt-2 w-25"
+                      onClick={() => {
+                        setShowServant(true);
+                        setShowS(false);
+                      }}
+                    >
+                      Add Servant
+                    </button>
                   </div>
                 </div>
               ) : showS ? (
@@ -735,6 +950,128 @@ const ResidentDetail = () => {
                   <h3 className="text-light">No Servant Details To Show</h3>
                 </div>
               ) : null}
+
+              {/* servant details */}
+
+              {showServant && (
+                <div className="row">
+                  <hr />
+                  <h1 className="my-3 fw-bold text-center">
+                    Enter servant details
+                  </h1>
+                  <div className="col-md-6">
+                    <input
+                      value={maid.name}
+                      onChange={(e) => handleMaidChange("name", e.target.value)}
+                      type="text"
+                      name="name"
+                      className="w-75 my-3 text-white py-2"
+                      placeholder="Servant's Name"
+                      style={inputStyle}
+                    />
+                    <br />
+                    <input
+                      value={maid.dob}
+                      onChange={(e) => handleMaidChange("dob", e.target.value)}
+                      type="date"
+                      name="dob"
+                      placeholder="Date Of Birth"
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    />
+                    <br />
+                    <input
+                      value={maid.address}
+                      onChange={(e) =>
+                        handleMaidChange("address", e.target.value)
+                      }
+                      type="text"
+                      name="address"
+                      placeholder="Address"
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    />
+                    <br />
+                    <input
+                      value={maid.guardian}
+                      onChange={(e) =>
+                        handleMaidChange("guardian", e.target.value)
+                      }
+                      type="text"
+                      name="guardian"
+                      placeholder="Guardian's Name"
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    />
+                    <br />
+                  </div>
+                  <div className="col-md-6">
+                    <input
+                      value={maid.number}
+                      onChange={(e) =>
+                        handleMaidChange("number", e.target.value)
+                      }
+                      type="tel"
+                      name="number"
+                      placeholder="Phone Number"
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    />
+                    <br />
+                    <input
+                      value={maid.cnic}
+                      onChange={(e) => handleMaidChange("cnic", e.target.value)}
+                      type="text"
+                      name="cnic"
+                      placeholder="CNIC Number"
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    />
+                    <br />
+
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    >
+                      {maid.cnicUrl ? "CNIC Uploaded" : "Upload CNIC"}
+                      <input
+                        type="file"
+                        name="cnicFile"
+                        accept="image/*"
+                        onChange={handleMaidCnicUpload}
+                        hidden
+                      />
+                    </label>
+                    <label
+                      className="w-75 my-3 text-white py-2"
+                      style={inputStyle}
+                    >
+                      {maid.cantPassUrl
+                        ? "Cant Pass Uploaded"
+                        : "Upload Cant Pass"}
+                      <input
+                        type="file"
+                        name="cantPassFile"
+                        accept="image/*"
+                        onChange={handleMaidCantPassUpload}
+                        hidden
+                      />
+                    </label>
+                  </div>
+
+                  <div className="text-center pt-2">
+                    <button
+                      className="btn btn-success m-5 mt-2 w-25 pt-2"
+                      onClick={() => {
+                        addMaidField();
+                      }}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {showV && vehicle.length > 0 ? (
                 <div className="text-center">
                   <h2 className="my-5 text-secondary">Vehicle Details</h2>
@@ -771,6 +1108,15 @@ const ResidentDetail = () => {
                         ))}
                       </tbody>
                     </table>
+                    <button
+                      className="btn btn-outline-secondary mb-3"
+                      onClick={() => {
+                        setShowVehicle(true);
+                        setShowV(false);
+                      }}
+                    >
+                      Add Vehicle
+                    </button>
                   </div>
                 </div>
               ) : showV ? (
@@ -781,6 +1127,186 @@ const ResidentDetail = () => {
                   <h3 className="text-light">No Vehicle Details To Show</h3>
                 </div>
               ) : null}
+
+              {/* vehicle details */}
+
+              {/* vehicle details */}
+              {showVehicle && (
+                <div className="row text-center">
+                  <hr />
+                  <h1 className="my-3 fw-bold">Enter vehicle details</h1>
+                  {vehicles.map((vehicle, index) => (
+                    <>
+                      <div className="col-md-6">
+                        <div key={index}>
+                          {/* selection */}
+
+                          <input
+                            value={vehicle.type}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="type"
+                            placeholder="Vehicle Type | Car or Motorcycle"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <input
+                            value={vehicle.colour}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="colour"
+                            placeholder="Colour"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+
+                          <input
+                            value={vehicle.make}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="make"
+                            placeholder="Vehicle Make"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <input
+                            value={vehicle.model}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="model"
+                            placeholder="Vehicle Model Name"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div>
+                          <input
+                            value={vehicle.year}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="year"
+                            placeholder="Vehicle Year"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <input
+                            value={vehicle.stickerNumber}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="stickerNumber"
+                            placeholder="Sticker Number"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <input
+                            value={vehicle.registrationNumber}
+                            onChange={(e) => handleVehicleChange(index, e)}
+                            type="text"
+                            name="registrationNumber"
+                            placeholder="Vehicle Registration Number"
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          />
+                          <label
+                            className="w-75 my-3 text-white py-2"
+                            style={{
+                              background: "transparent",
+                              border: "none",
+                              borderBottom: "1px solid white",
+                              borderRadius: "12px",
+                              textIndent: "12px",
+                              boxShadow:
+                                "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                            }}
+                          >
+                            {vehicle.paperDocument
+                              ? vehicle.paperDocument.name
+                              : "Upload Document"}
+                            <input
+                              type="file"
+                              name="nocFile"
+                              accept="image/*"
+                              onChange={(event) =>
+                                handlePaperDocumentUpload(event, index)
+                              }
+                              hidden
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  ))}
+                  <div className="text-center mt-3">
+                    <button
+                      type="button"
+                      onClick={addVehicleField}
+                      className="btn btn-outline-primary w-25 m-5 mt-2"
+                    >
+                      <FaPlus />
+                      Add Vehicle
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
                   <Modal.Title>Document</Modal.Title>
@@ -1243,6 +1769,16 @@ const ResidentDetail = () => {
       </div>
     </div>
   );
+};
+
+// Styling object (same as before)
+const inputStyle = {
+  background: "transparent",
+  border: "none",
+  borderBottom: "1px solid white",
+  borderRadius: "12px",
+  textIndent: "12px",
+  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
 };
 
 export default ResidentDetail;
