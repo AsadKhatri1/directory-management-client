@@ -1300,8 +1300,7 @@ const ResidentDetail = () => {
                       onClick={addVehicleField}
                       className="btn btn-outline-primary w-25 m-5 mt-2"
                     >
-                      <FaPlus />
-                      Add Vehicle
+                      Submit Vehicle
                     </button>
                   </div>
                 </div>
