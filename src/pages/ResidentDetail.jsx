@@ -241,7 +241,7 @@ const ResidentDetail = () => {
         }
       );
 
-      if (response) {
+      if (response.data) {
         toast.success("Servant added successfully");
 
         // Reset only if needed
@@ -255,9 +255,10 @@ const ResidentDetail = () => {
           cnicUrl: "",
           cantPassUrl: "",
         });
-
+        getResident();
+        setShowS(true)
         setShowServant(false);
-        setShowS(true);
+       
       } else {
         toast.error("Failed to add Servant member");
       }
@@ -282,6 +283,7 @@ const ResidentDetail = () => {
 
       if (response.data) {
         toast.success("Servant deleted successfully");
+        getResident();
       } else {
         toast.error("Failed to delete Servant member");
       }
@@ -311,6 +313,8 @@ const ResidentDetail = () => {
       onClick={() => handleImageClick(url)}
     />
   );
+
+
 
   const getResident = async () => {
     try {
@@ -400,8 +404,7 @@ const ResidentDetail = () => {
 
       if (response) {
         toast.success("Vehicle added successfully");
-
-        setVehicle({
+        setVehicles({
           type: "",
           make: "",
           model: "",
@@ -411,8 +414,9 @@ const ResidentDetail = () => {
           registrationNumber: "",
           paperDocument: "",
         });
-        setShowVehicle(false);
+       getResident();
         setShowV(true);
+         setShowVehicle(false);
       } else {
         toast.error("Failed to add Vehicle member");
       }
@@ -423,6 +427,33 @@ const ResidentDetail = () => {
       );
     }
   };
+
+
+const deleteVehicle =async(vid)=>{
+  try {
+    const response = await axios.delete(`${backendURL}/api/v1/resident/${id}/vehicles/${vid}`,{
+      headers :{
+        Authorization : `Bearer ${localStorage.getItem("token")}`,
+      }      
+     })
+     if(response.data)
+     {
+      toast.success("Vehicle Deleted Successfully")
+      getResident()
+     }
+
+ else {
+        toast.error("Failed to delete Vehicle");
+      }
+    } catch (error) {
+      console.error("Error deleting Vehicle:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to delete Vehicle"
+      );
+    }
+}
+
+
 
   useEffect(() => {
     getResident();
@@ -500,6 +531,11 @@ const ResidentDetail = () => {
     }
   };
 
+  console.log(vehicles);
+  console.log("vhe", vehicle);
+  
+  
+
   return (
     <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
@@ -550,6 +586,7 @@ const ResidentDetail = () => {
                 onClick={() => {
                   setShowV(!showV);
                   setShowM(false);
+                  setShowVehicle(false)
                   setShowS(false);
                   setShowT(false);
                 }}
@@ -1087,6 +1124,7 @@ const ResidentDetail = () => {
                           <th scope="col">REGISTRATION NUMBER</th>
                           <th scope="col">STICKER NUMBER</th>
                           <th scope="col">DOCUMENT</th>
+                           <th scope="col">Action</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -1104,6 +1142,14 @@ const ResidentDetail = () => {
                                 ? renderImage(r.paperDocument)
                                 : "N/A"}
                             </td>
+                              <td>
+                                <button
+                                  className="text-center btn btn-outline-primary m-1"
+                                  onClick={()=>{deleteVehicle(r._id)}}
+                                >
+                                  Delete
+                                </button>
+                              </td>
                           </tr>
                         ))}
                       </tbody>
@@ -1135,7 +1181,7 @@ const ResidentDetail = () => {
                 <div className="row text-center">
                   <hr />
                   <h1 className="my-3 fw-bold">Enter vehicle details</h1>
-                  {vehicles.map((vehicle, index) => (
+                  { vehicles?.map((vehicle, index) => (
                     <>
                       <div className="col-md-6">
                         <div key={index}>
