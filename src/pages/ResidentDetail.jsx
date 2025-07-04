@@ -176,7 +176,7 @@ const ResidentDetail = () => {
     },
   ]);
 
-  const [showServant, setShowServant] = useState(false); // Set true to show form initially
+  const [showServant, setShowServant] = useState(false); 
 
   const [maid, setMaid] = useState([
     {
