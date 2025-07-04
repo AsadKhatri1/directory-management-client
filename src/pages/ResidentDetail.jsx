@@ -682,7 +682,7 @@ const deleteVehicle =async(vid)=>{
                 >
                   <h3 className="text-light">No Family Members To Show</h3>
                   <button
-                    className="btn btn-outline-secondary mb-3"
+                    className="btn btn-outline-success m-5 mt-2 w-25"
                     onClick={() => {
                       setAddMember(true);
                       setShowM(false);
@@ -985,6 +985,15 @@ const deleteVehicle =async(vid)=>{
                   style={{ backgroundColor: "#263043", borderRadius: "12px" }}
                 >
                   <h3 className="text-light">No Servant Details To Show</h3>
+                   <button
+                      className="btn btn-outline-success m-5 mt-2 w-25"
+                      onClick={() => {
+                        setShowServant(true);
+                        setShowS(false);
+                      }}
+                    >
+                      Add Servant
+                    </button>
                 </div>
               ) : null}
 
@@ -1171,6 +1180,15 @@ const deleteVehicle =async(vid)=>{
                   style={{ backgroundColor: "#263043", borderRadius: "12px" }}
                 >
                   <h3 className="text-light">No Vehicle Details To Show</h3>
+                   <button
+                      className="btn btn-outline-success m-5 mt-2 w-25"
+                      onClick={() => {
+                        setShowVehicle(true);
+                        setShowV(false);
+                      }}
+                    >
+                      Add Vehicle
+                    </button>
                 </div>
               ) : null}
 
