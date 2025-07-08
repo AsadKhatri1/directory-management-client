@@ -10,6 +10,8 @@ const Invoice = () => {
   const resident = JSON.parse(localStorage.getItem("resident"));
   const amount = JSON.parse(localStorage.getItem("amount"));
   const months = JSON.parse(localStorage.getItem("months")) || [];
+  const numberOfMonths =
+    JSON.parse(localStorage.getItem("NumberOfMonths")) || [];
 
   const [receiptNumber, setReceiptNumber] = useState(() => {
     const lastReceiptNumber = localStorage.getItem("receiptNumber");
@@ -21,6 +23,16 @@ const Invoice = () => {
   }, [receiptNumber]);
 
   const paymentMode = localStorage.getItem("PaymentMode") || "";
+
+  // Get start and end months from the months array
+  const startMonth =
+    months.length > 0
+      ? moment(months[0], "YYYY-MM").format("MMMM YYYY")
+      : "N/A";
+  const endMonth =
+    months.length > 0
+      ? moment(months[months.length - 1], "YYYY-MM").format("MMMM YYYY")
+      : "N/A";
 
   const invoiceSection = (copyType) => (
     <div
@@ -75,19 +87,17 @@ const Invoice = () => {
       </h5>
 
       {/* Paid Months */}
-      <p
-        style={{
-          margin: "0 0 8px 0",
-          fontSize: "13px",
-          textAlign: "center",
-        }}
-      >
-        <strong>
-          Paid Months: {months.length > 0
-            ? months.map((month) => moment(month, "YYYY-MM").format("MMMM YYYY")).join(", ")
-            : "N/A"}
-        </strong>
-      </p>
+      <div style={{ margin: "0 0 8px 0", textAlign: "center" }}>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>From:</strong> {startMonth}
+        </p>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>To:</strong> {endMonth}
+        </p>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>Total Months:</strong> {months.length}
+        </p>
+      </div>
 
       {/* Resident Info */}
       <div className="row text-center" style={{ marginBottom: "8px" }}>
@@ -148,7 +158,7 @@ const Invoice = () => {
       {/* Total */}
       <div className="text-center" style={{ margin: "8px 0" }}>
         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
-          Total Amount: {amount || "N/A"}
+          Total Amount: Rs. {amount || "N/A"}
         </p>
       </div>
     </div>

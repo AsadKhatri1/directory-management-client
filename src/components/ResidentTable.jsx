@@ -1,10 +1,12 @@
 import axios from "axios";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Audio } from "react-loader-spinner";
 import { ToastContainer } from "react-bootstrap";
 import moment from "moment";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const ResidentTable = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
@@ -12,22 +14,14 @@ const ResidentTable = () => {
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedMonths, setSelectedMonths] = useState({});
+  const [selectedDates, setSelectedDates] = useState({});
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTenantsOnly, setShowTenantsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
   const [residentId, setResidentId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [houseSearch, setHouseSearch] = useState("");
-
-  // Generate a list of months from 12 months prior to 12 months after the current date
-  const monthsOptions = Array.from({ length: 24 }, (_, i) => {
-    const date = moment().subtract(12, "months").add(i, "months");
-    return {
-      value: date.format("YYYY-MM"),
-      label: date.format("MMMM YYYY"),
-    };
-  });
+  const [activeDatePickerId, setActiveDatePickerId] = useState(null);
 
   const allResidents = async () => {
     setLoading(true);
@@ -42,10 +36,13 @@ const ResidentTable = () => {
       );
       if (res?.data?.success) {
         setResidents(res.data.residents);
-        // Initialize selectedMonths for each resident
-        setSelectedMonths(
+        // Initialize selectedDates for each resident
+        setSelectedDates(
           res.data.residents.reduce((acc, resident) => {
-            acc[resident._id] = [];
+            acc[resident._id] = {
+              start: moment().subtract(1, "months").toDate(),
+              end: moment().toDate(),
+            };
             return acc;
           }, {})
         );
@@ -88,22 +85,43 @@ const ResidentTable = () => {
   const Slippopup = (id) => {
     setIsOpen(true);
     setResidentId(id);
+    setActiveDatePickerId(null); // Close any open date picker when opening modal
   };
 
   const generateFeeSlip = async (residentId, paymentMode) => {
     setLoading(true);
-    const months = selectedMonths[residentId] || [];
+    const { start, end } = selectedDates[residentId] || {};
+    let months = [];
+
+    if (start && end) {
+      const startDate = moment(start);
+      const endDate = moment(end);
+
+      // Ensure start date is not after end date
+      if (startDate.isAfter(endDate)) {
+        toast.warn("Start date cannot be after end date");
+        setLoading(false);
+        return;
+      }
+
+      // Generate array of months between start and end dates
+      const current = startDate.clone().startOf("month");
+      while (current.isSameOrBefore(endDate, "month")) {
+        months.push(current.format("YYYY-MM"));
+        current.add(1, "month");
+      }
+    }
+
     const numberOfMonths = months.length;
+
+    if (numberOfMonths === 0) {
+      toast.warn("Please select valid start and end dates");
+      setLoading(false);
+      return;
+    }
 
     localStorage.setItem("PaymentMode", paymentMode);
     localStorage.setItem("NumberOfMonths", JSON.stringify(months));
-
-    if (numberOfMonths === 0) {
-      toast.warn("Please select at least one month to generate slip");
-      setLoading(false);
-      setIsOpen(false);
-      return;
-    }
 
     try {
       const response = await axios.post(
@@ -122,6 +140,7 @@ const ResidentTable = () => {
           JSON.stringify(response.data.resident)
         );
         localStorage.setItem("months", JSON.stringify(months));
+        setIsOpen(false);
         navigate("/dashboard/resident/invoice");
       } else {
         toast.error(response.data.message || "Failed to generate fee slip");
@@ -155,6 +174,10 @@ const ResidentTable = () => {
       return houseMatch && generalMatch && matchesUnpaid;
     });
   }, [residents, search, houseSearch, showUnpaidOnly, showTenantsOnly]);
+
+  const toggleDatePicker = (id) => {
+    setActiveDatePickerId(activeDatePickerId === id ? null : id);
+  };
 
   return (
     <main className="main-container text-center">
@@ -199,8 +222,9 @@ const ResidentTable = () => {
           />
           Unpaid Residents
         </label>
-        <label className="mx-2 d-inline">
+        <label for="showTenantsOnly" class="checkbox">
           <input
+            id="showTenantsOnly"
             type="checkbox"
             className="mx-2"
             checked={showTenantsOnly}
@@ -208,8 +232,8 @@ const ResidentTable = () => {
           />
           Tenants
         </label>
-        <p style={{ color: "#03bb50", fontSize: "1.24em", padding: "12px" }}>
-          Total Residents: {filteredResidents.length}
+        <p style={{ color: "#03bb50", fontSize: "1.24em", padding: "10px" }}>
+          Total residents: {filteredResidents.length}
         </p>
       </div>
 
@@ -319,53 +343,6 @@ const ResidentTable = () => {
                     {r.paid ? "Paid" : "Unpaid"}
                   </td>
                   <td>
-                    <div className="dropdown">
-                      <button
-                        className="btn btn-outline-info dropdown-toggle fs-6"
-                        type="button"
-                        id={`monthsDropdown-${r._id}`}
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                      >
-                        Select Months
-                      </button>
-                      <ul
-                        className="dropdown-menu"
-                        aria-labelledby={`monthsDropdown-${r._id}`}
-                        style={{ maxHeight: "200px", overflowY: "auto" }}
-                      >
-                        {monthsOptions.map((month) => (
-                          <li key={month.value}>
-                            <label className="dropdown-item">
-                              <input
-                                type="checkbox"
-                                value={month.value}
-                                checked={(selectedMonths[r._id] || []).includes(
-                                  month.value
-                                )}
-                                onChange={(e) => {
-                                  const months = selectedMonths[r._id] || [];
-                                  if (e.target.checked) {
-                                    setSelectedMonths({
-                                      ...selectedMonths,
-                                      [r._id]: [...months, month.value],
-                                    });
-                                  } else {
-                                    setSelectedMonths({
-                                      ...selectedMonths,
-                                      [r._id]: months.filter(
-                                        (m) => m !== month.value
-                                      ),
-                                    });
-                                  }
-                                }}
-                              />
-                              <span className="ms-2">{month.label}</span>
-                            </label>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
                     <button
                       className={
                         !r.paid
@@ -425,16 +402,98 @@ const ResidentTable = () => {
               </div>
             )}
             <h4>Generate Fee Slip</h4>
-            <p>
-              Confirm generating a slip for{" "}
+            <div className="mb-3">
+              <label className="form-label">Start Month</label>
+              <DatePicker
+                selected={selectedDates[residentId]?.start || null}
+                onChange={(date) => {
+                  const newStart = date;
+                  const newEnd =
+                    selectedDates[residentId]?.end || moment().toDate();
+                  if (
+                    newStart &&
+                    newEnd &&
+                    moment(newStart).isAfter(moment(newEnd))
+                  ) {
+                    toast.warn("Start date cannot be after end date");
+                    return;
+                  }
+                  setSelectedDates({
+                    ...selectedDates,
+                    [residentId]: {
+                      ...selectedDates[residentId],
+                      start: newStart,
+                    },
+                  });
+                }}
+                minDate={new Date("2000-01-01")}
+                maxDate={new Date()}
+                dateFormat="MMMM yyyy"
+                showMonthYearPicker
+                className="form-control"
+                open={activeDatePickerId === `${residentId}-start`}
+                onFocus={() => setActiveDatePickerId(`${residentId}-start`)}
+                onClickOutside={() => setActiveDatePickerId(null)}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">End Month</label>
+              <DatePicker
+                selected={selectedDates[residentId]?.end || null}
+                onChange={(date) => {
+                  const newEnd = date;
+                  const newStart =
+                    selectedDates[residentId]?.start ||
+                    moment().subtract(1, "months").toDate();
+                  if (
+                    newEnd &&
+                    newStart &&
+                    moment(newEnd).isBefore(moment(newStart))
+                  ) {
+                    toast.warn("End date cannot be before start date");
+                    return;
+                  }
+                  setSelectedDates({
+                    ...selectedDates,
+                    [residentId]: {
+                      ...selectedDates[residentId],
+                      end: newEnd,
+                    },
+                  });
+                }}
+                minDate={new Date("2000-01-01")}
+                maxDate={new Date()}
+                dateFormat="MMMM yyyy"
+                showMonthYearPicker
+                className="form-control"
+                open={activeDatePickerId === `${residentId}-end`}
+                onFocus={() => setActiveDatePickerId(`${residentId}-end`)}
+                onClickOutside={() => setActiveDatePickerId(null)}
+              />
+            </div>
+            <p className="mb-3">
+              Selected period:{" "}
               <strong>
-                {(selectedMonths[residentId] || []).length} month(s)
+                {selectedDates[residentId]?.start &&
+                selectedDates[residentId]?.end
+                  ? `${moment(selectedDates[residentId].start).format(
+                      "MMMM YYYY"
+                    )} - ${moment(selectedDates[residentId].end).format(
+                      "MMMM YYYY"
+                    )}`
+                  : "None selected"}
               </strong>
-              :{" "}
-              {(selectedMonths[residentId] || [])
-                .map((month) => moment(month, "YYYY-MM").format("MMMM YYYY"))
-                .join(", ") || "None selected"}
-              ?
+              <br />
+              Total months:{" "}
+              <strong>
+                {selectedDates[residentId]?.start &&
+                selectedDates[residentId]?.end
+                  ? moment(selectedDates[residentId].end).diff(
+                      moment(selectedDates[residentId].start),
+                      "months"
+                    ) + 1
+                  : 0}
+              </strong>
             </p>
             <div className="d-flex justify-content-end">
               <button
