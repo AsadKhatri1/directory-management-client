@@ -427,7 +427,7 @@ const ResidentTable = () => {
                   });
                 }}
                 minDate={new Date("2000-01-01")}
-                maxDate={new Date()}
+                // Removed maxDate restriction to allow future dates
                 dateFormat="MMMM yyyy"
                 showMonthYearPicker
                 className="form-control"
@@ -462,7 +462,7 @@ const ResidentTable = () => {
                   });
                 }}
                 minDate={new Date("2000-01-01")}
-                maxDate={new Date()}
+                // Removed maxDate restriction to allow future dates
                 dateFormat="MMMM yyyy"
                 showMonthYearPicker
                 className="form-control"
