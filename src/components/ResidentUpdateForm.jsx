@@ -49,14 +49,15 @@ const ResidentUpdateForm = () => {
         setQualification(resident.Qualification || "");
         setBAddress(resident.bAddress || "");
         setNOCHolder(resident.NOCHolder || "");
-        setNOCIssue(resident.NOCIssue || "");
+        setNOCIssue(resident.NOCIssue ? resident.NOCIssue.split("T")[0] : "");
         setNOCNo(resident.NOCNo || "");
         setDOB(resident.DOB ? resident.DOB.split("T")[0] : "");
         setCNIC(resident.CNIC || "");
         setPhoto(resident.Photo || "");
         setCnicFile(resident.CnicFile || "");
         setNocFile(resident.NocFile || "");
-        setResidentType(resident.residentType || ""); // Set residentType
+        setResidentType(resident.residentType || "");
+        console.log("noc isssue:", resident?.NOCIssue);
       } catch (error) {
         toast.error("Failed to load resident data");
       }
@@ -124,7 +125,7 @@ const ResidentUpdateForm = () => {
           Photo: photoUrl,
           CnicFile: cnicUrl,
           NocFile: nocUrl,
-          residentType, // Include residentType in the update
+          residentType,
         },
         {
           headers: {
