@@ -164,15 +164,17 @@ const ResidentDetail = () => {
       );
     }
   };
-  const [ownerResident, setOwnerResident] = useState([{
-    FullName: "",
-    Email: "",
-    CNIC: "",
-    HouseNumber: "",
-    NOCHolder: "",
-    Phone: "",
-    Profession: "",
-  }])
+  const [ownerResident, setOwnerResident] = useState([
+    {
+      FullName: "",
+      Email: "",
+      CNIC: "",
+      HouseNumber: "",
+      NOCHolder: "",
+      Phone: "",
+      Profession: "",
+    },
+  ]);
   const [maids, setMaids] = useState([
     {
       name: "",
@@ -265,9 +267,8 @@ const ResidentDetail = () => {
           cantPassUrl: "",
         });
         getResident();
-        setShowS(true)
+        setShowS(true);
         setShowServant(false);
-
       } else {
         toast.error("Failed to add Servant member");
       }
@@ -322,8 +323,6 @@ const ResidentDetail = () => {
       onClick={() => handleImageClick(url)}
     />
   );
-
-
 
   const getResident = async () => {
     try {
@@ -437,31 +436,27 @@ const ResidentDetail = () => {
     }
   };
 
-
   const deleteVehicle = async (vid) => {
     try {
-      const response = await axios.delete(`${backendURL}/api/v1/resident/${id}/vehicles/${vid}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await axios.delete(
+        `${backendURL}/api/v1/resident/${id}/vehicles/${vid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      })
+      );
       if (response.data) {
-        toast.success("Vehicle Deleted Successfully")
-        getResident()
-      }
-
-      else {
+        toast.success("Vehicle Deleted Successfully");
+        getResident();
+      } else {
         toast.error("Failed to delete Vehicle");
       }
     } catch (error) {
       console.error("Error deleting Vehicle:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to delete Vehicle"
-      );
+      toast.error(error.response?.data?.message || "Failed to delete Vehicle");
     }
-  }
-
-
+  };
 
   useEffect(() => {
     getResident();
@@ -540,34 +535,30 @@ const ResidentDetail = () => {
   };
 
   // console.log(resident);
-  console.log(`${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`);
-
-
+  console.log(
+    `${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`
+  );
 
   const getTanentOwner = async () => {
     try {
-      const response = await axios.get(`${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`,
+      const response = await axios.get(
+        `${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
-
-      )
+      );
       setOwnerResident(response.data.residents);
-
     } catch (error) {
       console.log(error);
-
     }
-  }
+  };
   useEffect(() => {
     if (resident.HouseNumber && resident.residentType) {
       getTanentOwner();
     }
   }, [resident.HouseNumber, resident.residentType, resident._id]);
-
-
 
   return (
     <div className="grid-container">
@@ -593,8 +584,8 @@ const ResidentDetail = () => {
                   setShowS(false);
                   setShowV(false);
                   setShowT(false);
-                 setShowServant(false);
-                  setShowVehicle(false)
+                  setShowServant(false);
+                  setShowVehicle(false);
                 }}
               >
                 {!showM ? "View Family Members" : "Hide Family Members"}
@@ -609,9 +600,9 @@ const ResidentDetail = () => {
                   setShowM(false);
                   setShowV(false);
                   setShowT(false);
-                    // setOwnerResident(false);
+                  // setOwnerResident(false);
                   setAddMember(false);
-                  setShowVehicle(false)
+                  setShowVehicle(false);
                 }}
               >
                 {!showS ? "View Servant Details" : "Hide Servant details"}
@@ -624,7 +615,7 @@ const ResidentDetail = () => {
                 onClick={() => {
                   setShowV(!showV);
                   setShowM(false);
-                  setShowVehicle(false)
+                  setShowVehicle(false);
                   setShowS(false);
                   setShowT(false);
                   setAddMember(false);
@@ -647,13 +638,17 @@ const ResidentDetail = () => {
                   setShowT(false);
                   setAddMember(false);
                   setShowServant(false);
-                  setShowVehicle(false)
-
+                  setShowVehicle(false);
                 }}
               >
-                {!showTanents ? `View ${resident.residentType === "owner" ? "Tenants": "Owner"} Details` : `Hide ${resident.residentType === "owner" ? "Tenants": "Owner"} details`}
+                {!showTanents
+                  ? `View ${
+                      resident.residentType === "owner" ? "Tenants" : "Owner"
+                    } Details`
+                  : `Hide ${
+                      resident.residentType === "owner" ? "Tenants" : "Owner"
+                    } details`}
               </button>
-          
             </div>
           </div>
           {resident.length < 1 ? (
@@ -754,58 +749,66 @@ const ResidentDetail = () => {
                 </div>
               ) : null}
 
-
-              {resident.residentType === "owner" && showTanents && tanents.length > 0 && (
-                <div className="text-center">
-                  <div className="my-5">
-                    <h2 className="my-5 text-secondary">Tanents Details</h2>
-                    <div className="table-responsive">
-                      <table className="table table-dark table-bordered table-hover">
-                        <thead className="bg-light">
-                          <tr className="text-center">
-                            <th scope="col">NAME</th>
-                            <th scope="col">EMAIL</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">House Number</th>
-                            <th scope="col">NOC HOLDER</th>
-                            <th scope="col">OCCUPATION</th>
-                            <th scope="col">MOBILE NUMBER</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">Photo</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {ownerResident?.map((t) => (
-                            <tr key={t._id} className="text-center align-middle">
-                              <td>{t?.FullName || "N/A"}</td>
-                              <td>{t.Email || "N/A"}</td>
-                              <td>{t.CNIC || "N/A"}</td>
-                              <td>{t.HouseNumber || "N/A"}</td>
-                              <td>{t.NOCHolder || "N/A"}</td>
-                              <td>{t.Profession || "N/A"}</td>
-                              <td>{t.Phone || "N/A"}</td>
-                              <td>{t.CnicFile ? renderImage(t.CnicFile) : "N/A"}</td>
-                              <td>{t.Photo ? renderImage(t.Photo) : "N/A"}</td>
-                              <td>
-                                <button
-                                  className="btn btn-outline-primary m-1"
-                                  onClick={() => {
-                                    setShowTanents(false);
-                                    navigate(`/dashboard/resident/${t._id}`);
-                                  }}
-                                >
-                                  View
-                                </button>
-                              </td>
+              {resident.residentType === "owner" &&
+                showTanents &&
+                tanents.length > 0 && (
+                  <div className="text-center">
+                    <div className="my-5">
+                      <h2 className="my-5 text-secondary">Tanents Details</h2>
+                      <div className="table-responsive">
+                        <table className="table table-dark table-bordered table-hover">
+                          <thead className="bg-light">
+                            <tr className="text-center">
+                              <th scope="col">NAME</th>
+                              <th scope="col">EMAIL</th>
+                              <th scope="col">CNIC</th>
+                              <th scope="col">House Number</th>
+                              <th scope="col">NOC HOLDER</th>
+                              <th scope="col">OCCUPATION</th>
+                              <th scope="col">MOBILE NUMBER</th>
+                              <th scope="col">CNIC</th>
+                              <th scope="col">Photo</th>
+                              <th scope="col">Action</th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody>
+                            {ownerResident?.map((t) => (
+                              <tr
+                                key={t._id}
+                                className="text-center align-middle"
+                              >
+                                <td>{t?.FullName || "N/A"}</td>
+                                <td>{t.Email || "N/A"}</td>
+                                <td>{t.CNIC || "N/A"}</td>
+                                <td>{t.HouseNumber || "N/A"}</td>
+                                <td>{t.NOCHolder || "N/A"}</td>
+                                <td>{t.Profession || "N/A"}</td>
+                                <td>{t.Phone || "N/A"}</td>
+                                <td>
+                                  {t.CnicFile ? renderImage(t.CnicFile) : "N/A"}
+                                </td>
+                                <td>
+                                  {t.Photo ? renderImage(t.Photo) : "N/A"}
+                                </td>
+                                <td>
+                                  <button
+                                    className="btn btn-outline-primary m-1"
+                                    onClick={() => {
+                                      setShowTanents(false);
+                                      navigate(`/dashboard/resident/${t._id}`);
+                                    }}
+                                  >
+                                    View
+                                  </button>
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {resident.residentType === "tenant" && showTanents && (
                 <div className="text-center">
@@ -829,7 +832,10 @@ const ResidentDetail = () => {
                         </thead>
                         <tbody>
                           {ownerResident.map((t) => (
-                            <tr key={t._id} className="text-center align-middle">
+                            <tr
+                              key={t._id}
+                              className="text-center align-middle"
+                            >
                               <td>{t?.FullName || "N/A"}</td>
                               <td>{t.Email || "N/A"}</td>
                               <td>{t.CNIC || "N/A"}</td>
@@ -837,7 +843,9 @@ const ResidentDetail = () => {
                               <td>{t.NOCHolder || "N/A"}</td>
                               <td>{t.Profession || "N/A"}</td>
                               <td>{t.Phone || "N/A"}</td>
-                              <td>{t.CnicFile ? renderImage(t.CnicFile) : "N/A"}</td>
+                              <td>
+                                {t.CnicFile ? renderImage(t.CnicFile) : "N/A"}
+                              </td>
                               <td>{t.Photo ? renderImage(t.Photo) : "N/A"}</td>
                               <td>
                                 <button
@@ -849,7 +857,6 @@ const ResidentDetail = () => {
                                 >
                                   View
                                 </button>
-
                               </td>
                             </tr>
                           ))}
@@ -859,7 +866,6 @@ const ResidentDetail = () => {
                   </div>
                 </div>
               )}
-
 
               {addMember && (
                 <div className="row">
@@ -1323,7 +1329,9 @@ const ResidentDetail = () => {
                             <td>
                               <button
                                 className="text-center btn btn-outline-primary m-1"
-                                onClick={() => { deleteVehicle(r._id) }}
+                                onClick={() => {
+                                  deleteVehicle(r._id);
+                                }}
                               >
                                 Delete
                               </button>
@@ -1557,452 +1565,472 @@ const ResidentDetail = () => {
                 </Modal.Footer>
               </Modal>
 
-              {
-                showView && (
-                  <>
-                    <div className="mt-2 mb-5">
-                      <img
-                        src={resident?.Photo}
-                        alt="image"
-                        style={{
-                          borderRadius: "100%",
-                          height: "200px",
-                          width: "200px",
-                        }}
-                      />
-                      <h1 className="my-3">{resident?.FullName}</h1>
-                      <div
-                        className="row my-4 py-4 mx-3"
-                        style={{
-                          backgroundColor: "#2A354A",
-                          borderRadius: "16px",
-                          boxShadow:
-                            "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
-                          transition: "transform 0.2s ease-in-out",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.transform = "scale(1.01)")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.transform = "scale(1)")
-                        }
-                      >
-                        <div className="col-md-6 px-4">
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>Email:</span>{" "}
-                              {resident?.Email || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>Phone #:</span>{" "}
-                              {resident?.Phone || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>House #:</span>{" "}
-                              {resident?.HouseNumber || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>DOB:</span>{" "}
-                              {birthDate || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>CNIC #:</span>{" "}
-                              {resident?.CNIC || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>NOC #:</span>{" "}
-                              {resident?.NOCNo || "N/A"}
-                            </h5>
-                          </div>
+              {showView && (
+                <>
+                  <div className="mt-2 mb-5">
+                    <img
+                      src={resident?.Photo}
+                      alt="image"
+                      style={{
+                        borderRadius: "100%",
+                        height: "200px",
+                        width: "200px",
+                      }}
+                    />
+                    <h1 className="my-3">{resident?.FullName}</h1>
+                    <div
+                      className="row my-4 py-4 mx-3"
+                      style={{
+                        backgroundColor: "#2A354A",
+                        borderRadius: "16px",
+                        boxShadow:
+                          "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
+                        transition: "transform 0.2s ease-in-out",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.currentTarget.style.transform = "scale(1.01)")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.currentTarget.style.transform = "scale(1)")
+                      }
+                    >
+                      <div className="col-md-6 px-4">
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>Email:</span>{" "}
+                            {resident?.Email || "N/A"}
+                          </h5>
                         </div>
-                        <div className="col-md-6 px-4">
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>Profession:</span>{" "}
-                              {resident?.Profession || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>Qualification:</span>{" "}
-                              {resident?.Qualification || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>
-                                Business Address:
-                              </span>{" "}
-                              {resident?.bAddress || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>NOC Holder:</span>{" "}
-                              {resident?.NOCHolder || "N/A"}
-                            </h5>
-                          </div>
-                          <div className="mb-3">
-                            <h5
-                              className="text-light"
-                              style={{ fontSize: "1.2rem", fontWeight: "500" }}
-                            >
-                              <span style={{ color: "#A0AEC0" }}>
-                                NOC Issue Date:
-                              </span>{" "}
-                              {nocdate || "N/A"}
-                            </h5>
-                          </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>Phone #:</span>{" "}
+                            {resident?.Phone || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>House #:</span>{" "}
+                            {resident?.HouseNumber || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>DOB:</span>{" "}
+                            {birthDate || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>CNIC #:</span>{" "}
+                            {resident?.CNIC || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>NOC #:</span>{" "}
+                            {resident?.NOCNo || "N/A"}
+                          </h5>
                         </div>
                       </div>
-                      <div
-                        className="my-4 py-4 mx-3 px-4"
-                        style={{
-                          backgroundColor: "#2A354A",
-                          borderRadius: "16px",
-                          boxShadow:
-                            "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
-                        }}
-                      >
-                        <h2
-                          className="text-center text-secondary mb-4"
-                          style={{ fontSize: "1.8rem", fontWeight: "600" }}
-                        >
-                          Uploaded Files
-                        </h2>
-                        <div className="row justify-content-center g-3">
-                          {resident?.CnicFile && (
-                            <div className="col-md-4 col-sm-6 text-center">
-                              <div
-                                className="p-3"
-                                style={{
-                                  backgroundColor: "#33415C",
-                                  borderRadius: "12px",
-                                  transition: "transform 0.2s ease-in-out",
-                                }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1.03)")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                              >
-                                <h5
-                                  className="text-light mb-3"
-                                  style={{ fontSize: "1.2rem" }}
-                                >
-                                  CNIC
-                                </h5>
-                                <img
-                                  src={resident.CnicFile}
-                                  alt="CNIC Document"
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    objectFit: "cover",
-                                    borderRadius: "8px",
-                                    border: "2px solid #ffffff33",
-                                    cursor: "pointer",
-                                    transition: "border-color 0.2s",
-                                  }}
-                                  onClick={() => handleImageClick(resident.CnicFile)}
-                                  onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff66")
-                                  }
-                                  onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff33")
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                          {resident?.NocFile && (
-                            <div className="col-md-4 col-sm-6 text-center">
-                              <div
-                                className="p-3"
-                                style={{
-                                  backgroundColor: "#33415C",
-                                  borderRadius: "12px",
-                                  transition: "transform 0.2s ease-in-out",
-                                }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1.03)")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                              >
-                                <h5
-                                  className="text-light mb-3"
-                                  style={{ fontSize: "1.2rem" }}
-                                >
-                                  NOC
-                                </h5>
-                                <img
-                                  src={resident.NocFile}
-                                  alt="NOC Document"
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    objectFit: "cover",
-                                    borderRadius: "8px",
-                                    border: "2px solid #ffffff33",
-                                    cursor: "pointer",
-                                    transition: "border-color 0.2s",
-                                  }}
-                                  onClick={() => handleImageClick(resident.NocFile)}
-                                  onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff66")
-                                  }
-                                  onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff33")
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                          {resident?.CantFile && (
-                            <div className="col-md-4 col-sm-6 text-center">
-                              <div
-                                className="p-3"
-                                style={{
-                                  backgroundColor: "#33415C",
-                                  borderRadius: "12px",
-                                  transition: "transform 0.2s ease-in-out",
-                                }}
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1.03)")
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = "scale(1)")
-                                }
-                              >
-                                <h5
-                                  className="text-light mb-3"
-                                  style={{ fontSize: "1.2rem" }}
-                                >
-                                  Cant Pass
-                                </h5>
-                                <img
-                                  src={resident.CantFile}
-                                  alt="Cant Pass Document"
-                                  style={{
-                                    width: "100px",
-                                    height: "100px",
-                                    objectFit: "cover",
-                                    borderRadius: "8px",
-                                    border: "2px solid #ffffff33",
-                                    cursor: "pointer",
-                                    transition: "border-color 0.2s",
-                                  }}
-                                  onClick={() => handleImageClick(resident.CantFile)}
-                                  onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff66")
-                                  }
-                                  onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor = "#ffffff33")
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                          {!resident?.CnicFile &&
-                            !resident?.NocFile &&
-                            !resident?.CantFile && (
-                              <div className="text-center py-3">
-                                <h5
-                                  className="text-light"
-                                  style={{
-                                    fontSize: "1.3rem",
-                                    backgroundColor: "#33415C",
-                                    borderRadius: "8px",
-                                    padding: "15px",
-                                    display: "inline-block",
-                                  }}
-                                >
-                                  No Uploaded Files Available
-                                </h5>
-                              </div>
-                            )}
+                      <div className="col-md-6 px-4">
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>
+                              Profession:
+                            </span>{" "}
+                            {resident?.Profession || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>
+                              Qualification:
+                            </span>{" "}
+                            {resident?.Qualification || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>
+                              Business Address:
+                            </span>{" "}
+                            {resident?.bAddress || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>
+                              NOC Holder:
+                            </span>{" "}
+                            {resident?.NOCHolder || "N/A"}
+                          </h5>
+                        </div>
+                        <div className="mb-3">
+                          <h5
+                            className="text-light"
+                            style={{ fontSize: "1.2rem", fontWeight: "500" }}
+                          >
+                            <span style={{ color: "#A0AEC0" }}>
+                              NOC Issue Date:
+                            </span>{" "}
+                            {nocdate || "N/A"}
+                          </h5>
                         </div>
                       </div>
                     </div>
-                    <form action="PUT" onSubmit={updateHandler}>
-                      <div className="form-check">
-                        <div className="form-check form-switch">
-                          <input
-                            className="form-check-input form-check-input-yes"
-                            type="checkbox"
-                            role="switch"
-                            id="flexSwitchCheckDefault"
-                            onClick={() => {
-                              setPaid(true);
-                              setShowAmountInput(true);
-                            }}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexSwitchCheckDefault"
-                          >
-                            Payment Received?
-                          </label>
-                          <br />
-                          {showAmountInput ? (
-                            <>
-                              <input
-                                value={feeAmount}
-                                onChange={(e) => setFeeAmount(e.target.value)}
-                                type="number"
-                                name="Fee Amount"
-                                id="FeeAmount"
-                                placeholder="Received Amount"
+                    <div
+                      className="my-4 py-4 mx-3 px-4"
+                      style={{
+                        backgroundColor: "#2A354A",
+                        borderRadius: "16px",
+                        boxShadow:
+                          "rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px",
+                      }}
+                    >
+                      <h2
+                        className="text-center text-secondary mb-4"
+                        style={{ fontSize: "1.8rem", fontWeight: "600" }}
+                      >
+                        Uploaded Files
+                      </h2>
+                      <div className="row justify-content-center g-3">
+                        {resident?.CnicFile && (
+                          <div className="col-md-4 col-sm-6 text-center">
+                            <div
+                              className="p-3"
+                              style={{
+                                backgroundColor: "#33415C",
+                                borderRadius: "12px",
+                                transition: "transform 0.2s ease-in-out",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.03)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <h5
+                                className="text-light mb-3"
+                                style={{ fontSize: "1.2rem" }}
+                              >
+                                CNIC
+                              </h5>
+                              <img
+                                src={resident.CnicFile}
+                                alt="CNIC Document"
+                                style={{
+                                  width: "100px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "8px",
+                                  border: "2px solid #ffffff33",
+                                  cursor: "pointer",
+                                  transition: "border-color 0.2s",
+                                }}
+                                onClick={() =>
+                                  handleImageClick(resident.CnicFile)
+                                }
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff66")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff33")
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {resident?.NocFile && (
+                          <div className="col-md-4 col-sm-6 text-center">
+                            <div
+                              className="p-3"
+                              style={{
+                                backgroundColor: "#33415C",
+                                borderRadius: "12px",
+                                transition: "transform 0.2s ease-in-out",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.03)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <h5
+                                className="text-light mb-3"
+                                style={{ fontSize: "1.2rem" }}
+                              >
+                                NOC
+                              </h5>
+                              <img
+                                src={resident.NocFile}
+                                alt="NOC Document"
+                                style={{
+                                  width: "100px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "8px",
+                                  border: "2px solid #ffffff33",
+                                  cursor: "pointer",
+                                  transition: "border-color 0.2s",
+                                }}
+                                onClick={() =>
+                                  handleImageClick(resident.NocFile)
+                                }
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff66")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff33")
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {resident?.CantFile && (
+                          <div className="col-md-4 col-sm-6 text-center">
+                            <div
+                              className="p-3"
+                              style={{
+                                backgroundColor: "#33415C",
+                                borderRadius: "12px",
+                                transition: "transform 0.2s ease-in-out",
+                              }}
+                              onMouseEnter={(e) =>
+                                (e.currentTarget.style.transform =
+                                  "scale(1.03)")
+                              }
+                              onMouseLeave={(e) =>
+                                (e.currentTarget.style.transform = "scale(1)")
+                              }
+                            >
+                              <h5
+                                className="text-light mb-3"
+                                style={{ fontSize: "1.2rem" }}
+                              >
+                                Cant Pass
+                              </h5>
+                              <img
+                                src={resident.CantFile}
+                                alt="Cant Pass Document"
+                                style={{
+                                  width: "100px",
+                                  height: "100px",
+                                  objectFit: "cover",
+                                  borderRadius: "8px",
+                                  border: "2px solid #ffffff33",
+                                  cursor: "pointer",
+                                  transition: "border-color 0.2s",
+                                }}
+                                onClick={() =>
+                                  handleImageClick(resident.CantFile)
+                                }
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff66")
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.borderColor =
+                                    "#ffffff33")
+                                }
+                              />
+                            </div>
+                          </div>
+                        )}
+                        {!resident?.CnicFile &&
+                          !resident?.NocFile &&
+                          !resident?.CantFile && (
+                            <div className="text-center py-3">
+                              <h5
+                                className="text-light"
+                                style={{
+                                  fontSize: "1.3rem",
+                                  backgroundColor: "#33415C",
+                                  borderRadius: "8px",
+                                  padding: "15px",
+                                  display: "inline-block",
+                                }}
+                              >
+                                No Uploaded Files Available
+                              </h5>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <form action="PUT" onSubmit={updateHandler}>
+                    <div className="form-check">
+                      <div className="form-check form-switch">
+                        <input
+                          className="form-check-input form-check-input-yes"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckDefault"
+                          onClick={() => {
+                            setPaid(true);
+                            setShowAmountInput(true);
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexSwitchCheckDefault"
+                        >
+                          Payment Received?
+                        </label>
+                        <br />
+                        {showAmountInput ? (
+                          <>
+                            <input
+                              value={feeAmount}
+                              onChange={(e) => setFeeAmount(e.target.value)}
+                              type="number"
+                              name="Fee Amount"
+                              id="FeeAmount"
+                              placeholder="Received Amount"
+                              className="w-50 my-3 text-white py-2"
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                borderBottom: "1px solid white",
+                                borderRadius: "12px",
+                                textIndent: "12px",
+                                boxShadow:
+                                  "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                              }}
+                            />
+                            <br />
+                            <input
+                              value={monthsInput}
+                              onChange={(e) => setMonthsInput(e.target.value)}
+                              type="number"
+                              name="Number"
+                              id="FeeAmount"
+                              placeholder="Number of Months"
+                              className="w-50 my-3 text-white py-2"
+                              style={{
+                                background: "transparent",
+                                border: "none",
+                                borderBottom: "1px solid white",
+                                borderRadius: "12px",
+                                textIndent: "12px",
+                                boxShadow:
+                                  "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                              }}
+                            />
+                            <div className="form-group">
+                              <select
                                 className="w-50 my-3 text-white py-2"
+                                id="account"
+                                value={Ownership}
+                                onChange={(e) => setOwnership(e.target.value)}
+                                required
                                 style={{
                                   background: "transparent",
                                   border: "none",
                                   borderBottom: "1px solid white",
                                   borderRadius: "12px",
                                   textIndent: "12px",
-                                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                                  boxShadow:
+                                    "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                                 }}
-                              />
-                              <br />
-                              <input
-                                value={monthsInput}
-                                onChange={(e) => setMonthsInput(e.target.value)}
-                                type="number"
-                                name="Number"
-                                id="FeeAmount"
-                                placeholder="Number of Months"
-                                className="w-50 my-3 text-white py-2"
-                                style={{
-                                  background: "transparent",
-                                  border: "none",
-                                  borderBottom: "1px solid white",
-                                  borderRadius: "12px",
-                                  textIndent: "12px",
-                                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                                }}
-                              />
-                              <div className="form-group">
-                                <select
-                                  className="w-50 my-3 text-white py-2"
-                                  id="account"
-                                  value={Ownership}
-                                  onChange={(e) => setOwnership(e.target.value)}
-                                  required
+                              >
+                                <option
+                                  value=""
                                   style={{
                                     background: "transparent",
-                                    border: "none",
-                                    borderBottom: "1px solid white",
-                                    borderRadius: "12px",
-                                    textIndent: "12px",
-                                    boxShadow:
-                                      "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                                    color: "black",
                                   }}
                                 >
-                                  <option
-                                    value=""
-                                    style={{
-                                      background: "transparent",
-                                      color: "black",
-                                    }}
-                                  >
-                                    Ownership
-                                  </option>
-                                  <option
-                                    value="owner"
-                                    style={{
-                                      background: "transparent",
-                                      color: "black",
-                                    }}
-                                  >
-                                    Owner
-                                  </option>
-                                  <option
-                                    value="tanent"
-                                    style={{
-                                      background: "transparent",
-                                      color: "black",
-                                    }}
-                                  >
-                                    Tanent
-                                  </option>
-                                </select>
-                              </div>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                          <br />
-                          <input
-                            className="form-check-input form-check-input-no"
-                            type="checkbox"
-                            role="switch"
-                            id="flexSwitchCheckDefault"
-                            onClick={() => {
-                              setPaid(false);
-                            }}
-                          />
-                          <label
-                            className="form-check-label"
-                            htmlFor="flexSwitchCheckDefault"
-                          >
-                            Payment Not Received?
-                          </label>
-                        </div>
-                        <button
-                          type="submit"
-                          className="btn btn-outline-success mt-2"
+                                  Ownership
+                                </option>
+                                <option
+                                  value="owner"
+                                  style={{
+                                    background: "transparent",
+                                    color: "black",
+                                  }}
+                                >
+                                  Owner
+                                </option>
+                                <option
+                                  value="tanent"
+                                  style={{
+                                    background: "transparent",
+                                    color: "black",
+                                  }}
+                                >
+                                  Tanent
+                                </option>
+                              </select>
+                            </div>
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                        <br />
+                        <input
+                          className="form-check-input form-check-input-no"
+                          type="checkbox"
+                          role="switch"
+                          id="flexSwitchCheckDefault"
+                          onClick={() => {
+                            setPaid(false);
+                          }}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="flexSwitchCheckDefault"
                         >
-                          Save Changes
-                        </button>
+                          Payment Not Received?
+                        </label>
                       </div>
-                    </form>
-                  </>
-                )
-              }
-
+                      <button
+                        type="submit"
+                        className="btn btn-outline-success mt-2"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </form>
+                </>
+              )}
             </>
           )}
         </div>
