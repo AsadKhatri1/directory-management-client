@@ -66,6 +66,7 @@ const ExpenseForm = () => {
   });
 
   // Pagination
+  // Pagination
   const [expensesPerPage] = useState(8);
   const [currentPageExpense, setCurrentPageExpense] = useState(1);
   const [incomesPerPage] = useState(8);
@@ -135,17 +136,19 @@ const ExpenseForm = () => {
           Title,
           Amount,
           Type,
+          account: Account,
           date: date,
           fileUrl,
         },
         { headers: {} }
       );
 
+
       if (res.data.success) {
         toast.success(res.data.message);
         setTitle("");
         setAmount("");
-        setAccount("");
+        // setAccount("");
         setType("");
         setDate("");
         setFile("");
@@ -160,6 +163,7 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
           const finalRecBalance = parseFloat(re1.data.acc.Balance) - Amount;
+
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
             { Balance: finalRecBalance }
@@ -175,6 +179,7 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance = parseFloat(re.data.acc.Balance) - Amount;
+          // const finalMasjidBalance = parseFloat(re.data.acc.Balance) - 10;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
@@ -189,6 +194,10 @@ const ExpenseForm = () => {
       console.log(err);
     }
   };
+
+
+
+  //Donation
 
   const submitFundHandler = async (e) => {
     e.preventDefault();
@@ -208,6 +217,7 @@ const ExpenseForm = () => {
       }
 
       const fundAmountNumber = parseFloat(FundAmount);
+
       if (isNaN(fundAmountNumber)) {
         toast.error("Please enter a valid amount");
         return;
@@ -215,6 +225,7 @@ const ExpenseForm = () => {
       const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
         ResidentName: FullName,
         Amount: fundAmountNumber,
+        account:Account,
         Reason,
         Type: "Donation",
         date: date,
@@ -258,6 +269,119 @@ const ExpenseForm = () => {
       toast.error("Error in adding fund");
     }
   };
+
+
+
+
+
+
+  const handleDeleteExpense = async (id, amount, account) => {
+    try {
+
+      const res = await axios.delete(`${backendURL}/api/v1/expense/deleteExpense/${id}`);
+      // Delete Api Clear
+      console.log(res.data.success);
+
+      if (res.data.success) {
+        // toast.success("Expense deleted successfully!");
+        const feeAmountNumber = parseFloat(amount);
+
+        if (isNaN(feeAmountNumber)) {
+          toast.error("Invalid amount");
+          return;
+        }
+        console.log("Account : ", account);
+        if (account === "rec") {
+          const re1 = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance = parseFloat(re1.data.acc.Balance) + feeAmountNumber;
+
+          await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+            { Balance: finalRecBalance }
+          );
+        }
+
+        if (account === "masjid") {
+          console.log("i am in masjid");
+
+          const re = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance = parseFloat(re.data.acc.Balance) + feeAmountNumber;
+          console.log("masjid : ", finalMasjidBalance);
+
+          const res = await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+            { Balance: finalMasjidBalance }
+          );
+          console.log(res);
+
+        }
+
+        // Step 3: Refresh data
+        allExpenses();
+        getMasjidBalance();
+        getRecBalance();
+      } else {
+        toast.error(res.data.message || "Failed to delete expense");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while deleting the expense");
+    }
+  };
+
+const handleDeleteIncome = async (id,amount, account)=>{
+   try {
+    console.log(id,amount,account);
+    const res = await axios.delete(`${backendURL}/api/v1/income/deleteIncome/${id}`);
+
+
+     if(res.data.success){
+      toast.success("Income Delete Successfully")
+      const feeAmountNumber = parseFloat(amount);
+        if (isNaN(feeAmountNumber)) {
+          toast.error("Invalid amount");
+          return;
+        }
+          if (account === "rec") {
+          const re1 = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance = parseFloat(re1.data.acc.Balance) - feeAmountNumber;
+          await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+            { Balance: finalRecBalance }
+          );
+        }
+          if (account === "masjid") {
+          console.log("i am in masjid");
+          const re = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance = parseFloat(re.data.acc.Balance) - feeAmountNumber;
+          console.log("masjid : ", finalMasjidBalance);
+
+          const res = await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+            { Balance: finalMasjidBalance }
+          );
+        allIncomes();
+        getMasjidBalance();
+        getRecBalance();
+          }
+      else {
+        // toast.error(res.data.message || "Failed to delete Income");
+        
+      }
+     }
+   } catch (error) {
+     console.error(error);
+      toast.error("An error occurred while deleting the Income");
+   }
+}
 
   const allExpenses = async () => {
     const res = await axios.get(`${backendURL}/api/v1/expense/expenses`);
@@ -526,6 +650,8 @@ const ExpenseForm = () => {
               >
                 ADD
               </button>
+
+
             </form>
           </div>
         ) : (
@@ -814,6 +940,7 @@ const ExpenseForm = () => {
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Incomes</h2>
             <div className="table-responsive rounded inTable">
+
               <table className="table table-dark table-hover table-striped">
                 <thead className="bg-light py-5">
                   <tr className="text-center py-5">
@@ -844,6 +971,13 @@ const ExpenseForm = () => {
                     <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Document
                     </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -867,10 +1001,21 @@ const ExpenseForm = () => {
                       >
                         <IoDocumentsSharp />
                       </td>
+                      <td>
+                        <button
+                          className="btn btn-outline text-white"
+                          style={{ backgroundColor: " rgb(182, 1, 1)" }}
+                          onClick={() => handleDeleteIncome(e._id, e.Amount, e.account)}                         >
+                          Delete
+                        </button>
+                      </td>
+
                     </tr>
                   ))}
                 </tbody>
               </table>
+
+
             </div>
 
             {/* Income Document Modal */}
@@ -894,6 +1039,9 @@ const ExpenseForm = () => {
           </div>
         </div>
         );
+
+
+
         <div className="row">
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Expenses</h2>
@@ -951,6 +1099,13 @@ const ExpenseForm = () => {
                     >
                       Receipt
                     </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: "#03bb50" }}
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -979,6 +1134,17 @@ const ExpenseForm = () => {
                         >
                           View
                         </button>
+
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline text-white"
+                          style={{ backgroundColor: " rgb(182, 1, 1)" }}
+                          onClick={() => handleDeleteExpense(e._id, e.Amount, e.account)} // Use `e.Account` if stored separately
+                        >
+                          Delete
+                        </button>
+
                       </td>
                     </tr>
                   ))}
