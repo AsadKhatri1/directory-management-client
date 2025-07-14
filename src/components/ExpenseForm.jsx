@@ -369,10 +369,11 @@ const filteredIncomeList = incomeList.filter((e) => {
           getMasjidBalance();
           getRecBalance();
         }
-        else {
+        
+      }
+      else {
           toast.error(res.data.message || "Failed to delete Income");
         }
-      }
     } catch (error) {
       console.error(error);
       toast.error("An error occurred while deleting the Income");
