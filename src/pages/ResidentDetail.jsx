@@ -560,6 +560,8 @@ const ResidentDetail = () => {
     }
   }, [resident.HouseNumber, resident.residentType, resident._id]);
 
+  console.log(ownerResident);
+
   return (
     <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
