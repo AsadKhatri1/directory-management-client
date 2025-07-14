@@ -26,7 +26,10 @@ const ExpenseForm = () => {
   const [date, setDate] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-const [selectedStartDate, setSelectedStartDate] = useState(moment().subtract(1,"month"));
+// const [selectedStartDate, setSelectedStartDate] = useState(moment().subtract(1,"month"));
+const [selectedStartDate, setSelectedStartDate] = useState(
+  moment().startOf("year") // January 1st of the current year
+);
 const [selectedEndDate, setSelectedEndDate] = useState(moment());
 
   const [showModal, setShowModal] = useState(false);
@@ -277,11 +280,9 @@ const filteredIncomeList = incomeList.filter((e) => {
     try {
 
       const res = await axios.delete(`${backendURL}/api/v1/expense/deleteExpense/${id}`);
-      // Delete Api Clear
-      console.log(res.data.success);
 
       if (res.data.success) {
-        // toast.success("Expense deleted successfully!");
+        toast.success("Expense deleted successfully!");
         const feeAmountNumber = parseFloat(amount);
 
         if (isNaN(feeAmountNumber)) {
@@ -314,8 +315,6 @@ const filteredIncomeList = incomeList.filter((e) => {
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
           );
-          console.log(res);
-
         }
 
         // Step 3: Refresh data
@@ -371,8 +370,7 @@ const filteredIncomeList = incomeList.filter((e) => {
           getRecBalance();
         }
         else {
-          // toast.error(res.data.message || "Failed to delete Income");
-
+          toast.error(res.data.message || "Failed to delete Income");
         }
       }
     } catch (error) {
@@ -390,7 +388,8 @@ const filteredIncomeList = incomeList.filter((e) => {
 
   useEffect(() => {
     allExpenses();
-  }, []);
+    allIncomes();
+  }, [incomeList]);
 
   const allIncomes = async () => {
     const res = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
@@ -399,9 +398,6 @@ const filteredIncomeList = incomeList.filter((e) => {
     }
   };
 
-  useEffect(() => {
-    allIncomes();
-  }, []);
 
   const handleNavigate = () => {
     navigate("/dashboard/income/report", {
@@ -1125,7 +1121,8 @@ const filteredIncomeList = incomeList.filter((e) => {
                         <button
                           className="btn btn-outline-success"
                           // style={{ backgroundColor: " rgb(3, 187, 80)" }}
-                          onClick={(event) => navigate(`receipt/${e._id}`)}
+                          onClick={(event) => {navigate(`receipt/${e._id}`); console.log(e);
+                          } }
                         >
                           View
                         </button>
