@@ -26,12 +26,8 @@ const ExpenseForm = () => {
   const [date, setDate] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-  const [selectedStartMonth, setSelectedStartMonth] = useState(
-    moment().startOf("month").month() - 1
-  );
-  const [selectedEndMonth, setSelectedEndMonth] = useState(
-    moment().endOf("month").month()
-  );
+const [selectedStartDate, setSelectedStartDate] = useState(moment().subtract(1,"month"));
+const [selectedEndDate, setSelectedEndDate] = useState(moment());
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
@@ -46,24 +42,26 @@ const ExpenseForm = () => {
     setSelectedImageUrl("");
   };
   const [selectedYear, setSelectedYear] = useState(moment().year());
-  // Filtered expenses and incomes based on selected month range and year
+
+
+
   const filteredExpenseList = expenseList.filter((e) => {
-    const expenseDate = moment(e?.createdAt);
-    return (
-      expenseDate.month() >= selectedStartMonth &&
-      expenseDate.month() <= selectedEndMonth &&
-      expenseDate.year() === selectedYear
-    );
-  });
-  const filteredIncomeList = incomeList.filter((e) => {
-    const incomeDate = moment(e?.createdAt);
-    // console.log(incomeDate.month());
-    return (
-      incomeDate.month() >= selectedStartMonth &&
-      incomeDate.month() <= selectedEndMonth &&
-      incomeDate.year() === selectedYear
-    );
-  });
+  const expenseDate = moment(e?.createdAt);
+  return (
+    expenseDate.isSameOrAfter(selectedStartDate, 'month') &&
+    expenseDate.isSameOrBefore(selectedEndDate, 'month')
+  );
+});
+
+const filteredIncomeList = incomeList.filter((e) => {
+  const incomeDate = moment(e?.createdAt);
+  return (
+    incomeDate.isSameOrAfter(selectedStartDate, 'month') &&
+    incomeDate.isSameOrBefore(selectedEndDate, 'month')
+  );
+});
+
+  
 
   // Pagination
   // Pagination
@@ -225,7 +223,7 @@ const ExpenseForm = () => {
       const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
         ResidentName: FullName,
         Amount: fundAmountNumber,
-        account:Account,
+        account: Account,
         Reason,
         Type: "Donation",
         date: date,
@@ -333,20 +331,20 @@ const ExpenseForm = () => {
     }
   };
 
-const handleDeleteIncome = async (id,amount, account)=>{
-   try {
-    console.log(id,amount,account);
-    const res = await axios.delete(`${backendURL}/api/v1/income/deleteIncome/${id}`);
+  const handleDeleteIncome = async (id, amount, account) => {
+    try {
+      console.log(id, amount, account);
+      const res = await axios.delete(`${backendURL}/api/v1/income/deleteIncome/${id}`);
 
 
-     if(res.data.success){
-      toast.success("Income Delete Successfully")
-      const feeAmountNumber = parseFloat(amount);
+      if (res.data.success) {
+        toast.success("Income Delete Successfully")
+        const feeAmountNumber = parseFloat(amount);
         if (isNaN(feeAmountNumber)) {
           toast.error("Invalid amount");
           return;
         }
-          if (account === "rec") {
+        if (account === "rec") {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
@@ -356,7 +354,7 @@ const handleDeleteIncome = async (id,amount, account)=>{
             { Balance: finalRecBalance }
           );
         }
-          if (account === "masjid") {
+        if (account === "masjid") {
           console.log("i am in masjid");
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
@@ -368,20 +366,20 @@ const handleDeleteIncome = async (id,amount, account)=>{
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
           );
-        allIncomes();
-        getMasjidBalance();
-        getRecBalance();
-          }
-      else {
-        // toast.error(res.data.message || "Failed to delete Income");
-        
+          allIncomes();
+          getMasjidBalance();
+          getRecBalance();
+        }
+        else {
+          // toast.error(res.data.message || "Failed to delete Income");
+
+        }
       }
-     }
-   } catch (error) {
-     console.error(error);
+    } catch (error) {
+      console.error(error);
       toast.error("An error occurred while deleting the Income");
-   }
-}
+    }
+  }
 
   const allExpenses = async () => {
     const res = await axios.get(`${backendURL}/api/v1/expense/expenses`);
@@ -867,14 +865,13 @@ const handleDeleteIncome = async (id,amount, account)=>{
                   Start Month:
                 </label>
                 <input
-                  type="month"
-                  className="form-control"
-                  id="startMonth"
-                  value={moment().month(selectedStartMonth).format("YYYY-MM")}
-                  onChange={(e) =>
-                    setSelectedStartMonth(moment(e.target.value).month())
-                  }
-                />
+  type="month"
+  className="form-control"
+  id="startMonth"
+  value={selectedStartDate.format("YYYY-MM")}
+  onChange={(e) => setSelectedStartDate(moment(e.target.value))}
+/>
+
               </div>
             </div>
             <div className="col-md-6">
@@ -883,15 +880,13 @@ const handleDeleteIncome = async (id,amount, account)=>{
                 <label htmlFor="endMonth" className="mb-3">
                   End Month:
                 </label>
-                <input
-                  type="month"
-                  className="form-control"
-                  id="endMonth"
-                  value={moment().month(selectedEndMonth).format("YYYY-MM")}
-                  onChange={(e) =>
-                    setSelectedEndMonth(moment(e.target.value).month())
-                  }
-                />
+       <input
+  type="month"
+  className="form-control"
+  id="endMonth"
+  value={selectedEndDate.format("YYYY-MM")}
+  onChange={(e) => setSelectedEndDate(moment(e.target.value))}
+/>
               </div>
             </div>
           </div>
