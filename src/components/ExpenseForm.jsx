@@ -109,16 +109,11 @@ const filteredIncomeList = incomeList.filter((e) => {
     }
   };
 
-  useEffect(() => {
-    getMasjidBalance();
-    getRecBalance();
-  }, []);
 
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       let fileUrl = "";
-
       if (File) {
         const formData = new FormData();
         formData.append("file", File);
@@ -214,11 +209,12 @@ const filteredIncomeList = incomeList.filter((e) => {
           formData
         );
         fileUrl = await cloudinaryRes.data.secure_url;
-        console.log(fileUrl);
+
       }
 
       const fundAmountNumber = parseFloat(FundAmount);
-
+                console.log(fundAmountNumber);
+                
       if (isNaN(fundAmountNumber)) {
         toast.error("Please enter a valid amount");
         return;
@@ -247,10 +243,10 @@ const filteredIncomeList = incomeList.filter((e) => {
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
-          const finalMasjidBalance =
-            parseFloat(re.data.acc.Balance) + fundAmountNumber;
+          const finalMasjidBalance = parseFloat(re.data.acc.Balance) + fundAmountNumber;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+         
             { Balance: finalMasjidBalance }
           );
         }
@@ -303,13 +299,10 @@ const filteredIncomeList = incomeList.filter((e) => {
         }
 
         if (account === "masjid") {
-          console.log("i am in masjid");
-
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance = parseFloat(re.data.acc.Balance) + feeAmountNumber;
-          console.log("masjid : ", finalMasjidBalance);
 
           const res = await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
@@ -321,6 +314,7 @@ const filteredIncomeList = incomeList.filter((e) => {
         allExpenses();
         getMasjidBalance();
         getRecBalance();
+        allIncomes();
       } else {
         toast.error(res.data.message || "Failed to delete expense");
       }
@@ -390,6 +384,7 @@ const filteredIncomeList = incomeList.filter((e) => {
   useEffect(() => {
     allExpenses();
     allIncomes();
+    getRecBalance();
   }, [incomeList]);
 
   const allIncomes = async () => {
@@ -422,6 +417,12 @@ const filteredIncomeList = incomeList.filter((e) => {
   const handleCloseIncomeModal = () => {
     setShowIncomeModal(false);
   };
+
+    useEffect(() => {
+    getMasjidBalance();
+    getRecBalance();
+  }, []);
+
   return (
     <>
       <main className="main-container text-center mt-3">
