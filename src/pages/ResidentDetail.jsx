@@ -34,6 +34,8 @@ const ResidentDetail = () => {
   const [showTanents, setShowTanents] = useState(false);
   const [showView, setShowView] = useState(true);
 
+  const [account , setAccount] = useState("")
+
   const [relatives, setRelatives] = useState([
     {
       name: "",
@@ -472,7 +474,10 @@ const ResidentDetail = () => {
     resident.NOCIssue && moment(resident?.NOCIssue).format("MMMM Do, YYYY");
 
   const updateHandler = async (e) => {
+
     e.preventDefault();
+    console.log(account);
+    
     try {
       if (feeAmount) {
         const feeAmountNumber = parseFloat(feeAmount);
@@ -487,9 +492,12 @@ const ResidentDetail = () => {
             HouseNo: resident.HouseNumber,
             Amount: feeAmountNumber,
             Ownership: Ownership,
+            account : account,
             Type: "membership",
           }
         );
+        console.log(resIn);
+        
         if (resIn.success) {
           toast.success("Income added");
         }
@@ -1956,6 +1964,8 @@ const ResidentDetail = () => {
                                   "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                               }}
                             />
+
+                            
                             <div className="form-group">
                               <select
                                 className="w-50 my-3 text-white py-2"
@@ -2002,6 +2012,62 @@ const ResidentDetail = () => {
                                 </option>
                               </select>
                             </div>
+
+                            <div className="form-group">
+                              <select
+                                className="w-50 my-3 text-white py-2"
+                                id="account"
+                                value={account}
+                                onChange={(e) => setAccount(e.target.value)}
+                                required
+                                style={{
+                                  background: "transparent",
+                                  border: "none",
+                                  borderBottom: "1px solid white",
+                                  borderRadius: "12px",
+                                  textIndent: "12px",
+                                  boxShadow:
+                                    "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                                }}
+                              >
+                                <option
+                                  value=""
+                                  style={{
+                                    background: "transparent",
+                                    color: "black",
+                                  }}
+                                >
+                                  Select Account Type
+                                </option>
+                                <option
+                                  value="masjid"
+                                  style={{
+                                    background: "transparent",
+                                    color: "black",
+                                  }}
+                                >
+                                  Owner
+                                </option>
+                                <option
+                                  value="rec"
+                                  style={{
+                                    background: "transparent",
+                                    color: "black",
+                                  }}
+                                >
+                                  Tanent
+                                </option>
+                              </select>
+                            </div>
+
+
+
+
+
+
+
+
+
                           </>
                         ) : (
                           <></>
