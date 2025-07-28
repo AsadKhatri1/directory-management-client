@@ -155,7 +155,7 @@ const Invoice = () => {
         </div>
       </div>
 
-      {/* Total */}
+
       <div className="text-center" style={{ margin: "8px 0" }}>
         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
           Total Amount: Rs. {amount || "N/A"}
