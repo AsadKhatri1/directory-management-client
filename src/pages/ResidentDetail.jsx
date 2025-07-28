@@ -534,10 +534,10 @@ const ResidentDetail = () => {
     }
   };
 
-  // console.log(resident);
-  console.log(
-    `${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`
-  );
+  // // console.log(resident);
+  // console.log(
+  //   `${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`
+  // );
 
   const getTanentOwner = async () => {
     try {
@@ -560,7 +560,7 @@ const ResidentDetail = () => {
     }
   }, [resident.HouseNumber, resident.residentType, resident._id]);
 
-  console.log(ownerResident);
+  // console.log(ownerResident);
 
   return (
     <div className="grid-container">
