@@ -534,7 +534,7 @@ const ResidentDetail = () => {
       if (data.success) {
         toast.success(data.message);
         setPaid(false);
-        navigate("/dashboard/residents");
+        navigate("/dashboard");
       }
     } catch (err) {
       console.log(err);
@@ -2046,7 +2046,7 @@ const ResidentDetail = () => {
                                     color: "black",
                                   }}
                                 >
-                                  Owner
+                                  Masjid
                                 </option>
                                 <option
                                   value="rec"
@@ -2055,7 +2055,7 @@ const ResidentDetail = () => {
                                     color: "black",
                                   }}
                                 >
-                                  Tanent
+                                  Rec
                                 </option>
                               </select>
                             </div>
