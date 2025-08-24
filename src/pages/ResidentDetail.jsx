@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Audio } from "react-loader-spinner";
-import moment from "moment";
-import axios from "axios";
-import { Modal, Button } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from 'react';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Audio } from 'react-loader-spinner';
+import moment from 'moment';
+import axios from 'axios';
+import { Modal, Button } from 'react-bootstrap';
 const ResidentDetail = () => {
-  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const backendURL = 'https://directory-management-g8gf.onrender.com';
   // redirect on refresh
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
-  const [monthsInput, setMonthsInput] = useState("");
+  const [monthsInput, setMonthsInput] = useState('');
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
@@ -24,13 +24,13 @@ const ResidentDetail = () => {
   const [showS, setShowS] = useState(false);
   const [showT, setShowT] = useState(false);
   const [showAmountInput, setShowAmountInput] = useState(false);
-  const [feeAmount, setFeeAmount] = useState("");
-  const [Ownership, setOwnership] = useState("");
+  const [feeAmount, setFeeAmount] = useState('');
+  const [Ownership, setOwnership] = useState('');
   const navigate = useNavigate();
 
   // modal work
   const [showModal, setShowModal] = useState(false);
-  const [selectedImageUrl, setSelectedImageUrl] = useState("");
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
 
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
@@ -39,14 +39,14 @@ const ResidentDetail = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedImageUrl("");
+    setSelectedImageUrl('');
   };
 
   const renderImage = (url) => (
     <img
       src={url}
       alt="Document"
-      style={{ width: "50px", height: "50px", cursor: "pointer" }}
+      style={{ width: '50px', height: '50px', cursor: 'pointer' }}
       onClick={() => handleImageClick(url)}
     />
   );
@@ -78,10 +78,10 @@ const ResidentDetail = () => {
   };
 
   const birthDate =
-    resident.DOB && moment(resident?.DOB).format("MMMM Do, YYYY");
+    resident.DOB && moment(resident?.DOB).format('MMMM Do, YYYY');
 
   const nocdate =
-    resident.NOCIssue && moment(resident?.NOCIssue).format("MMMM Do, YYYY");
+    resident.NOCIssue && moment(resident?.NOCIssue).format('MMMM Do, YYYY');
 
   // updating payment status
 
@@ -94,22 +94,22 @@ const ResidentDetail = () => {
 
         // Check if feeAmount is a valid number
         if (isNaN(feeAmountNumber)) {
-          toast.error("Please enter a valid amount");
+          toast.error('Please enter a valid amount');
           return;
         }
 
         const resIn = await axios.post(
           `${backendURL}/api/v1/income/addIncome`,
           {
-            ResidentName: resident.FullName ? resident.FullName : "Unknown",
+            ResidentName: resident.FullName ? resident.FullName : 'Unknown',
             HouseNo: resident.HouseNumber,
             Amount: feeAmountNumber,
             Ownership: Ownership,
-            Type: "membership",
+            Type: 'membership',
           }
         );
         if (resIn.success) {
-          toast.success("Income added");
+          toast.success('Income added');
         }
 
         const recAmount = feeAmountNumber / 2;
@@ -149,7 +149,7 @@ const ResidentDetail = () => {
         { paid, numberOfMonths },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include 'Bearer' prefix for most token types
           },
         }
       );
@@ -158,11 +158,11 @@ const ResidentDetail = () => {
         toast.success(data.message);
         console.log(data.resident);
         setPaid(false); // Assuming you want to reset this state after successful update
-        navigate("/dashboard/residents");
+        navigate('/dashboard/residents');
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.message || "An error occurred");
+      toast.error(err.response?.message || 'An error occurred');
     }
   };
 
@@ -181,9 +181,9 @@ const ResidentDetail = () => {
               <button
                 className="btn mt-2 mb-2 border"
                 style={{
-                  backgroundColor: "#263043",
-                  color: "white",
-                  transition: "all 0.5s",
+                  backgroundColor: '#263043',
+                  color: 'white',
+                  transition: 'all 0.5s',
                 }}
                 onClick={(e) => {
                   setShowM(!showM),
@@ -192,13 +192,13 @@ const ResidentDetail = () => {
                     setShowT(false);
                 }}
               >
-                {!showM ? "View Family Members" : "Hide Family Members"}
+                {!showM ? 'View Family Members' : 'Hide Family Members'}
               </button>
             </div>
             <div className="col-md-3">
               <button
                 className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: "#263043", color: "white" }}
+                style={{ backgroundColor: '#263043', color: 'white' }}
                 onClick={(e) => {
                   setShowS(!showS),
                     setShowM(false),
@@ -206,13 +206,13 @@ const ResidentDetail = () => {
                     setShowT(false);
                 }}
               >
-                {!showS ? "View Servant Details" : "Hide Servant details"}
+                {!showS ? 'View Servant Details' : 'Hide Servant details'}
               </button>
             </div>
             <div className="col-md-3">
               <button
                 className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: "#263043", color: "white" }}
+                style={{ backgroundColor: '#263043', color: 'white' }}
                 onClick={(e) => {
                   setShowV(!showV),
                     setShowM(false),
@@ -220,13 +220,13 @@ const ResidentDetail = () => {
                     setShowT(false);
                 }}
               >
-                {!showV ? "View Vehicle Details" : "Hide Vehicle details"}
+                {!showV ? 'View Vehicle Details' : 'Hide Vehicle details'}
               </button>
             </div>
             <div className="col-md-3">
               <button
                 className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: "#263043", color: "white" }}
+                style={{ backgroundColor: '#263043', color: 'white' }}
                 onClick={(e) => {
                   setShowT(!showT),
                     setShowM(false),
@@ -234,7 +234,7 @@ const ResidentDetail = () => {
                     setShowV(false);
                 }}
               >
-                {!showT ? "View Tanent Details" : "Hide Tanent details"}
+                {!showT ? 'View Tanent Details' : 'Hide Tanent details'}
               </button>
             </div>
           </div>
@@ -270,6 +270,7 @@ const ResidentDetail = () => {
                             <th scope="col">OCCUPATION</th>
                             <th scope="col">CNIC Number</th>
                             <th scope="col">CNIC</th>
+                            <th scope="col">ACTION</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -285,13 +286,14 @@ const ResidentDetail = () => {
                               <td>{r.relation}</td>
                               <td>{r.number}</td>
                               <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format('MMMM Do, YYYY')}
                               </td>
                               <td>{r.occupation}</td>
                               <td>{r.cnic}</td>
                               <td>
                                 {r.cnicUrl ? renderImage(r.cnicUrl) : null}
                               </td>
+                              <td>x</td>
                             </tr>
                           ))}
                         </tbody>
@@ -302,7 +304,7 @@ const ResidentDetail = () => {
               ) : showM ? (
                 <div
                   className="text-center py-3 pt-4"
-                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
                 >
                   <h3 className="text-light">No Family Members To Show</h3>
                 </div>
@@ -326,6 +328,7 @@ const ResidentDetail = () => {
                             <th scope="col">GUARDIAN'S NAME</th>
                             <th scope="col">CNIC</th>
                             <th scope="col">CANT PASS</th>
+                            <th scope="col">ACTION</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -336,7 +339,7 @@ const ResidentDetail = () => {
                             >
                               <td>{r.name}</td>
                               <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format('MMMM Do, YYYY')}
                               </td>
                               <td>{r.number}</td>
                               <td>{r.cnic}</td>
@@ -350,6 +353,7 @@ const ResidentDetail = () => {
                                   ? renderImage(r.cantPassUrl)
                                   : null}
                               </td>
+                              <td>x</td>
                             </tr>
                           ))}
                         </tbody>
@@ -360,7 +364,7 @@ const ResidentDetail = () => {
               ) : showS ? (
                 <div
                   className="text-center py-3 pt-4"
-                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
                 >
                   <h3 className="text-light">No Servant Details To Show</h3>
                 </div>
@@ -408,7 +412,7 @@ const ResidentDetail = () => {
               ) : showV ? (
                 <div
                   className="text-center py-3 pt-4"
-                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
                 >
                   <h3 className="text-light">No Vehicle Details To Show</h3>
                 </div>
@@ -448,17 +452,17 @@ const ResidentDetail = () => {
                               <td>{r.nocNo}</td>
                               <td>
                                 {r.nocIssue &&
-                                  moment(r.nocIssue).format("MMMM Do, YYYY")}
+                                  moment(r.nocIssue).format('MMMM Do, YYYY')}
                               </td>
                               <td>{r.number}</td>
                               <td>
-                                {r.dob && moment(r.dob).format("MMMM Do, YYYY")}
+                                {r.dob && moment(r.dob).format('MMMM Do, YYYY')}
                               </td>
                               <td>{r.occupation}</td>
                               <td>{r.cnic}</td>
                               <td>
                                 {r.cnicUrl ? renderImage(r.cnicUrl) : null}
-                              </td>{" "}
+                              </td>{' '}
                               <td>{r.nocUrl ? renderImage(r.nocUrl) : null}</td>
                             </tr>
                           ))}
@@ -470,7 +474,7 @@ const ResidentDetail = () => {
               ) : showT ? (
                 <div
                   className="text-center py-3 pt-4"
-                  style={{ backgroundColor: "#263043", borderRadius: "12px" }}
+                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
                 >
                   <h3 className="text-light">No Tanents To Show</h3>
                 </div>
@@ -485,7 +489,7 @@ const ResidentDetail = () => {
                   <img
                     src={selectedImageUrl}
                     alt="Document"
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                   />
                 </Modal.Body>
                 <Modal.Footer>
@@ -500,9 +504,9 @@ const ResidentDetail = () => {
                   src={resident?.Photo}
                   alt="image"
                   style={{
-                    borderRadius: "100%",
-                    height: "200px",
-                    width: "200px",
+                    borderRadius: '100%',
+                    height: '200px',
+                    width: '200px',
                   }}
                 />
                 <h1 className="my-3">{resident?.FullName}</h1>
@@ -510,10 +514,10 @@ const ResidentDetail = () => {
                 <div
                   className="row my-3 py-3 mx-3"
                   style={{
-                    backgroundColor: "#263043",
-                    borderRadius: "12px",
+                    backgroundColor: '#263043',
+                    borderRadius: '12px',
                     boxShadow:
-                      "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+                      'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
                   }}
                 >
                   <div className="col-md-6">
@@ -572,14 +576,14 @@ const ResidentDetail = () => {
                     placeholder="Received Amount"
                     className="w-50 my-3 text-white py-2"
                     style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid white',
+                      borderRadius: '12px',
+                      textIndent: '12px',
+                      boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                     }}
-                  />{" "}
+                  />{' '}
                   <br />
                   <input
                     value={monthsInput}
@@ -590,12 +594,12 @@ const ResidentDetail = () => {
                     placeholder="Number of Months"
                     className="w-50 my-3 text-white py-2"
                     style={{
-                      background: "transparent",
-                      border: "none",
-                      borderBottom: "1px solid white",
-                      borderRadius: "12px",
-                      textIndent: "12px",
-                      boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                      background: 'transparent',
+                      border: 'none',
+                      borderBottom: '1px solid white',
+                      borderRadius: '12px',
+                      textIndent: '12px',
+                      boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                     }}
                   />
                   <div className="form-group">
@@ -606,24 +610,24 @@ const ResidentDetail = () => {
                       onChange={(e) => setOwnership(e.target.value)}
                       required
                       style={{
-                        background: "transparent",
-                        border: "none",
-                        borderBottom: "1px solid white",
-                        borderRadius: "12px",
-                        textIndent: "12px",
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                        background: 'transparent',
+                        border: 'none',
+                        borderBottom: '1px solid white',
+                        borderRadius: '12px',
+                        textIndent: '12px',
+                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                       }}
                     >
                       <option
                         value=""
                         style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                          background: 'transparent',
+                          border: 'none',
+                          borderBottom: '1px solid white',
+                          borderRadius: '12px',
+                          textIndent: '12px',
+                          color: 'black',
+                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                         }}
                       >
                         Ownership
@@ -631,13 +635,13 @@ const ResidentDetail = () => {
                       <option
                         value="owner"
                         style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                          background: 'transparent',
+                          border: 'none',
+                          borderBottom: '1px solid white',
+                          borderRadius: '12px',
+                          textIndent: '12px',
+                          color: 'black',
+                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                         }}
                       >
                         Owner
@@ -645,13 +649,13 @@ const ResidentDetail = () => {
                       <option
                         value="tanent"
                         style={{
-                          background: "transparent",
-                          border: "none",
-                          borderBottom: "1px solid white",
-                          borderRadius: "12px",
-                          textIndent: "12px",
-                          color: "black",
-                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                          background: 'transparent',
+                          border: 'none',
+                          borderBottom: '1px solid white',
+                          borderRadius: '12px',
+                          textIndent: '12px',
+                          color: 'black',
+                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                         }}
                       >
                         Tanent

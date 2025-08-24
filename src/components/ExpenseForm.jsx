@@ -22,8 +22,8 @@ const ExpenseForm = () => {
   const [FundAmount, setFundAmount] = useState('');
   const [FullName, setFullName] = useState('');
   const [Reason, setReason] = useState('');
-  const [date, setDate] = useState('');
   const [Account, setAccount] = useState('');
+  const [date, setDate] = useState('');
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
   const [selectedStartMonth, setSelectedStartMonth] = useState(
@@ -129,21 +129,26 @@ const ExpenseForm = () => {
         console.log(fileUrl);
       }
 
-      const res = await axios.post(`${backendURL}/api/v1/expense/addExpense`, {
-        Title,
-        Amount,
-        Type,
-        date,
-        fileUrl,
-      });
+      const res = await axios.post(
+        `${backendURL}/api/v1/expense/addExpense`,
+        {
+          Title,
+          Amount,
+          Type,
+          date: date,
+          fileUrl,
+        },
+        { headers: {} }
+      );
 
       if (res.data.success) {
         toast.success(res.data.message);
         setTitle('');
         setAmount('');
         setAccount('');
-        setDate('');
         setType('');
+        setDate('');
+        setFile('');
         setFile(null);
         if (Account === 'rec') {
           const feeAmountNumber = parseFloat(Amount);
@@ -241,18 +246,17 @@ const ExpenseForm = () => {
   const submitFundHandler = async (e) => {
     e.preventDefault();
     try {
-      let incomeFileUrl = ''; // Initialize file URL
+      let fileUrl = '';
 
-      // File upload to Cloudinary
       if (File) {
         const formData = new FormData();
         formData.append('file', File);
-        formData.append('upload_preset', 'images_preset'); // Replace with your Cloudinary upload preset
+        formData.append('upload_preset', 'images_preset'); // replace with your upload preset
         const cloudinaryRes = await axios.post(
-          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // Replace with your Cloudinary URL
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
           formData
         );
-        incomeFileUrl = cloudinaryRes.data.secure_url; // Retrieve the uploaded file's URL
+        fileUrl = await cloudinaryRes.data.secure_url;
         console.log(fileUrl);
       }
 
@@ -267,9 +271,9 @@ const ExpenseForm = () => {
         ResidentName: FullName,
         Amount: fundAmountNumber,
         Reason,
-        date,
         Type: 'Donation',
-        fileUrl: incomeFileUrl, // Include the file URL in the API request
+        date: date,
+        fileUrl,
       });
 
       if (resIn.data.success) {
@@ -304,6 +308,8 @@ const ExpenseForm = () => {
         setDate('');
         setFile(null); // Reset file input
         allIncomes();
+        setDate('');
+        setFile('');
         getMasjidBalance();
         getRecBalance();
         toast.success('Successfully added donation and updated balance');
@@ -344,6 +350,18 @@ const ExpenseForm = () => {
     navigate('/dashboard/expense/report', {
       state: { data: filteredExpenseList },
     });
+  };
+
+  const [showIncomeModal, setShowIncomeModal] = useState(false);
+  const [selectedIncomeImageUrl, setSelectedIncomeImageUrl] = useState('');
+
+  const handleIncomeImageClick = (url) => {
+    setSelectedIncomeImageUrl(url);
+    setShowIncomeModal(true);
+  };
+
+  const handleCloseIncomeModal = () => {
+    setShowIncomeModal(false);
   };
   return (
     <>
@@ -435,6 +453,41 @@ const ExpenseForm = () => {
                 }}
               />{' '}
               <br />
+              <input
+                type="date"
+                placeholder="Date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                }}
+              />{' '}
+              <br />
+              <input
+                type="date"
+                placeholder="Date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                name="reason"
+                id="reason"
+                className="w-75 my-3 text-white py-2"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  borderBottom: '1px solid white',
+                  borderRadius: '12px',
+                  textIndent: '12px',
+                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                }}
+              ></input>
               {/* type */}
               <div className="w-75 mx-auto">
                 <select
@@ -544,23 +597,6 @@ const ExpenseForm = () => {
                   hidden
                 />
               </label>
-              <input
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                type="date"
-                name="date"
-                id="date"
-                placeholder="Date"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                }}
-              />{' '}
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
@@ -573,7 +609,6 @@ const ExpenseForm = () => {
         ) : (
           ''
         )}
-
         {showF ? (
           <div
             className="py-3 rounded"
@@ -639,14 +674,14 @@ const ExpenseForm = () => {
                   textIndent: '12px',
                   boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              ></input>{' '}
+              ></input>
               <input
+                type="date"
+                placeholder="Date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                type="date"
-                name="date"
-                id="date"
-                placeholder="Date"
+                name="reason"
+                id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
                   background: 'transparent',
@@ -656,7 +691,7 @@ const ExpenseForm = () => {
                   textIndent: '12px',
                   boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                 }}
-              />{' '}
+              ></input>
               <div className="w-75 mx-auto">
                 <select
                   onChange={(e) => setAccount(e.target.value)}
@@ -707,7 +742,6 @@ const ExpenseForm = () => {
         ) : (
           ''
         )}
-
         <div className="main-finance-cards">
           <div
             className="cards"
@@ -821,54 +855,32 @@ const ExpenseForm = () => {
               <table className="table table-dark table-hover table-striped">
                 <thead className="bg-light py-5">
                   <tr className="text-center py-5">
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Date
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Resident
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       House Number
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Amount
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Reason
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                      Date
+                    </th>
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Residency
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Type
+                    </th>
+                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                      Document
                     </th>
                   </tr>
                 </thead>
@@ -879,60 +891,47 @@ const ExpenseForm = () => {
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e.Reason ? e.reason : 'null'}</td>
-
+                      <td>{e.Reason ? e.Reason : 'null'}</td>
+                      <td>
+                        {e.date
+                          ? new Date(e.date).toISOString().split('T')[0]
+                          : 'null'}
+                      </td>
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
+                      <td
+                        onClick={() => handleIncomeImageClick(e?.fileUrl)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        <IoDocumentsSharp />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <div className="w-100 d-flex align-items-center justify-content-end py-3">
-              <button
-                className="btn btn-light"
-                onClick={handleNavigate}
-                style={{
-                  fontWeight: 'bold',
-                  boxShadow: ' 0px 2px 3px #03bb50',
-                }}
-              >
-                {' '}
-                View Report
-              </button>
-            </div>
 
-            <div className="d-flex justify-content-center my-3">
-              <button
-                className="btn mx-2"
-                onClick={() => paginateIncomes(currentPageIncome - 1)}
-                disabled={currentPageIncome === 1}
-                style={{
-                  color: 'rgb(3, 187, 80)',
-                  backgroundColor: 'white',
-                  // border: "1px solid #009843",
-                }}
-              >
-                Previous
-              </button>
-              <button
-                className="btn btn-secondary mx-2"
-                onClick={() => paginateIncomes(currentPageIncome + 1)}
-                disabled={
-                  currentPageIncome ===
-                  Math.ceil(filteredIncomeList.length / incomesPerPage)
-                }
-                style={{
-                  color: 'rgb(3, 187, 80)',
-                  backgroundColor: 'white',
-                  // border: "1px solid #009843",
-                }}
-              >
-                Next
-              </button>
-            </div>
+            {/* Income Document Modal */}
+            <Modal show={showIncomeModal} onHide={handleCloseIncomeModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Income Document</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <img
+                  src={selectedIncomeImageUrl}
+                  alt="Document"
+                  style={{ width: '75%' }}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseIncomeModal}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
           </div>
         </div>
+
         <div className="row">
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Expenses</h2>
@@ -974,6 +973,13 @@ const ExpenseForm = () => {
                       className="py-3 fs-5"
                       style={{ color: '#03bb50' }}
                     >
+                      Date
+                    </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: '#03bb50' }}
+                    >
                       Document
                     </th>
                     <th
@@ -992,6 +998,11 @@ const ExpenseForm = () => {
                       <td>{e.Title}</td>
                       <td>{e?.Type}</td>
                       <td>{e.Amount}</td>
+                      <td>
+                        {e.date
+                          ? new Date(e.date).toISOString().split('T')[0]
+                          : 'null'}
+                      </td>
                       <td
                         onClick={() => handleImageClick(e?.fileUrl)}
                         style={{ cursor: 'pointer' }}

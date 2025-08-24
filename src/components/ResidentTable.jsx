@@ -1,15 +1,15 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Audio } from "react-loader-spinner";
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { Audio } from 'react-loader-spinner';
 
 const ResidentTable = () => {
-  const backendURL = "https://directory-management-g8gf.onrender.com";
-  let token = localStorage.getItem("token");
+  const backendURL = 'https://directory-management-g8gf.onrender.com';
+  let token = localStorage.getItem('token');
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [numberOfMonths, setNumberOfMonths] = useState(0);
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTanentsOnly, setShowTanentsOnly] = useState(false);
@@ -62,26 +62,26 @@ const ResidentTable = () => {
         }
       );
       if (response.data.success) {
-        localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
+        localStorage.setItem('amount', JSON.stringify(response.data.totalFee));
         localStorage.setItem(
-          "resident",
+          'resident',
           JSON.stringify(response.data.resident)
         );
         localStorage.setItem(
-          "months",
+          'months',
           JSON.stringify(response.data.numberOfMonths)
         );
-        navigate("/dashboard/resident/invoice");
+        navigate('/dashboard/resident/invoice');
       } else {
-        console.error("Failed to generate fee slip:", response.data.message);
+        console.error('Failed to generate fee slip:', response.data.message);
       }
     } catch (error) {
-      console.error("Error generating fee slip:", error);
+      console.error('Error generating fee slip:', error);
     }
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 100;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
   const records = residents.slice(firstIndex, lastIndex);
@@ -112,7 +112,7 @@ const ResidentTable = () => {
             className="input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
             style={{
-              border: "2px solid #009843",
+              border: '2px solid #009843',
             }}
           />
         </form>
@@ -123,10 +123,10 @@ const ResidentTable = () => {
       <div
         className="my-3 py-3"
         style={{
-          backgroundColor: "#263043",
-          borderRadius: "12px",
+          backgroundColor: '#263043',
+          borderRadius: '12px',
           boxShadow:
-            "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
+            'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
         }}
       >
         <h3 className="mb-3">FILTERS</h3>
@@ -158,7 +158,7 @@ const ResidentTable = () => {
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: "#03bb50" }}
+                style={{ color: '#03bb50' }}
               >
                 Full Name
               </th>
@@ -166,7 +166,7 @@ const ResidentTable = () => {
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
+                  style={{ color: '#03bb50' }}
                 >
                   Email
                 </th>
@@ -174,21 +174,21 @@ const ResidentTable = () => {
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: "#03bb50" }}
+                style={{ color: '#03bb50' }}
               >
                 Phone
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: "#03bb50" }}
+                style={{ color: '#03bb50' }}
               >
                 House Number
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: "#03bb50" }}
+                style={{ color: '#03bb50' }}
               >
                 CNIC
               </th>
@@ -196,7 +196,7 @@ const ResidentTable = () => {
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
+                  style={{ color: '#03bb50' }}
                 >
                   Payment Status
                 </th>
@@ -205,7 +205,7 @@ const ResidentTable = () => {
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
+                  style={{ color: '#03bb50' }}
                 >
                   Payment Slip
                 </th>
@@ -214,7 +214,7 @@ const ResidentTable = () => {
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
+                  style={{ color: '#03bb50' }}
                 >
                   Action
                 </th>
@@ -223,7 +223,7 @@ const ResidentTable = () => {
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: "#03bb50" }}
+                  style={{ color: '#03bb50' }}
                 >
                   NOC
                 </th>
@@ -247,7 +247,7 @@ const ResidentTable = () => {
                 // Log the item to check its structure
 
                 const matchesSearch =
-                  search.toLowerCase() === "" ||
+                  search.toLowerCase() === '' ||
                   item.FullName.toLowerCase().includes(search) ||
                   item.Email.toLowerCase().includes(search) ||
                   item.Phone.toLowerCase().includes(search) ||
@@ -274,12 +274,12 @@ const ResidentTable = () => {
                           key={tenant._id || Math.random()}
                           className="text-center align-middle"
                         >
-                          <td>{tenant.name || "N/A"}</td>
+                          <td>{tenant.name || 'N/A'}</td>
 
-                          <td>{tenant.number || "N/A"}</td>
+                          <td>{tenant.number || 'N/A'}</td>
                           <td>{r.HouseNumber}</td>
-                          <td>{tenant.cnic || "N/A"}</td>
-                          <td>{tenant.nocNo || "N/A"}</td>
+                          <td>{tenant.cnic || 'N/A'}</td>
+                          <td>{tenant.nocNo || 'N/A'}</td>
                         </tr>
                       ))
                     : [];
@@ -289,15 +289,15 @@ const ResidentTable = () => {
                       key={r._id}
                       className="text-center align-middle"
                       // onClick={() => navigate(`/dashboard/resident/${r._id}`)}
-                      style={{ cursor: "pointer" }}
+                      style={{ cursor: 'pointer' }}
                     >
                       <td>{r.FullName}</td>
                       <td>{r.Email}</td>
                       <td>{r.Phone}</td>
                       <td>{r.HouseNumber}</td>
                       <td>{r.CNIC}</td>
-                      <td style={{ color: r.paid ? "green" : "red" }}>
-                        {r.paid ? "Paid" : "Unpaid"}
+                      <td style={{ color: r.paid ? 'green' : 'red' }}>
+                        {r.paid ? 'Paid' : 'Unpaid'}
                       </td>
                       <td>
                         <select
@@ -313,8 +313,8 @@ const ResidentTable = () => {
                         <button
                           className={
                             !r.paid
-                              ? "btn btn-outline-info m-1"
-                              : "btn btn-outline-secondary m-1 disabled"
+                              ? 'btn btn-outline-info m-1'
+                              : 'btn btn-outline-secondary m-1 disabled'
                           }
                           onClick={() => generateFeeSlip(r._id)}
                         >
@@ -325,7 +325,7 @@ const ResidentTable = () => {
                         <button
                           className="btn btn-outline-danger "
                           onClick={() => {
-                            if (confirm("Are you sure you want to delete?")) {
+                            if (confirm('Are you sure you want to delete?')) {
                               handleDelete(r._id);
                             }
                           }}
@@ -354,7 +354,7 @@ const ResidentTable = () => {
                 className="page-link"
                 href="#"
                 onClick={prevPage}
-                style={{ color: "rgb(3, 187, 80)" }}
+                style={{ color: 'rgb(3, 187, 80)' }}
               >
                 Prev
               </a>
@@ -362,7 +362,7 @@ const ResidentTable = () => {
             {numbers.map((n, i) => (
               <li
                 className={`page-item-dark ${
-                  currentPage === n ? "active" : ""
+                  currentPage === n ? 'active' : ''
                 }`}
                 key={i}
               >
@@ -371,8 +371,8 @@ const ResidentTable = () => {
                   className="page-link border-none"
                   onClick={() => changeCPage(n)}
                   style={{
-                    backgroundColor: "rgb(3, 187, 80)",
-                    border: "1px solid #009843",
+                    backgroundColor: 'rgb(3, 187, 80)',
+                    border: '1px solid #009843',
                   }}
                 >
                   {n}
@@ -384,7 +384,7 @@ const ResidentTable = () => {
                 className="page-link"
                 href="#"
                 onClick={nextPage}
-                style={{ color: "rgb(3, 187, 80)" }}
+                style={{ color: 'rgb(3, 187, 80)' }}
               >
                 Next
               </a>
