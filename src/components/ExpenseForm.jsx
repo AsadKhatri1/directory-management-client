@@ -8,6 +8,7 @@ import { IoIosWallet } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import { Audio } from "react-loader-spinner";
 import { IoDocumentsSharp } from "react-icons/io5";
+
 const ExpenseForm = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
   const [File, setFile] = useState(null);
@@ -26,9 +27,13 @@ const ExpenseForm = () => {
   const [date, setDate] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-  // const [selectedStartDate, setSelectedStartDate] = useState(moment().subtract(1,"month"));
+  const [showFilter, setShowFilter] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState("");
+  const [selectedType, setSelectedType] = useState("");
+
+
   const [selectedStartDate, setSelectedStartDate] = useState(
-    moment().startOf("year") // January 1st of the current year
+    moment().startOf("year")
   );
   const [selectedEndDate, setSelectedEndDate] = useState(moment());
 
@@ -44,25 +49,31 @@ const ExpenseForm = () => {
     setShowModal(false);
     setSelectedImageUrl("");
   };
-  const [selectedYear, setSelectedYear] = useState(moment().year());
 
+  // Corrected filter functions with proper variable names
   const filteredExpenseList = expenseList.filter((e) => {
+  
+    
     const expenseDate = moment(e?.createdAt);
     return (
       expenseDate.isSameOrAfter(selectedStartDate, "month") &&
-      expenseDate.isSameOrBefore(selectedEndDate, "month")
+      expenseDate.isSameOrBefore(selectedEndDate, "month") &&
+      (selectedAccount ? e.account === selectedAccount : true) &&
+      (selectedType === "expense" || selectedType === "" ? true : false)
     );
   });
 
   const filteredIncomeList = incomeList.filter((e) => {
+    
     const incomeDate = moment(e?.createdAt);
     return (
       incomeDate.isSameOrAfter(selectedStartDate, "month") &&
-      incomeDate.isSameOrBefore(selectedEndDate, "month")
+      incomeDate.isSameOrBefore(selectedEndDate, "month") &&
+      (selectedAccount ? e.account === selectedAccount : true) &&
+      (selectedType === "income" || selectedType === "" ? true : false)
     );
   });
 
-  // Pagination
   // Pagination
   const [expensesPerPage] = useState(8);
   const [currentPageExpense, setCurrentPageExpense] = useState(1);
@@ -112,13 +123,12 @@ const ExpenseForm = () => {
       if (File) {
         const formData = new FormData();
         formData.append("file", File);
-        formData.append("upload_preset", "images_preset"); // replace with your upload preset
+        formData.append("upload_preset", "images_preset");
         const cloudinaryRes = await axios.post(
-          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`,
           formData
         );
         fileUrl = await cloudinaryRes.data.secure_url;
-        console.log(fileUrl);
       }
 
       const res = await axios.post(
@@ -138,10 +148,8 @@ const ExpenseForm = () => {
         toast.success(res.data.message);
         setTitle("");
         setAmount("");
-        // setAccount("");
         setType("");
         setDate("");
-        setFile("");
         setFile(null);
         if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
@@ -169,7 +177,6 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance = parseFloat(re.data.acc.Balance) - Amount;
-          // const finalMasjidBalance = parseFloat(re.data.acc.Balance) - 10;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
@@ -185,26 +192,23 @@ const ExpenseForm = () => {
     }
   };
 
-  //Donation
-
+  // Donation handler
   const submitFundHandler = async (e) => {
     e.preventDefault();
     try {
       let fileUrl = "";
-
       if (File) {
         const formData = new FormData();
         formData.append("file", File);
-        formData.append("upload_preset", "images_preset"); // replace with your upload preset
+        formData.append("upload_preset", "images_preset");
         const cloudinaryRes = await axios.post(
-          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`, // replace with your cloud name
+          `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`,
           formData
         );
         fileUrl = await cloudinaryRes.data.secure_url;
       }
 
       const fundAmountNumber = parseFloat(FundAmount);
-      console.log(fundAmountNumber);
 
       if (isNaN(fundAmountNumber)) {
         toast.error("Please enter a valid amount");
@@ -238,18 +242,17 @@ const ExpenseForm = () => {
             parseFloat(re.data.acc.Balance) + fundAmountNumber;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
-
             { Balance: finalMasjidBalance }
           );
         }
         setShowF(false);
-        allExpenses();
         setFundAmount("");
         setFullName("");
         setReason("");
-        allIncomes();
         setDate("");
-        setFile("");
+        setFile(null);
+        allExpenses();
+        allIncomes();
         getMasjidBalance();
         getRecBalance();
         toast.success("Successfully updated the balance");
@@ -273,7 +276,6 @@ const ExpenseForm = () => {
           toast.error("Invalid amount");
           return;
         }
-        console.log("Account : ", account);
         if (account === "rec") {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
@@ -294,13 +296,12 @@ const ExpenseForm = () => {
           const finalMasjidBalance =
             parseFloat(re.data.acc.Balance) + feeAmountNumber;
 
-          const res = await axios.put(
+          await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
           );
         }
 
-        // Step 3: Refresh data
         allExpenses();
         getMasjidBalance();
         getRecBalance();
@@ -316,7 +317,6 @@ const ExpenseForm = () => {
 
   const handleDeleteIncome = async (id, amount, account) => {
     try {
-      console.log(id, amount, account);
       const res = await axios.delete(
         `${backendURL}/api/v1/income/deleteIncome/${id}`
       );
@@ -340,22 +340,20 @@ const ExpenseForm = () => {
           );
         }
         if (account === "masjid") {
-          console.log("i am in masjid");
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance =
             parseFloat(re.data.acc.Balance) - feeAmountNumber;
-          console.log("masjid : ", finalMasjidBalance);
 
-          const res = await axios.put(
+          await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
           );
-          allIncomes();
-          getMasjidBalance();
-          getRecBalance();
         }
+        allIncomes();
+        getMasjidBalance();
+        getRecBalance();
       } else {
         toast.error(res.data.message || "Failed to delete Income");
       }
@@ -372,24 +370,27 @@ const ExpenseForm = () => {
     }
   };
 
-  useEffect(() => {
-    allExpenses();
-    allIncomes();
-    getRecBalance();
-  }, [incomeList]);
-
   const allIncomes = async () => {
     const res = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
+    
     if (res.data.success) {
       setIncomeList(res.data.incomeList);
     }
   };
+
+  useEffect(() => {
+    allExpenses();
+    allIncomes();
+    getRecBalance();
+    getMasjidBalance();
+  }, []);
 
   const handleNavigate = () => {
     navigate("/dashboard/income/report", {
       state: { data: filteredIncomeList },
     });
   };
+  
   const handleExpenseNavigate = () => {
     navigate("/dashboard/expense/report", {
       state: { data: filteredExpenseList },
@@ -408,10 +409,11 @@ const ExpenseForm = () => {
     setShowIncomeModal(false);
   };
 
-  useEffect(() => {
-    getMasjidBalance();
-    getRecBalance();
-  }, []);
+
+
+
+
+
 
   return (
     <>
@@ -434,6 +436,7 @@ const ExpenseForm = () => {
               </button>
             )}
           </div>
+         
           <div className="col-md-6"></div>
           <div className="col-md-3 my-2">
             {show ? (
@@ -442,18 +445,109 @@ const ExpenseForm = () => {
                 style={{ cursor: "pointer" }}
               />
             ) : (
-              <button
-                className="btn btn-danger rounded"
+              <>
+               <button
+                className="btn btn-danger rounded "
                 onClick={() => {
                   setShow(!show), setShowF(false);
                 }}
               >
                 + Expense
               </button>
+              
+               <button
+              className="btn btn-primary px-2 py-2 mx-2 rounded shadow-sm"
+              onClick={() => setShowFilter(!showFilter)}
+            >
+              {showFilter ? "Hide Filters ✖" : "Show Filters "}
+            </button>
+              </>
+             
+            )}
+            
+          </div>
+  
+          <div className="my-4">
+           
+            {showFilter && (
+              <div
+                className="mt-4 p-4 rounded shadow-lg border border-gray-300"
+                style={{ backgroundColor: "#f9fafb" }}
+              >
+                <h4 className="mb-3 text-start text-primary fw-bold">
+                  Apply Filters
+                </h4>
+
+                <div className="row g-4">
+                  {/* Filter by Account */}
+                  <div className="col-md-3">
+                    <label className="form-label fw-semibold text-black">Account</label>
+                    <select
+                      value={selectedAccount}
+                      onChange={(e) => setSelectedAccount(e.target.value)}
+                      className="form-select shadow-sm"
+                    >
+                      <option value="">All</option>
+                      <option value="rec">REC</option>
+                      <option value="masjid">Masjid</option>
+                    </select>
+                  </div>
+
+                  {/* Filter by Type */}
+                  <div className="col-md-3">
+                    <label className="form-label fw-semibold text-black">Type</label>
+                    <select
+                      value={selectedType}
+                      onChange={(e) => setSelectedType(e.target.value)}
+                      className="form-select shadow-sm"
+                    >
+                      <option value="">All</option>
+                      <option value="income">Income</option>
+                      <option value="expense">Expense</option>
+                    </select>
+                  </div>
+
+                  {/* Filter by Date Range */}
+                  <div className="col-md-3">
+                    <label className="form-label fw-semibold text-black">Date Range</label>
+                    <div className="d-flex align-items-center gap-2">
+                      <input
+                        type="month"
+                        className="form-control shadow-sm"
+                        value={selectedStartDate.format("YYYY-MM")}
+                        onChange={(e) => setSelectedStartDate(moment(e.target.value))}
+                      />
+                      <span>to</span>
+                      <input
+                        type="month"
+                        className="form-control shadow-sm"
+                        value={selectedEndDate.format("YYYY-MM")}
+                        onChange={(e) => setSelectedEndDate(moment(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Reset Filters */}
+                <div className="mt-4 text-end">
+                  <button
+                    className="btn btn-sm btn-outline-danger px-3"
+                    onClick={() => {
+                      setSelectedAccount("");
+                      setSelectedType("");
+                      setSelectedStartDate(moment().startOf("year"));
+                      setSelectedEndDate(moment());
+                    }}
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
-        {show ? (
+
+        {show && (
           <div
             className="py-3 rounded"
             style={{
@@ -638,10 +732,9 @@ const ExpenseForm = () => {
               </button>
             </form>
           </div>
-        ) : (
-          ""
         )}
-        {showF ? (
+
+        {showF && (
           <div
             className="py-3 rounded"
             style={{
@@ -771,9 +864,8 @@ const ExpenseForm = () => {
               </button>
             </form>
           </div>
-        ) : (
-          ""
         )}
+
         <div className="main-finance-cards">
           <div
             className="cards"
@@ -831,91 +923,7 @@ const ExpenseForm = () => {
             </h2>
           </div>
         </div>
-        {/* Filter Section */}
-        <div
-          className="my-4 p-3"
-          style={{
-            backgroundColor: "#263043",
-            borderRadius: "12px",
 
-            boxShadow:
-              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-          }}
-        >
-          <h3 className="my-3">Filter By Range</h3>
-          <div className="row">
-            <div className="col-md-6">
-              {" "}
-              <div className="form-group">
-                <label htmlFor="startMonth" className="mb-3">
-                  Start Month:
-                </label>
-                <input
-                  type="month"
-                  className="form-control"
-                  id="startMonth"
-                  value={selectedStartDate.format("YYYY-MM")}
-                  onChange={(e) => setSelectedStartDate(moment(e.target.value))}
-                />
-              </div>
-            </div>
-            <div className="col-md-6">
-              {" "}
-              <div className="form-group">
-                <label htmlFor="endMonth" className="mb-3">
-                  End Month:
-                </label>
-                <input
-                  type="month"
-                  className="form-control"
-                  id="endMonth"
-                  value={selectedEndDate.format("YYYY-MM")}
-                  onChange={(e) => setSelectedEndDate(moment(e.target.value))}
-                />
-              </div>
-            </div>
-          </div>
-          {/* <div className="row">
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="startMonth" className="mb-3">
-                  Start Month:
-                </label>
-                <input
-                  type="month"
-                  className="form-control"
-                  id="startMonth"
-                  value={moment()
-                    .year(selectedStartMonth.year()) // Use selected year
-                    .month(selectedStartMonth.month()) // Use selected month
-                    .format("YYYY-MM")} // Format as YYYY-MM
-                  onChange={(e) =>
-                    setSelectedStartMonth(moment(e.target.value, "YYYY-MM"))
-                  }
-                />
-              </div>
-            </div>
-            <div className="col-md-6">
-              <div className="form-group">
-                <label htmlFor="endMonth" className="mb-3">
-                  End Month:
-                </label>
-                <input
-                  type="month"
-                  className="form-control"
-                  id="endMonth"
-                  value={moment()
-                    .year(selectedEndMonth.year()) // Use selected year
-                    .month(selectedEndMonth.month()) // Use selected month
-                    .format("YYYY-MM")} // Format as YYYY-MM
-                  onChange={(e) =>
-                    setSelectedEndMonth(moment(e.target.value, "YYYY-MM"))
-                  }
-                />
-              </div>
-            </div>
-          </div> */}
-        </div>
         <div className="row">
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Incomes</h2>
@@ -936,20 +944,20 @@ const ExpenseForm = () => {
                       Amount
                     </th>
                     <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
-                      Reason
+                      Account
                     </th>
-                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                    {/* <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
-                    </th>
+                    </th> */}
                     <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Residency
                     </th>
                     <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Type
                     </th>
-                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                    {/* <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Document
-                    </th>
+                    </th> */}
                     <th
                       scope="col"
                       className="py-3 fs-5"
@@ -961,25 +969,28 @@ const ExpenseForm = () => {
                 </thead>
                 <tbody>
                   {currentIncomes.map((e, i) => (
+                  
+                    
                     <tr key={i} className="text-center align-middle">
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e.Reason ? e.Reason : "null"}</td>
-                      <td>
+                            <td>{e?.account || "null"}</td>
+                    
+                      {/* <td>
                         {e.date
                           ? new Date(e.date).toISOString().split("T")[0]
                           : "null"}
-                      </td>
+                      </td> */}
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
-                      <td
+                      {/* <td
                         onClick={() => handleIncomeImageClick(e?.fileUrl)}
                         style={{ cursor: "pointer" }}
                       >
                         <IoDocumentsSharp />
-                      </td>
+                      </td> */}
                       <td>
                         <button
                           className="btn btn-outline text-white"
@@ -1015,65 +1026,73 @@ const ExpenseForm = () => {
                 </Button>
               </Modal.Footer>
             </Modal>
+
+
+
+
+ <div className="d-flex justify-content-center my-3">
+              <button
+                className="btn mx-2"
+                onClick={() => paginateIncomes(currentPageIncome - 1)}
+                disabled={currentPageIncome === 1}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
+              >
+                Previous
+              </button>
+              <span className="mx-2 my-2">
+                Page {currentPageIncome} of{" "}
+                {Math.ceil(filteredIncomeList.length / incomesPerPage)}
+              </span>
+              <button
+                className="btn mx-2"
+                onClick={() => paginateIncomes(currentPageIncome + 1)}
+                disabled={
+                  currentPageIncome ===
+                  Math.ceil(filteredIncomeList.length / incomesPerPage)
+                }
+                style={{ backgroundColor: "#03bb50", color: "white" }}
+              >
+                Next
+              </button>
+            </div>
+
+            <div className="text-end my-3">
+              <button
+                className="btn btn-primary"
+                onClick={handleNavigate}
+                disabled={filteredIncomeList.length === 0}
+              >
+                Generate Income Report
+              </button>
+            </div>
           </div>
         </div>
 
         <div className="row">
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Expenses</h2>
-
-            <div className="table-responsive rounded exp-table">
+            <div className="table-responsive rounded inTable">
               <table className="table table-dark table-hover table-striped">
-                <thead className="bg-light my-3">
-                  <tr className="text-center my-3">
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                <thead className="bg-light py-5">
+                  <tr className="text-center py-5">
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Title
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
-                      Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Amount
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
-                      Date
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                      Type
                     </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
+                      Account
+                    </th>
+                 
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Document
-                    </th>
-                    <th
-                      scope="col"
-                      className="py-3 fs-5"
-                      style={{ color: "#03bb50" }}
-                    >
-                      Receipt
                     </th>
                     <th
                       scope="col"
@@ -1088,31 +1107,16 @@ const ExpenseForm = () => {
                   {currentExpenses.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
                       <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
-                      <td>{e.Title}</td>
+                      <td>{e?.Title}</td>
+                      <td>{e?.Amount}</td>
                       <td>{e?.Type}</td>
-                      <td>{e.Amount}</td>
-                      <td>
-                        {e.date
-                          ? new Date(e.date).toISOString().split("T")[0]
-                          : "null"}
-                      </td>
+                      <td>{e?.account || "null"}</td>
+                
                       <td
                         onClick={() => handleImageClick(e?.fileUrl)}
                         style={{ cursor: "pointer" }}
                       >
-                        <IoDocumentsSharp />
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-outline-success"
-                          // style={{ backgroundColor: " rgb(3, 187, 80)" }}
-                          onClick={(event) => {
-                            navigate(`receipt/${e._id}`);
-                            console.log(e);
-                          }}
-                        >
-                          View
-                        </button>
+                        {e?.fileUrl && <IoDocumentsSharp />}
                       </td>
                       <td>
                         <button
@@ -1120,7 +1124,7 @@ const ExpenseForm = () => {
                           style={{ backgroundColor: " rgb(182, 1, 1)" }}
                           onClick={() =>
                             handleDeleteExpense(e._id, e.Amount, e.account)
-                          } // Use `e.Account` if stored separately
+                          }
                         >
                           Delete
                         </button>
@@ -1128,52 +1132,41 @@ const ExpenseForm = () => {
                     </tr>
                   ))}
                 </tbody>
-                {/* Modal */}
-                <Modal show={showModal} onHide={handleCloseModal}>
-                  <Modal.Header closeButton>
-                    <Modal.Title>Expense Document</Modal.Title>
-                  </Modal.Header>
-                  <Modal.Body>
-                    <img
-                      src={selectedImageUrl}
-                      alt="Document"
-                      style={{ width: "75%" }}
-                    />
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                      Close
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
               </table>
             </div>
-            <div className="w-100 d-flex align-items-center justify-content-end py-3">
-              <button
-                className="btn btn-light"
-                onClick={handleExpenseNavigate}
-                style={{
-                  fontWeight: "bold",
-                  boxShadow: " 0px 2px 3px #03bb50",
-                }}
-              >
-                View Report
-              </button>
-            </div>
+
+            {/* Expense Document Modal */}
+            <Modal show={showModal} onHide={handleCloseModal}>
+              <Modal.Header closeButton>
+                <Modal.Title>Expense Document</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <img
+                  src={selectedImageUrl}
+                  alt="Document"
+                  style={{ width: "75%" }}
+                />
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModal}>
+                  Close
+                </Button>
+              </Modal.Footer>
+            </Modal>
 
             <div className="d-flex justify-content-center my-3">
               <button
                 className="btn mx-2"
                 onClick={() => paginateExpenses(currentPageExpense - 1)}
                 disabled={currentPageExpense === 1}
-                style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
-                  // border: "1px solid #009843",
-                }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
                 Previous
               </button>
+              <span className="mx-2 my-2">
+                Page {currentPageExpense} of{" "}
+                {Math.ceil(filteredExpenseList.length / expensesPerPage)}
+              </span>
               <button
                 className="btn mx-2"
                 onClick={() => paginateExpenses(currentPageExpense + 1)}
@@ -1181,13 +1174,19 @@ const ExpenseForm = () => {
                   currentPageExpense ===
                   Math.ceil(filteredExpenseList.length / expensesPerPage)
                 }
-                style={{
-                  color: "rgb(3, 187, 80)",
-                  backgroundColor: "white",
-                  // border: "1px solid #009843",
-                }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
                 Next
+              </button>
+            </div>
+
+            <div className="text-end my-3">
+              <button
+                className="btn btn-primary"
+                onClick={handleExpenseNavigate}
+                disabled={filteredExpenseList.length === 0}
+              >
+                Generate Expense Report
               </button>
             </div>
           </div>

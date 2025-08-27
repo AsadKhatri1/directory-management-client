@@ -23,6 +23,7 @@ const ExpenseReport = () => {
       { header: "Title", dataKey: "Title" },
       { header: "Amount", dataKey: "Amount" },
       { header: "Type", dataKey: "Type" },
+      { header: "Account", dataKey: "account" },
       { header: "Date", dataKey: "createdAt" },
     ];
 
@@ -52,7 +53,7 @@ const ExpenseReport = () => {
 
   return (
     <div>
-      <div className="container">
+      <div className="container ">
         <div ref={reportRef}>
           <h1>Expense Report</h1>
           <table
@@ -75,6 +76,9 @@ const ExpenseReport = () => {
                   Type
                 </th>
                 <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                  Account
+                </th>
+                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
                   Date
                 </th>
               </tr>
@@ -90,6 +94,9 @@ const ExpenseReport = () => {
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {expense.Type}
+                  </td>
+                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                    {expense.account || "null"}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
                     {expense.createdAt
