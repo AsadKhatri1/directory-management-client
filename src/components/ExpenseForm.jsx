@@ -26,12 +26,11 @@ const ExpenseForm = () => {
   const [date, setDate] = useState('');
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
-  const [selectedStartMonth, setSelectedStartMonth] = useState(
-    moment().startOf('month').month() - 1
+  // const [selectedStartDate, setSelectedStartDate] = useState(moment().subtract(1,"month"));
+  const [selectedStartDate, setSelectedStartDate] = useState(
+    moment().startOf('year') // January 1st of the current year
   );
-  const [selectedEndMonth, setSelectedEndMonth] = useState(
-    moment().endOf('month').month()
-  );
+  const [selectedEndDate, setSelectedEndDate] = useState(moment());
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
@@ -46,25 +45,24 @@ const ExpenseForm = () => {
     setSelectedImageUrl('');
   };
   const [selectedYear, setSelectedYear] = useState(moment().year());
-  // Filtered expenses and incomes based on selected month range and year
+
   const filteredExpenseList = expenseList.filter((e) => {
     const expenseDate = moment(e?.createdAt);
     return (
-      expenseDate.month() >= selectedStartMonth &&
-      expenseDate.month() <= selectedEndMonth &&
-      expenseDate.year() === selectedYear
-    );
-  });
-  const filteredIncomeList = incomeList.filter((e) => {
-    const incomeDate = moment(e?.createdAt);
-    // console.log(incomeDate.month());
-    return (
-      incomeDate.month() >= selectedStartMonth &&
-      incomeDate.month() <= selectedEndMonth &&
-      incomeDate.year() === selectedYear
+      expenseDate.isSameOrAfter(selectedStartDate, 'month') &&
+      expenseDate.isSameOrBefore(selectedEndDate, 'month')
     );
   });
 
+  const filteredIncomeList = incomeList.filter((e) => {
+    const incomeDate = moment(e?.createdAt);
+    return (
+      incomeDate.isSameOrAfter(selectedStartDate, 'month') &&
+      incomeDate.isSameOrBefore(selectedEndDate, 'month')
+    );
+  });
+
+  // Pagination
   // Pagination
   const [expensesPerPage] = useState(8);
   const [currentPageExpense, setCurrentPageExpense] = useState(1);
@@ -107,16 +105,10 @@ const ExpenseForm = () => {
     }
   };
 
-  useEffect(() => {
-    getMasjidBalance();
-    getRecBalance();
-  }, []);
-
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       let fileUrl = '';
-
       if (File) {
         const formData = new FormData();
         formData.append('file', File);
@@ -135,6 +127,7 @@ const ExpenseForm = () => {
           Title,
           Amount,
           Type,
+          account: Account,
           date: date,
           fileUrl,
         },
@@ -145,7 +138,7 @@ const ExpenseForm = () => {
         toast.success(res.data.message);
         setTitle('');
         setAmount('');
-        setAccount('');
+        // setAccount("");
         setType('');
         setDate('');
         setFile('');
@@ -160,6 +153,7 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
           const finalRecBalance = parseFloat(re1.data.acc.Balance) - Amount;
+
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
             { Balance: finalRecBalance }
@@ -175,6 +169,7 @@ const ExpenseForm = () => {
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
           const finalMasjidBalance = parseFloat(re.data.acc.Balance) - Amount;
+          // const finalMasjidBalance = parseFloat(re.data.acc.Balance) - 10;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
             { Balance: finalMasjidBalance }
@@ -190,58 +185,7 @@ const ExpenseForm = () => {
     }
   };
 
-  // const submitFundHandler = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const fundAmountNumber = parseFloat(FundAmount);
-  //     if (isNaN(fundAmountNumber)) {
-  //       toast.error('Please enter a valid amount');
-  //       return;
-  //     }
-  //     const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
-  //       ResidentName: FullName,
-  //       Amount: fundAmountNumber,
-  //       Reason,
-  //       date,
-  //       Type: 'Donation',
-  //     });
-  //     if (resIn.data.success) {
-  //       if (Account === 'rec') {
-  //         const re1 = await axios.get(
-  //           `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
-  //         );
-  //         const finalRecBalance =
-  //           parseFloat(re1.data.acc.Balance) + fundAmountNumber;
-  //         await axios.put(
-  //           `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
-  //           { Balance: finalRecBalance }
-  //         );
-  //       } else if (Account === 'masjid') {
-  //         const re = await axios.get(
-  //           `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
-  //         );
-  //         const finalMasjidBalance =
-  //           parseFloat(re.data.acc.Balance) + fundAmountNumber;
-  //         await axios.put(
-  //           `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
-  //           { Balance: finalMasjidBalance }
-  //         );
-  //       }
-  //       setShowF(false);
-  //       allExpenses();
-  //       setFundAmount('');
-  //       setFullName('');
-  //       setReason('');
-  //       setDate('');
-  //       allIncomes();
-  //       getMasjidBalance();
-  //       getRecBalance();
-  //       toast.success('Successfully updated the balance');
-  //     }
-  //   } catch (err) {
-  //     toast.error('Error in adding fund');
-  //   }
-  // };
+  //Donation
 
   const submitFundHandler = async (e) => {
     e.preventDefault();
@@ -257,10 +201,11 @@ const ExpenseForm = () => {
           formData
         );
         fileUrl = await cloudinaryRes.data.secure_url;
-        console.log(fileUrl);
       }
 
       const fundAmountNumber = parseFloat(FundAmount);
+      console.log(fundAmountNumber);
+
       if (isNaN(fundAmountNumber)) {
         toast.error('Please enter a valid amount');
         return;
@@ -270,6 +215,7 @@ const ExpenseForm = () => {
       const resIn = await axios.post(`${backendURL}/api/v1/income/addIncome`, {
         ResidentName: FullName,
         Amount: fundAmountNumber,
+        account: Account,
         Reason,
         Type: 'Donation',
         date: date,
@@ -296,6 +242,7 @@ const ExpenseForm = () => {
             parseFloat(re.data.acc.Balance) + fundAmountNumber;
           await axios.put(
             `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+
             { Balance: finalMasjidBalance }
           );
         }
@@ -315,7 +262,113 @@ const ExpenseForm = () => {
         toast.success('Successfully added donation and updated balance');
       }
     } catch (err) {
-      toast.error('Error in adding donation');
+      toast.error('Error in adding fund');
+    }
+  };
+
+  const handleDeleteExpense = async (id, amount, account) => {
+    try {
+      const res = await axios.delete(
+        `${backendURL}/api/v1/expense/deleteExpense/${id}`
+      );
+
+      if (res.data.success) {
+        toast.success('Expense deleted successfully!');
+        const feeAmountNumber = parseFloat(amount);
+
+        if (isNaN(feeAmountNumber)) {
+          toast.error('Invalid amount');
+          return;
+        }
+        console.log('Account : ', account);
+        if (account === 'rec') {
+          const re1 = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance =
+            parseFloat(re1.data.acc.Balance) + feeAmountNumber;
+
+          await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+            { Balance: finalRecBalance }
+          );
+        }
+
+        if (account === 'masjid') {
+          const re = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance =
+            parseFloat(re.data.acc.Balance) + feeAmountNumber;
+
+          const res = await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+            { Balance: finalMasjidBalance }
+          );
+        }
+
+        // Step 3: Refresh data
+        allExpenses();
+        getMasjidBalance();
+        getRecBalance();
+        allIncomes();
+      } else {
+        toast.error(res.data.message || 'Failed to delete expense');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('An error occurred while deleting the expense');
+    }
+  };
+
+  const handleDeleteIncome = async (id, amount, account) => {
+    try {
+      console.log(id, amount, account);
+      const res = await axios.delete(
+        `${backendURL}/api/v1/income/deleteIncome/${id}`
+      );
+
+      if (res.data.success) {
+        toast.success('Income Delete Successfully');
+        const feeAmountNumber = parseFloat(amount);
+        if (isNaN(feeAmountNumber)) {
+          toast.error('Invalid amount');
+          return;
+        }
+        if (account === 'rec') {
+          const re1 = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          );
+          const finalRecBalance =
+            parseFloat(re1.data.acc.Balance) - feeAmountNumber;
+          await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
+            { Balance: finalRecBalance }
+          );
+        }
+        if (account === 'masjid') {
+          console.log('i am in masjid');
+          const re = await axios.get(
+            `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          );
+          const finalMasjidBalance =
+            parseFloat(re.data.acc.Balance) - feeAmountNumber;
+          console.log('masjid : ', finalMasjidBalance);
+
+          const res = await axios.put(
+            `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
+            { Balance: finalMasjidBalance }
+          );
+          allIncomes();
+          getMasjidBalance();
+          getRecBalance();
+        }
+      } else {
+        toast.error(res.data.message || 'Failed to delete Income');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('An error occurred while deleting the Income');
     }
   };
 
@@ -328,7 +381,9 @@ const ExpenseForm = () => {
 
   useEffect(() => {
     allExpenses();
-  }, []);
+    allIncomes();
+    getRecBalance();
+  }, [incomeList]);
 
   const allIncomes = async () => {
     const res = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
@@ -336,10 +391,6 @@ const ExpenseForm = () => {
       setIncomeList(res.data.incomeList);
     }
   };
-
-  useEffect(() => {
-    allIncomes();
-  }, []);
 
   const handleNavigate = () => {
     navigate('/dashboard/income/report', {
@@ -363,6 +414,12 @@ const ExpenseForm = () => {
   const handleCloseIncomeModal = () => {
     setShowIncomeModal(false);
   };
+
+  useEffect(() => {
+    getMasjidBalance();
+    getRecBalance();
+  }, []);
+
   return (
     <>
       <main className="main-container text-center mt-3">
@@ -810,7 +867,7 @@ const ExpenseForm = () => {
               'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
           }}
         >
-          {/* <h3 className="my-3">Filter By Range</h3> */}
+          <h3 className="my-3">Filter By Range</h3>
           <div className="row">
             <div className="col-md-6">
               {' '}
@@ -822,10 +879,8 @@ const ExpenseForm = () => {
                   type="month"
                   className="form-control"
                   id="startMonth"
-                  value={moment().month(selectedStartMonth).format('YYYY-MM')}
-                  onChange={(e) =>
-                    setSelectedStartMonth(moment(e.target.value).month())
-                  }
+                  value={selectedStartDate.format('YYYY-MM')}
+                  onChange={(e) => setSelectedStartDate(moment(e.target.value))}
                 />
               </div>
             </div>
@@ -839,14 +894,52 @@ const ExpenseForm = () => {
                   type="month"
                   className="form-control"
                   id="endMonth"
-                  value={moment().month(selectedEndMonth).format('YYYY-MM')}
-                  onChange={(e) =>
-                    setSelectedEndMonth(moment(e.target.value).month())
-                  }
+                  value={selectedEndDate.format('YYYY-MM')}
+                  onChange={(e) => setSelectedEndDate(moment(e.target.value))}
                 />
               </div>
             </div>
           </div>
+          {/* <div className="row">
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="startMonth" className="mb-3">
+                  Start Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="startMonth"
+                  value={moment()
+                    .year(selectedStartMonth.year()) // Use selected year
+                    .month(selectedStartMonth.month()) // Use selected month
+                    .format("YYYY-MM")} // Format as YYYY-MM
+                  onChange={(e) =>
+                    setSelectedStartMonth(moment(e.target.value, "YYYY-MM"))
+                  }
+                />
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="form-group">
+                <label htmlFor="endMonth" className="mb-3">
+                  End Month:
+                </label>
+                <input
+                  type="month"
+                  className="form-control"
+                  id="endMonth"
+                  value={moment()
+                    .year(selectedEndMonth.year()) // Use selected year
+                    .month(selectedEndMonth.month()) // Use selected month
+                    .format("YYYY-MM")} // Format as YYYY-MM
+                  onChange={(e) =>
+                    setSelectedEndMonth(moment(e.target.value, "YYYY-MM"))
+                  }
+                />
+              </div>
+            </div>
+          </div> */}
         </div>
         <div className="row">
           <div className="col-md-12 mt-4">
@@ -882,6 +975,13 @@ const ExpenseForm = () => {
                     <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
                       Document
                     </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: '#03bb50' }}
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -904,6 +1004,17 @@ const ExpenseForm = () => {
                         style={{ cursor: 'pointer' }}
                       >
                         <IoDocumentsSharp />
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline text-white"
+                          style={{ backgroundColor: ' rgb(182, 1, 1)' }}
+                          onClick={() =>
+                            handleDeleteIncome(e._id, e.Amount, e.account)
+                          }
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -989,6 +1100,13 @@ const ExpenseForm = () => {
                     >
                       Receipt
                     </th>
+                    <th
+                      scope="col"
+                      className="py-3 fs-5"
+                      style={{ color: '#03bb50' }}
+                    >
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1013,9 +1131,23 @@ const ExpenseForm = () => {
                         <button
                           className="btn btn-outline-success"
                           // style={{ backgroundColor: " rgb(3, 187, 80)" }}
-                          onClick={(event) => navigate(`receipt/${e._id}`)}
+                          onClick={(event) => {
+                            navigate(`receipt/${e._id}`);
+                            console.log(e);
+                          }}
                         >
                           View
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline text-white"
+                          style={{ backgroundColor: ' rgb(182, 1, 1)' }}
+                          onClick={() =>
+                            handleDeleteExpense(e._id, e.Amount, e.account)
+                          } // Use `e.Account` if stored separately
+                        >
+                          Delete
                         </button>
                       </td>
                     </tr>

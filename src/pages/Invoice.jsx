@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactToPrint from "react-to-print";
 import logo from "../assets/logo.png";
 import moment from "moment";
-// import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
 const Invoice = () => {
   const componentRef = useRef();
   const now = moment();
 
-  // Fetch resident, months, and amount from localStorage
   const resident = JSON.parse(localStorage.getItem("resident"));
   const amount = JSON.parse(localStorage.getItem("amount"));
+  const months = JSON.parse(localStorage.getItem("months")) || [];
+  const numberOfMonths =
+    JSON.parse(localStorage.getItem("NumberOfMonths")) || [];
 
-  // State to manage the receipt number
   const [receiptNumber, setReceiptNumber] = useState(() => {
     const lastReceiptNumber = localStorage.getItem("receiptNumber");
     return lastReceiptNumber ? parseInt(lastReceiptNumber) + 1 : 1;
@@ -22,87 +22,144 @@ const Invoice = () => {
     localStorage.setItem("receiptNumber", receiptNumber);
   }, [receiptNumber]);
 
+  const paymentMode = localStorage.getItem("PaymentMode") || "";
+
+  // Get start and end months from the months array
+  const startMonth =
+    months.length > 0
+      ? moment(months[0], "YYYY-MM").format("MMMM YYYY")
+      : "N/A";
+  const endMonth =
+    months.length > 0
+      ? moment(months[months.length - 1], "YYYY-MM").format("MMMM YYYY")
+      : "N/A";
+
   const invoiceSection = (copyType) => (
     <div
-      className="col-12 col-md-6 border px-4"
-      style={{ backgroundColor: "white" }}
+      className="border p-3"
+      style={{
+        backgroundColor: "white",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      <div className="row mb-1">
-        <div className="col-4 d-flex align-items-center">
-          <p className="mb-0">
-            <strong>Date:</strong> {now.format("DD-MM-YYYY")}
+      {/* Header Row */}
+      <div
+        className="d-flex justify-content-between"
+        style={{ marginBottom: "5px" }}
+      >
+        <p style={{ margin: 0, fontSize: "13px" }}>
+          <strong>Date:</strong> {now.format("DD-MM-YYYY")}
+        </p>
+        <p style={{ opacity: 0.6, margin: 0, fontSize: "13px" }}>
+          <strong>{copyType}</strong>
+        </p>
+        <p style={{ margin: 0, fontSize: "13px" }}>
+          <strong>Receipt #</strong> {receiptNumber}
+        </p>
+      </div>
+
+      {/* Logo */}
+      <div className="text-center" style={{ margin: "5px 0px 2px 0px" }}>
+        <img
+          src={logo}
+          alt="Logo"
+          style={{
+            height: "190px",
+            width: "auto",
+            maxWidth: "100%",
+            objectFit: "contain",
+          }}
+        />
+      </div>
+
+      {/* Title */}
+      <h5
+        className="text-center"
+        style={{
+          margin: "5px 0 8px 0",
+          fontSize: "16px",
+          fontWeight: "bold",
+        }}
+      >
+        Received with thanks Member Contribution / Others
+      </h5>
+
+      {/* Paid Months */}
+      <div style={{ margin: "0 0 8px 0", textAlign: "center" }}>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>From:</strong> {startMonth}
+        </p>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>To:</strong> {endMonth}
+        </p>
+        <p style={{ margin: "3px 0", fontSize: "13px" }}>
+          <strong>Total Months:</strong> {months.length}
+        </p>
+      </div>
+
+      {/* Resident Info */}
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
+        <div className="col-6">
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>From:</strong> Mr. / Mrs. {resident?.FullName || "N/A"}
           </p>
         </div>
-        <div className="col-4 text-center">
-          <p className="mb-0" style={{ opacity: "0.6" }}>
-            {copyType}
-          </p>
-        </div>
-        <div className="col-4 text-end">
-          <p className="mb-0">
-            <strong>Receipt #{receiptNumber}</strong>
+        <div className="col-6">
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>House No.:</strong> {resident?.HouseNumber || "N/A"}
           </p>
         </div>
       </div>
 
-      <div className="text-center">
-        <img src={logo} alt="Logo" style={{ height: "95px", width: "80px" }} />
-      </div>
-
-      <div className="row mb-4 text-center">
-        <div className="col-12">
-          <h5>Received with thanks Member Contribution / Others</h5>
-        </div>
-      </div>
-
-      <div className="row mb-2 w-100 text-center">
+      {/* Additional Fields */}
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>From Mr. / Mrs.:</strong> {resident.FullName}
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Cash / Cheque No.:</strong> ___________________
           </p>
         </div>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>House No.:</strong> {resident.HouseNumber}
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Received By:</strong> ___________________
           </p>
         </div>
       </div>
 
-      <div className="row mb-2 w-100 text-center">
+      {/* Amount Breakdown */}
+      <div className="row text-center" style={{ marginBottom: "12px" }}>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>Cash / Cheque No.:</strong> _______________
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>REC Amount:</strong> Rs. {amount ? amount / 2 : "N/A"}
           </p>
         </div>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>Received By:</strong> _______________
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Masjid Amount:</strong> Rs. {amount ? amount / 2 : "N/A"}
           </p>
         </div>
       </div>
 
-      <div className="row mb-4 w-100 text-center">
+      {/* Resident Type and Payment Mode */}
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>REC Amount:</strong> Rs. {amount / 2}
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Resident Type:</strong> {resident?.residentType || "N/A"}
           </p>
         </div>
         <div className="col-6">
-          <p className="mb-1">
-            <strong>Masjid Amount:</strong> Rs. {amount / 2}
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Payment Mode:</strong> {paymentMode || "N/A"}
           </p>
         </div>
       </div>
 
-      <div className="row w-100 text-center">
-        <div className="col-12 text-center">
-          <p
-            className="mb-0"
-            style={{ fontSize: "1.25rem", fontWeight: "bold" }}
-          >
-            Total Amount: Rs. {amount}
-          </p>
-        </div>
+
+      <div className="text-center" style={{ margin: "8px 0" }}>
+        <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>
+          Total Amount: Rs. {amount || "N/A"}
+        </p>
       </div>
     </div>
   );
@@ -110,24 +167,52 @@ const Invoice = () => {
   return (
     <>
       <div
-        className="main d-flex flex-column align-items-center justify-content-start w-100 "
-        style={{ height: "50vh" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          backgroundColor: "#f8f9fa",
+        }}
       >
         <div
           ref={componentRef}
-          className="invoice row w-100 h-100"
           style={{
             backgroundColor: "white",
             color: "black",
-            boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
-            width: "100%",
+            boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+            width: "210mm",
+            height: "297mm",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            boxSizing: "border-box",
           }}
         >
-          {invoiceSection("Office Copy")}
-          {invoiceSection("Resident Copy")}
+          {/* Office Copy */}
+          <div
+            style={{
+              height: "148.5mm",
+              borderBottom: "1px dashed #ccc",
+              padding: "10mm",
+            }}
+          >
+            {invoiceSection("Office Copy")}
+          </div>
+
+          {/* Resident Copy */}
+          <div
+            style={{
+              height: "148.5mm",
+              padding: "10mm",
+            }}
+          >
+            {invoiceSection("Resident Copy")}
+          </div>
         </div>
       </div>
-      <div className="text-center mt-5 ">
+
+      <div className="text-center mt-4 print-btn">
         <ReactToPrint
           trigger={() => (
             <button className="btn btn-secondary">Print / Download</button>

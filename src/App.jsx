@@ -1,4 +1,3 @@
-import React, { createContext, useEffect, useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard.jsx';
@@ -12,6 +11,8 @@ import Expense from './pages/Expense.jsx';
 import Receipt from './components/Receipt.jsx';
 import ExpenseReport from './components/ExpenseReport.jsx';
 import IncomeReport from './components/IncomeReport.jsx';
+import ResidentUpdate from './pages/ResidentUpdate.jsx';
+import PrivateRoute from './privateroute/PrivateRoute.jsx';
 import Violation from './pages/Violation.jsx';
 
 function App() {
@@ -20,16 +21,94 @@ function App() {
       <Routes>
         <Route path="/" element={<Auth />} />
         <Route path="/dashboard/resident/:id" element={<ResidentDetail />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard/residents" element={<Residents />} />
-        <Route path="/dashboard/newResident" element={<NewResident />} />
-        <Route path="/dashboard/addAdmin" element={<AddAdmin />} />
-        <Route path="/dashboard/resident/invoice" element={<Invoice />} />
-        <Route path="/dashboard/expense" element={<Expense />} />
-        <Route path="/dashboard/expense/report" element={<ExpenseReport />} />
-        <Route path="/dashboard/income/report" element={<IncomeReport />} />
-        <Route path="/dashboard/expense/receipt/:id" element={<Receipt />} />
-        <Route path="/dashboard/violations" element={<Violation />} />
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/residents"
+          element={
+            <PrivateRoute>
+              <Residents />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/newResident"
+          element={
+            <PrivateRoute>
+              <NewResident />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/update-resident/:id"
+          element={
+            <PrivateRoute>
+              <ResidentUpdate />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/addAdmin"
+          element={
+            <PrivateRoute>
+              <AddAdmin />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/resident/invoice"
+          element={
+            <PrivateRoute>
+              <Invoice />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/expense"
+          element={
+            <PrivateRoute>
+              <Expense />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/expense/report"
+          element={
+            <PrivateRoute>
+              <ExpenseReport />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/income/report"
+          element={
+            <PrivateRoute>
+              <IncomeReport />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/expense/receipt/:id"
+          element={
+            <PrivateRoute>
+              <Receipt />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/violations"
+          element={
+            <PrivateRoute>
+              <Violation />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

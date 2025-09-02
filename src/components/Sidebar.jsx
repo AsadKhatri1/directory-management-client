@@ -1,40 +1,42 @@
-import React from "react";
-import { GoFileDirectoryFill } from "react-icons/go";
-import { MdDashboard } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
-import { FaHouseUser, FaMoneyBillWave } from "react-icons/fa";
-import { RiAdminFill } from "react-icons/ri";
-import { BsFillHouseAddFill } from "react-icons/bs";
-import { TbLogout2 } from "react-icons/tb";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import logo from "../assets/logo.png";
-import { GiExpense } from "react-icons/gi";
+import React from 'react';
+import { GoFileDirectoryFill } from 'react-icons/go';
+import { MdDashboard } from 'react-icons/md';
+import { Link, useLocation } from 'react-router-dom';
+import { FaHouseUser, FaMoneyBillWave } from 'react-icons/fa';
+import { RiAdminFill } from 'react-icons/ri';
+import { BsFileBreakFill } from 'react-icons/bs';
+
+import { BsFillHouseAddFill } from 'react-icons/bs';
+import { TbLogout2 } from 'react-icons/tb';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import logo from '../assets/logo.png';
+import { GiExpense } from 'react-icons/gi';
 
 const Sidebar = ({ sideBarToggle, openSideBar }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const logout = () => {
-    localStorage.removeItem("token");
-    toast.success("Logged out successfully");
-    navigate("/");
+    localStorage.removeItem('token');
+    toast.success('Logged out successfully');
+    navigate('/');
   };
 
   return (
-    <aside id="sidebar" className={sideBarToggle ? "sidebar-responsive" : ""}>
+    <aside id="sidebar" className={sideBarToggle ? 'sidebar-responsive' : ''}>
       <div className="sidebar-title">
         <div className="sidebar-brand w-100 d-flex align-items-center justify-content-center">
           <Link
             to="/dashboard"
             className="text-center"
-            style={{ textDecoration: "none", color: "#9e9ea4" }}
+            style={{ textDecoration: 'none', color: '#9e9ea4' }}
           >
             <img
               src={logo}
               className="icon-header"
-              style={{ height: "200px", width: "160px" }}
-            />{" "}
+              style={{ height: '200px', width: '160px' }}
+            />{' '}
             Directory Management
           </Link>
         </div>
@@ -45,7 +47,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
       <ul className="sidebar-list">
         <li
           className={`sidebar-item ${
-            location.pathname === "/dashboard" ? "active" : ""
+            location.pathname === '/dashboard' ? 'active' : ''
           }`}
         >
           <Link to="/dashboard">
@@ -56,7 +58,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
 
         <li
           className={`sidebar-item ${
-            location.pathname === "/dashboard/residents" ? "active" : ""
+            location.pathname === '/dashboard/residents' ? 'active' : ''
           }`}
         >
           <Link to="/dashboard/residents">
@@ -67,7 +69,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
 
         <li
           className={`sidebar-item ${
-            location.pathname === "/dashboard/newResident" ? "active" : ""
+            location.pathname === '/dashboard/newResident' ? 'active' : ''
           }`}
         >
           <Link to="/dashboard/newResident">
@@ -77,7 +79,7 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
         </li>
         <li
           className={`sidebar-item ${
-            location.pathname === "/dashboard/expense" ? "active" : ""
+            location.pathname === '/dashboard/expense' ? 'active' : ''
           }`}
         >
           <Link to="/dashboard/expense">
@@ -87,12 +89,22 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
         </li>
         <li
           className={`sidebar-item ${
-            location.pathname === "/dashboard/addAdmin" ? "active" : ""
+            location.pathname === '/dashboard/addAdmin' ? 'active' : ''
           }`}
         >
           <Link to="/dashboard/addAdmin">
             <RiAdminFill className="mx-2 pb-1" />
             Add Admin
+          </Link>
+        </li>
+        <li
+          className={`sidebar-item ${
+            location.pathname === '/dashboard/violations' ? 'active' : ''
+          }`}
+        >
+          <Link to="/dashboard/violations">
+            <BsFileBreakFill className="mx-2 pb-1" />
+            Violations
           </Link>
         </li>
 

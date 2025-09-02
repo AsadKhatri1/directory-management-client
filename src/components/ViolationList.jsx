@@ -20,56 +20,73 @@ const ViolationList = () => {
       status: 'Resolved',
       imageUrl: 'https://via.placeholder.com/80',
     },
-    {
-      id: 3,
-      houseNumber: '303',
-      residentName: 'Jane Smith',
-      title: 'Garbage Disposal Issue',
-      description: 'Garbage not disposed properly',
-      status: 'Open',
-      imageUrl: 'https://via.placeholder.com/80',
-    },
   ]);
 
-  const [search, setSearch] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 5;
-
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-  const filteredRecords = violations.filter((v) => {
-    return (
-      v.houseNumber.toLowerCase().includes(search.toLowerCase()) ||
-      v.residentName.toLowerCase().includes(search.toLowerCase()) ||
-      v.title.toLowerCase().includes(search.toLowerCase()) ||
-      v.description.toLowerCase().includes(search.toLowerCase()) ||
-      v.status.toLowerCase().includes(search.toLowerCase())
+  const uploadFileToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'images_preset');
+    const response = await fetch(
+      'https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload',
+      { method: 'POST', body: formData }
     );
+    if (response.ok) {
+      const data = await response.json();
+      return data.secure_url;
+    } else {
+      throw new Error(`Failed to upload file: ${file.name}`);
+    }
+  };
+
+  const [newViolation, setNewViolation] = useState({
+    houseNumber: '',
+    residentName: '',
+    title: '',
+    description: '',
+    status: 'Open',
+    imageUrl: '',
   });
-  const records = filteredRecords.slice(firstIndex, lastIndex);
-  const npage = Math.ceil(filteredRecords.length / recordsPerPage);
-  const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  const [showModal, setShowModal] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  // For image preview modal
+  const [previewImage, setPreviewImage] = useState(null);
 
   const handleAddViolation = () => {
-    const newViolation = {
-      id: violations.length + 1,
-      houseNumber: '404',
-      residentName: 'New Resident',
-      title: 'New Violation',
-      description: 'Dummy violation added',
+    setViolations([
+      ...violations,
+      { id: violations.length + 1, ...newViolation },
+    ]);
+    setNewViolation({
+      houseNumber: '',
+      residentName: '',
+      title: '',
+      description: '',
       status: 'Open',
-      imageUrl: 'https://via.placeholder.com/80',
-    };
-    setViolations([...violations, newViolation]);
+      imageUrl: '',
+    });
+    setShowModal(false);
   };
 
-  const prevPage = () => {
-    if (currentPage !== 1) setCurrentPage(currentPage - 1);
+  const handleViolationPhotoUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const uploadedUrl = await uploadFileToCloudinary(file);
+      setNewViolation((prev) => ({
+        ...prev,
+        imageUrl: uploadedUrl,
+      }));
+    } catch (error) {
+      console.error('Error uploading violation photo:', error);
+      alert('Error uploading photo. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
-  const nextPage = () => {
-    if (currentPage !== npage) setCurrentPage(currentPage + 1);
-  };
-  const changeCPage = (id) => setCurrentPage(id);
 
   return (
     <main className="main-container text-center">
@@ -80,17 +97,20 @@ const ViolationList = () => {
             placeholder="Search for violations"
             type="text"
             className="input mx-2 py-2 w-100"
-            onChange={(e) => setSearch(e.target.value)}
             style={{ border: '2px solid #009843' }}
           />
         </form>
-        <button onClick={handleAddViolation} className="btn btn-success mx-3">
+        <button
+          className="btn btn-success mx-3"
+          onClick={() => setShowModal(true)}
+        >
           Add New Violation
         </button>
       </div>
 
-      <h1 className="mx-5 mt-3">Violation Table</h1>
+      <h1 className="mx-5 mt-3">VIOLATIONS</h1>
 
+      {/* Violations Table */}
       <div
         className="main-table w-100 table-responsive mt-3"
         style={{
@@ -103,28 +123,16 @@ const ViolationList = () => {
         <table className="table table-dark table-hover rounded table-striped">
           <thead className="bg-light">
             <tr className="text-center align-middle">
-              <th scope="col" style={{ color: '#03bb50' }}>
-                House No.
-              </th>
-              <th scope="col" style={{ color: '#03bb50' }}>
-                Resident
-              </th>
-              <th scope="col" style={{ color: '#03bb50' }}>
-                Title
-              </th>
-              <th scope="col" style={{ color: '#03bb50' }}>
-                Description
-              </th>
-              <th scope="col" style={{ color: '#03bb50' }}>
-                Status
-              </th>
-              <th scope="col" style={{ color: '#03bb50' }}>
-                Image
-              </th>
+              <th style={{ color: '#03bb50' }}>House No.</th>
+              <th style={{ color: '#03bb50' }}>Resident</th>
+              <th style={{ color: '#03bb50' }}>Title</th>
+              <th style={{ color: '#03bb50' }}>Description</th>
+              <th style={{ color: '#03bb50' }}>Status</th>
+              <th style={{ color: '#03bb50' }}>Image</th>
             </tr>
           </thead>
           <tbody>
-            {records.map((v) => (
+            {violations.map((v) => (
               <tr key={v.id} className="text-center align-middle">
                 <td>{v.houseNumber}</td>
                 <td>{v.residentName || <i className="text-muted">N/A</i>}</td>
@@ -140,43 +148,173 @@ const ViolationList = () => {
                     className="rounded"
                     width="60"
                     height="60"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setPreviewImage(v.imageUrl)}
                   />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-
-        {/* Pagination */}
-        <nav>
-          <ul className="pagination justify-content-center">
-            <li className="page-item">
-              <a className="page-link" href="#" onClick={prevPage}>
-                Prev
-              </a>
-            </li>
-            {numbers.map((n, i) => (
-              <li
-                className={`page-item ${currentPage === n ? 'active' : ''}`}
-                key={i}
-              >
-                <a
-                  href="#"
-                  className="page-link"
-                  onClick={() => changeCPage(n)}
-                >
-                  {n}
-                </a>
-              </li>
-            ))}
-            <li className="page-item">
-              <a className="page-link" href="#" onClick={nextPage}>
-                Next
-              </a>
-            </li>
-          </ul>
-        </nav>
       </div>
+
+      {/* Add Violation Modal */}
+      {showModal && (
+        <div
+          className="modal show d-block"
+          tabIndex="-1"
+          role="dialog"
+          style={{ background: 'rgba(0,0,0,0.7)' }}
+        >
+          <div
+            className="modal-dialog modal-dialog-centered modal-lg"
+            role="document"
+          >
+            <div className="modal-content bg-dark text-light border-secondary">
+              {/* Header */}
+              <div className="modal-header border-secondary">
+                <h5 className="modal-title">Add New Violation</h5>
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
+                  onClick={() => setShowModal(false)}
+                ></button>
+              </div>
+
+              {/* Body */}
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label className="form-label">House Number</label>
+                  <input
+                    className="form-control bg-secondary text-light"
+                    placeholder="House Number"
+                    value={newViolation.houseNumber}
+                    onChange={(e) =>
+                      setNewViolation({
+                        ...newViolation,
+                        houseNumber: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Resident Name (optional)</label>
+                  <input
+                    className="form-control bg-secondary text-light"
+                    placeholder="Resident Name"
+                    value={newViolation.residentName}
+                    onChange={(e) =>
+                      setNewViolation({
+                        ...newViolation,
+                        residentName: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Title</label>
+                  <input
+                    className="form-control bg-secondary text-light"
+                    placeholder="Title"
+                    value={newViolation.title}
+                    onChange={(e) =>
+                      setNewViolation({
+                        ...newViolation,
+                        title: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label className="form-label">Description</label>
+                  <textarea
+                    className="form-control bg-secondary text-light"
+                    placeholder="Description"
+                    rows="3"
+                    value={newViolation.description}
+                    onChange={(e) =>
+                      setNewViolation({
+                        ...newViolation,
+                        description: e.target.value,
+                      })
+                    }
+                  ></textarea>
+                </div>
+
+                {/* File Upload */}
+                <div className="mb-3">
+                  <label className="form-label">Upload Image</label>
+                  <label className="btn btn-outline-light w-100">
+                    {newViolation.imageUrl
+                      ? 'Image Uploaded'
+                      : uploading
+                      ? 'Uploading...'
+                      : 'Choose File'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleViolationPhotoUpload}
+                      hidden
+                    />
+                  </label>
+                  {newViolation.imageUrl && (
+                    <div className="mt-2 text-success small">
+                      Image ready to save ✅
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className="modal-footer border-secondary">
+                <button
+                  className="btn btn-success"
+                  onClick={handleAddViolation}
+                  disabled={uploading}
+                >
+                  Save Violation
+                </button>
+                <button
+                  className="btn btn-outline-light"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="modal show d-block"
+          tabIndex="-1"
+          role="dialog"
+          style={{ background: 'rgba(0,0,0,0.9)' }}
+          onClick={() => setPreviewImage(null)}
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content bg-transparent border-0 text-center">
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="img-fluid rounded shadow"
+              />
+              <button
+                className="btn btn-light mt-3"
+                onClick={() => setPreviewImage(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 };
