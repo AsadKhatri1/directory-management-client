@@ -9,6 +9,7 @@ const ViolationList = () => {
   );
   const [violations, setViolations] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); // ✅ added
 
   const getViolations = async () => {
     try {
@@ -110,6 +111,15 @@ const ViolationList = () => {
     }
   };
 
+  // ✅ filter violations locally by house no or resident
+  const filteredViolations = violations.filter((v) => {
+    const search = searchTerm.toLowerCase();
+    return (
+      v.HouseNo?.toLowerCase().includes(search) ||
+      v.Resident?.toLowerCase().includes(search)
+    );
+  });
+
   return (
     <main className="main-container text-center">
       {/* Top Controls */}
@@ -118,6 +128,8 @@ const ViolationList = () => {
           <input
             placeholder="Search for violations"
             type="text"
+            value={searchTerm} // ✅ controlled input
+            onChange={(e) => setSearchTerm(e.target.value)} // ✅ update search
             className="input mx-2 py-2 w-100"
             style={{ border: '2px solid #009843' }}
           />
@@ -171,7 +183,7 @@ const ViolationList = () => {
             </tr>
           </thead>
           <tbody>
-            {violations.map((v) => (
+            {filteredViolations.map((v) => (
               <tr key={v._id} className="text-center align-middle">
                 <td>{v.HouseNo}</td>
                 <td>{v.Resident || <i className="text-muted">N/A</i>}</td>
@@ -242,6 +254,13 @@ const ViolationList = () => {
                 </td>
               </tr>
             ))}
+            {filteredViolations.length === 0 && (
+              <tr>
+                <td colSpan="8" className="text-muted text-center">
+                  No matching violations found
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
