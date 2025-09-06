@@ -1,26 +1,49 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 const ViolationList = () => {
+  const [baseUrl, setBaseUrl] = useState('http://localhost:4000/api/v1');
   const [violations, setViolations] = useState([
-    {
-      id: 1,
-      houseNumber: '101',
-      residentName: 'John Doe',
-      title: 'Loud Music',
-      description: 'Playing loud music past midnight',
-      status: 'Open',
-      imageUrl: 'https://via.placeholder.com/80',
-    },
-    {
-      id: 2,
-      houseNumber: '202',
-      residentName: '',
-      title: 'Improper Parking',
-      description: 'Car parked outside the designated area',
-      status: 'Resolved',
-      imageUrl: 'https://via.placeholder.com/80',
-    },
+    // {
+    //   id: 1,
+    //   houseNumber: '101',
+    //   residentName: 'John Doe',
+    //   title: 'Loud Music',
+    //   description: 'Playing loud music past midnight',
+    //   status: 'Open',
+    //   imageUrl: 'https://via.placeholder.com/80',
+    // },
+    // {
+    //   id: 2,
+    //   houseNumber: '202',
+    //   residentName: '',
+    //   title: 'Improper Parking',
+    //   description: 'Car parked outside the designated area',
+    //   status: 'Resolved',
+    //   imageUrl: 'https://via.placeholder.com/80',
+    // },
   ]);
+
+  const [statusFilter, setStatusFilter] = useState('');
+
+  const getViolations = async () => {
+    try {
+      let url = `${baseUrl}/violation/list`;
+      if (statusFilter) {
+        url += `?status=${statusFilter}`;
+      }
+      const res = await axios.get(url);
+      setViolations(res?.data?.data || []);
+    } catch (error) {
+      console.error('Error fetching violations:', error);
+      toast.error('Failed to fetch violations');
+    }
+  };
+
+  useEffect(() => {
+    getViolations();
+  }, [statusFilter]); // 👈 refetch when filter changes
 
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
@@ -39,11 +62,11 @@ const ViolationList = () => {
   };
 
   const [newViolation, setNewViolation] = useState({
-    houseNumber: '',
-    residentName: '',
-    title: '',
-    description: '',
-    status: 'Open',
+    HouseNo: '',
+    Resident: '',
+    Title: '',
+    Description: '',
+    Status: 'new',
     imageUrl: '',
   });
 
@@ -53,20 +76,29 @@ const ViolationList = () => {
   // For image preview modal
   const [previewImage, setPreviewImage] = useState(null);
 
-  const handleAddViolation = () => {
-    setViolations([
-      ...violations,
-      { id: violations.length + 1, ...newViolation },
-    ]);
-    setNewViolation({
-      houseNumber: '',
-      residentName: '',
-      title: '',
-      description: '',
-      status: 'Open',
-      imageUrl: '',
-    });
-    setShowModal(false);
+  const handleAddViolation = async () => {
+    // setViolations([
+    //   ...violations,
+    //   { id: violations.length + 1, ...newViolation },
+    // ]);
+
+    const res = await axios.post(`${baseUrl}/violation/save`, newViolation);
+    if (res.data.success) {
+      setNewViolation({
+        HouseNo: '',
+        Resident: '',
+        Title: '',
+        Description: '',
+        Status: 'new',
+        imageUrl: '',
+      });
+      await getViolations();
+      toast.success('Violation Added Successfully');
+
+      setShowModal(false);
+    } else {
+      toast.error('Error In Creating A Violation');
+    }
   };
 
   const handleViolationPhotoUpload = async (event) => {
@@ -88,9 +120,20 @@ const ViolationList = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    const deleted = await axios.delete(`${baseUrl}/violation/${id}`);
+    console.log(deleted);
+    if (deleted?.data?.success) {
+      await getViolations();
+      toast.success('Deleted Successfully');
+    } else {
+      toast.error('Error In Deleting');
+    }
+  };
   return (
     <main className="main-container text-center">
       {/* Top Controls */}
+
       <div className="header-left d-flex mb-4 justify-content-between align-items-center">
         <form className="mx-2 rounded w-50">
           <input
@@ -100,6 +143,7 @@ const ViolationList = () => {
             style={{ border: '2px solid #009843' }}
           />
         </form>
+
         <button
           className="btn btn-success mx-3"
           onClick={() => setShowModal(true)}
@@ -109,6 +153,20 @@ const ViolationList = () => {
       </div>
 
       <h1 className="mx-5 mt-3">VIOLATIONS</h1>
+
+      <div className="d-flex">
+        <select
+          className="form-select mx-2 ms-auto"
+          style={{ width: '150px' }}
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All Statuses</option>
+          <option value="new">New</option>
+          <option value="open">Open</option>
+          <option value="resolved">Resolved</option>
+        </select>
+      </div>
 
       {/* Violations Table */}
       <div
@@ -129,28 +187,87 @@ const ViolationList = () => {
               <th style={{ color: '#03bb50' }}>Description</th>
               <th style={{ color: '#03bb50' }}>Status</th>
               <th style={{ color: '#03bb50' }}>Image</th>
+              <th style={{ color: '#03bb50' }}>Date</th>
+              <th style={{ color: '#03bb50' }}>Action</th>
             </tr>
           </thead>
           <tbody>
             {violations.map((v) => (
               <tr key={v.id} className="text-center align-middle">
-                <td>{v.houseNumber}</td>
-                <td>{v.residentName || <i className="text-muted">N/A</i>}</td>
-                <td>{v.title}</td>
-                <td>{v.description}</td>
-                <td style={{ color: v.status === 'Open' ? 'red' : 'green' }}>
-                  {v.status}
+                <td>{v.HouseNo}</td>
+                <td>{v.Resident || <i className="text-muted">N/A</i>}</td>
+                <td>{v.Title}</td>
+                <td>{v.Description}</td>
+                {/* <td
+                  style={{
+                    color: v.Status === 'open' || 'new' ? 'red' : 'green',
+                  }}
+                >
+                  {v.Status}
+                </td> */}
+                <td>
+                  <select
+                    className="form-select form-select-sm bg-dark"
+                    style={{
+                      color: v.Status === 'resolved' ? 'limegreen' : 'red',
+                    }}
+                    value={v.Status}
+                    onChange={async (e) => {
+                      const newStatus = e.target.value;
+                      try {
+                        const res = await axios.put(
+                          `${baseUrl}/violation/${v._id}`,
+                          { Status: newStatus }
+                        );
+                        if (res.data.success) {
+                          toast.success('Status updated');
+                          await getViolations();
+                        } else {
+                          toast.error('Failed to update status');
+                        }
+                      } catch (error) {
+                        toast.error('Error updating status');
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    {/* Options stay white (default browser styling) */}
+                    <option value="new">new</option>
+                    <option value="open">open</option>
+                    <option value="resolved">resolved</option>
+                  </select>
                 </td>
+
                 <td>
                   <img
                     src={v.imageUrl}
-                    alt={v.title}
+                    alt={v.Title}
                     className="rounded"
                     width="60"
                     height="60"
                     style={{ cursor: 'pointer' }}
                     onClick={() => setPreviewImage(v.imageUrl)}
                   />
+                </td>
+                <td>
+                  {new Date(v.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: '2-digit',
+                  })}
+                </td>
+
+                <td>
+                  <button
+                    className="btn btn-outline-danger"
+                    onClick={() => {
+                      if (confirm('Are you sure you want to delete?')) {
+                        handleDelete(v._id);
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -188,11 +305,11 @@ const ViolationList = () => {
                   <input
                     className="form-control bg-secondary text-light"
                     placeholder="House Number"
-                    value={newViolation.houseNumber}
+                    value={newViolation.HouseNo}
                     onChange={(e) =>
                       setNewViolation({
                         ...newViolation,
-                        houseNumber: e.target.value,
+                        HouseNo: e.target.value,
                       })
                     }
                   />
@@ -203,11 +320,11 @@ const ViolationList = () => {
                   <input
                     className="form-control bg-secondary text-light"
                     placeholder="Resident Name"
-                    value={newViolation.residentName}
+                    value={newViolation.Resident}
                     onChange={(e) =>
                       setNewViolation({
                         ...newViolation,
-                        residentName: e.target.value,
+                        Resident: e.target.value,
                       })
                     }
                   />
@@ -218,11 +335,11 @@ const ViolationList = () => {
                   <input
                     className="form-control bg-secondary text-light"
                     placeholder="Title"
-                    value={newViolation.title}
+                    value={newViolation.Title}
                     onChange={(e) =>
                       setNewViolation({
                         ...newViolation,
-                        title: e.target.value,
+                        Title: e.target.value,
                       })
                     }
                   />
@@ -234,11 +351,11 @@ const ViolationList = () => {
                     className="form-control bg-secondary text-light"
                     placeholder="Description"
                     rows="3"
-                    value={newViolation.description}
+                    value={newViolation.Description}
                     onChange={(e) =>
                       setNewViolation({
                         ...newViolation,
-                        description: e.target.value,
+                        Description: e.target.value,
                       })
                     }
                   ></textarea>
