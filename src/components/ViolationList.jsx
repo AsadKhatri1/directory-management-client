@@ -3,7 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const ViolationList = () => {
-  const [baseUrl, setBaseUrl] = useState('http://localhost:4000/api/v1');
+  const [baseUrl, setBaseUrl] = useState(
+    'https://directory-management-g8gf.onrender.com/api/v1'
+  );
   const [violations, setViolations] = useState([
     // {
     //   id: 1,
