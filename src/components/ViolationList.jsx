@@ -256,7 +256,7 @@ const ViolationList = () => {
             ))}
             {filteredViolations.length === 0 && (
               <tr>
-                <td colSpan="8" className="text-muted text-center">
+                <td colSpan="8" className="text-center">
                   No matching violations found
                 </td>
               </tr>
