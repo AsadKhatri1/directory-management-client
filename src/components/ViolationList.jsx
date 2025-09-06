@@ -1,40 +1,19 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import CreateViolationForm from './CreateViolationForm';
 
 const ViolationList = () => {
-  const [baseUrl, setBaseUrl] = useState(
+  const [baseUrl] = useState(
     'https://directory-management-g8gf.onrender.com/api/v1'
   );
-  const [violations, setViolations] = useState([
-    // {
-    //   id: 1,
-    //   houseNumber: '101',
-    //   residentName: 'John Doe',
-    //   title: 'Loud Music',
-    //   description: 'Playing loud music past midnight',
-    //   status: 'Open',
-    //   imageUrl: 'https://via.placeholder.com/80',
-    // },
-    // {
-    //   id: 2,
-    //   houseNumber: '202',
-    //   residentName: '',
-    //   title: 'Improper Parking',
-    //   description: 'Car parked outside the designated area',
-    //   status: 'Resolved',
-    //   imageUrl: 'https://via.placeholder.com/80',
-    // },
-  ]);
-
+  const [violations, setViolations] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
 
   const getViolations = async () => {
     try {
       let url = `${baseUrl}/violation/list`;
-      if (statusFilter) {
-        url += `?status=${statusFilter}`;
-      }
+      if (statusFilter) url += `?status=${statusFilter}`;
       const res = await axios.get(url);
       setViolations(res?.data?.data || []);
     } catch (error) {
@@ -45,7 +24,7 @@ const ViolationList = () => {
 
   useEffect(() => {
     getViolations();
-  }, [statusFilter]); // 👈 refetch when filter changes
+  }, [statusFilter]);
 
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
@@ -74,32 +53,29 @@ const ViolationList = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [uploading, setUploading] = useState(false);
-
-  // For image preview modal
   const [previewImage, setPreviewImage] = useState(null);
 
   const handleAddViolation = async () => {
-    // setViolations([
-    //   ...violations,
-    //   { id: violations.length + 1, ...newViolation },
-    // ]);
-
-    const res = await axios.post(`${baseUrl}/violation/save`, newViolation);
-    if (res.data.success) {
-      setNewViolation({
-        HouseNo: '',
-        Resident: '',
-        Title: '',
-        Description: '',
-        Status: 'new',
-        imageUrl: '',
-      });
-      await getViolations();
-      toast.success('Violation Added Successfully');
-
-      setShowModal(false);
-    } else {
-      toast.error('Error In Creating A Violation');
+    try {
+      const res = await axios.post(`${baseUrl}/violation/save`, newViolation);
+      if (res.data.success) {
+        setNewViolation({
+          HouseNo: '',
+          Resident: '',
+          Title: '',
+          Description: '',
+          Status: 'new',
+          imageUrl: '',
+        });
+        await getViolations();
+        toast.success('Violation Added Successfully');
+        setShowModal(false);
+      } else {
+        toast.error('Error In Creating A Violation');
+      }
+    } catch (error) {
+      toast.error('Error saving violation');
+      console.error(error);
     }
   };
 
@@ -110,10 +86,7 @@ const ViolationList = () => {
     try {
       setUploading(true);
       const uploadedUrl = await uploadFileToCloudinary(file);
-      setNewViolation((prev) => ({
-        ...prev,
-        imageUrl: uploadedUrl,
-      }));
+      setNewViolation((prev) => ({ ...prev, imageUrl: uploadedUrl }));
     } catch (error) {
       console.error('Error uploading violation photo:', error);
       alert('Error uploading photo. Please try again.');
@@ -123,19 +96,23 @@ const ViolationList = () => {
   };
 
   const handleDelete = async (id) => {
-    const deleted = await axios.delete(`${baseUrl}/violation/${id}`);
-    console.log(deleted);
-    if (deleted?.data?.success) {
-      await getViolations();
-      toast.success('Deleted Successfully');
-    } else {
-      toast.error('Error In Deleting');
+    try {
+      const deleted = await axios.delete(`${baseUrl}/violation/${id}`);
+      if (deleted?.data?.success) {
+        await getViolations();
+        toast.success('Deleted Successfully');
+      } else {
+        toast.error('Error In Deleting');
+      }
+    } catch (error) {
+      toast.error('Error deleting violation');
+      console.error(error);
     }
   };
+
   return (
     <main className="main-container text-center">
       {/* Top Controls */}
-
       <div className="header-left d-flex mb-4 justify-content-between align-items-center">
         <form className="mx-2 rounded w-50">
           <input
@@ -195,18 +172,11 @@ const ViolationList = () => {
           </thead>
           <tbody>
             {violations.map((v) => (
-              <tr key={v.id} className="text-center align-middle">
+              <tr key={v._id} className="text-center align-middle">
                 <td>{v.HouseNo}</td>
                 <td>{v.Resident || <i className="text-muted">N/A</i>}</td>
                 <td>{v.Title}</td>
                 <td>{v.Description}</td>
-                {/* <td
-                  style={{
-                    color: v.Status === 'open' || 'new' ? 'red' : 'green',
-                  }}
-                >
-                  {v.Status}
-                </td> */}
                 <td>
                   <select
                     className="form-select form-select-sm bg-dark"
@@ -233,13 +203,11 @@ const ViolationList = () => {
                       }
                     }}
                   >
-                    {/* Options stay white (default browser styling) */}
                     <option value="new">new</option>
                     <option value="open">open</option>
                     <option value="resolved">resolved</option>
                   </select>
                 </td>
-
                 <td>
                   <img
                     src={v.imageUrl}
@@ -252,13 +220,14 @@ const ViolationList = () => {
                   />
                 </td>
                 <td>
-                  {new Date(v.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: '2-digit',
-                  })}
+                  {new Date(v.createdAt)
+                    .toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: '2-digit',
+                    })
+                    .replace(',', '')}
                 </td>
-
                 <td>
                   <button
                     className="btn btn-outline-danger"
@@ -300,108 +269,16 @@ const ViolationList = () => {
                 ></button>
               </div>
 
-              {/* Body */}
+              {/* Body: our CreateViolationForm */}
               <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">House Number</label>
-                  <input
-                    className="form-control bg-secondary text-light"
-                    placeholder="House Number"
-                    value={newViolation.HouseNo}
-                    onChange={(e) =>
-                      setNewViolation({
-                        ...newViolation,
-                        HouseNo: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Resident Name (optional)</label>
-                  <input
-                    className="form-control bg-secondary text-light"
-                    placeholder="Resident Name"
-                    value={newViolation.Resident}
-                    onChange={(e) =>
-                      setNewViolation({
-                        ...newViolation,
-                        Resident: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Title</label>
-                  <input
-                    className="form-control bg-secondary text-light"
-                    placeholder="Title"
-                    value={newViolation.Title}
-                    onChange={(e) =>
-                      setNewViolation({
-                        ...newViolation,
-                        Title: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="mb-3">
-                  <label className="form-label">Description</label>
-                  <textarea
-                    className="form-control bg-secondary text-light"
-                    placeholder="Description"
-                    rows="3"
-                    value={newViolation.Description}
-                    onChange={(e) =>
-                      setNewViolation({
-                        ...newViolation,
-                        Description: e.target.value,
-                      })
-                    }
-                  ></textarea>
-                </div>
-
-                {/* File Upload */}
-                <div className="mb-3">
-                  <label className="form-label">Upload Image</label>
-                  <label className="btn btn-outline-light w-100">
-                    {newViolation.imageUrl
-                      ? 'Image Uploaded'
-                      : uploading
-                      ? 'Uploading...'
-                      : 'Choose File'}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleViolationPhotoUpload}
-                      hidden
-                    />
-                  </label>
-                  {newViolation.imageUrl && (
-                    <div className="mt-2 text-success small">
-                      Image ready to save ✅
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="modal-footer border-secondary">
-                <button
-                  className="btn btn-success"
-                  onClick={handleAddViolation}
-                  disabled={uploading}
-                >
-                  Save Violation
-                </button>
-                <button
-                  className="btn btn-outline-light"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
+                <CreateViolationForm
+                  baseUrl={baseUrl}
+                  onSuccess={async () => {
+                    await getViolations();
+                    setShowModal(false);
+                  }}
+                  onCancel={() => setShowModal(false)}
+                />
               </div>
             </div>
           </div>

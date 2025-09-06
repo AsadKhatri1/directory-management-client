@@ -1,42 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import logo from "../assets/logo.png";
+import logo from '../assets/logo.png';
 
-import { toast } from "react-toastify";
-import axios from "axios";
-import { IoMdEye } from "react-icons/io";
-import { IoEyeOffSharp } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
-import { Audio } from "react-loader-spinner";
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import { IoMdEye } from 'react-icons/io';
+import { IoEyeOffSharp } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
+import { Audio } from 'react-loader-spinner';
 const Auth = () => {
-  const backendURL = "https://directory-management-g8gf.onrender.com";
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const backendURL = 'https://directory-management-g8gf.onrender.com';
+  const [Email, setEmail] = useState('');
+  const [Password, setPassword] = useState('');
   const [showLoader, setShowLoader] = useState(false);
-  const [inputType, setInputType] = useState("password");
-  const [token, setToken] = useState("")
+  const [inputType, setInputType] = useState('password');
+  const [token, setToken] = useState('');
   const navigate = useNavigate();
-
-
-  
 
   useEffect(() => {
     const fetchUserFromStorage = async () => {
-      await setToken(localStorage.getItem("token"));
-     console.log("inside fun")
-     console.log(token)
+      await setToken(localStorage.getItem('token'));
+      console.log('inside fun');
+      console.log(token);
     };
     fetchUserFromStorage();
   }, []);
-console.log(token)
+  console.log(token);
 
-if(token){
-  navigate("/dashboard")
-}
+  if (token) {
+    navigate('/dashboard');
+  }
 
   // -------------- submit form function ----------------------
 
-  console.log("auth page")
+  console.log('auth page');
   const submitHandler = async (e) => {
     e.preventDefault();
     setShowLoader(true);
@@ -46,11 +43,11 @@ if(token){
         Password,
       });
       if (res?.data?.success) {
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem('token', res.data.token);
         toast.success(res.data.message);
-        setEmail("");
-        setPassword("");
-        navigate("/dashboard");
+        setEmail('');
+        setPassword('');
+        navigate('/dashboard');
       } else {
         toast.error(res.data.message);
       }
@@ -60,10 +57,10 @@ if(token){
   };
 
   const passToggle = () => {
-    if (inputType === "password") {
-      setInputType("text");
+    if (inputType === 'password') {
+      setInputType('text');
     } else {
-      setInputType("password");
+      setInputType('password');
     }
   };
   return (
@@ -72,11 +69,11 @@ if(token){
         className="container p-0 rounded h-75 w-75 row"
         style={{
           boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
+            'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px',
         }}
       >
         <div className="col-md-6 text-dark rounded-start bg-light d-flex flex-column align-items-center justify-content-center my-2">
-          <h2 className="fw-bold" style={{ color: " #3C5B6F" }}>
+          <h2 className="fw-bold" style={{ color: ' #3C5B6F' }}>
             LOGIN
           </h2>
           <form className="w-75" onSubmit={submitHandler}>
@@ -91,7 +88,7 @@ if(token){
                 className="form-control w-100"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
-                style={{ boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px" }}
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px' }}
               />
             </div>
             <div className="mb-3">
@@ -103,20 +100,20 @@ if(token){
                   onChange={(e) => setPassword(e.target.value)}
                   value={Password}
                   style={{
-                    boxShadow: "rgba(0, 0, 0, 0.25) 0px 25px 50px -12px",
+                    boxShadow: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
                   }}
                   type={inputType}
                   className="form-control"
                   id="exampleInputPassword1"
                 />
-                {inputType === "password" ? (
+                {inputType === 'password' ? (
                   <IoMdEye
-                    style={{ marginLeft: "-30px", cursor: "pointer" }}
+                    style={{ marginLeft: '-30px', cursor: 'pointer' }}
                     onClick={passToggle}
                   />
                 ) : (
                   <IoEyeOffSharp
-                    style={{ marginLeft: "-30px", cursor: "pointer" }}
+                    style={{ marginLeft: '-30px', cursor: 'pointer' }}
                     onClick={passToggle}
                   />
                 )}
@@ -126,7 +123,7 @@ if(token){
             <button
               type="submit"
               className="btn px-5 mt-2"
-              style={{ background: "#3C5B6F", color: "white" }}
+              style={{ background: '#3C5B6F', color: 'white' }}
             >
               Login
             </button>
@@ -143,7 +140,7 @@ if(token){
                 wrapperClass
               />
             ) : (
-              ""
+              ''
             )}
           </div>
         </div>
@@ -159,7 +156,7 @@ if(token){
             }}
           >
             <img
-              style={{ height: "600px", width: "470px" }}
+              style={{ height: '600px', width: '470px' }}
               src={logo}
               alt="logo"
             />

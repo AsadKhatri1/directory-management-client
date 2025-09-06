@@ -14,6 +14,7 @@ import IncomeReport from './components/IncomeReport.jsx';
 import ResidentUpdate from './pages/ResidentUpdate.jsx';
 import PrivateRoute from './privateroute/PrivateRoute.jsx';
 import Violation from './pages/Violation.jsx';
+import CreateViolation from './pages/CreateViolation.jsx';
 
 function App() {
   return (
@@ -109,6 +110,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/violations" element={<CreateViolation />} />
       </Routes>
     </Router>
   );
