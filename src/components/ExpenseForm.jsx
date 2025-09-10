@@ -8,6 +8,10 @@ import { IoIosWallet } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { Audio } from 'react-loader-spinner';
 import { IoDocumentsSharp } from 'react-icons/io5';
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
+// const [filteredIncomeList, setFilteredIncomeList] = useState([])
 
 const ExpenseForm = () => {
   const backendURL = 'https://directory-management-g8gf.onrender.com';
@@ -38,6 +42,76 @@ const ExpenseForm = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
+
+  
+const handleGenerateIncomeReport = () => {
+  const doc = new jsPDF("landscape");
+
+  doc.setFontSize(18);
+  doc.text("Income Report", 14, 22);
+
+  const columns = [
+    { header: "Resident Name", dataKey: "ResidentName" },
+    { header: "Amount", dataKey: "Amount" },
+    { header: "Type", dataKey: "Type" },
+    { header: "Reason", dataKey: "Reason" },
+    { header: "House No", dataKey: "HouseNo" },
+    { header: "Ownership", dataKey: "Ownership" },
+    { header: "Created At", dataKey: "createdAt" },
+  ];
+
+  const rows = incomeList.map((income) => ({
+    ...income,
+    createdAt: new Date(income.createdAt).toLocaleDateString(),
+  }));
+
+  doc.autoTable({
+    columns,
+    body: rows,
+    startY: 30,
+    theme: "grid",
+    headStyles: { fillColor: [51, 122, 183] },
+  });
+
+  const today = new Date().toISOString().split("T")[0];
+  doc.save(`income-report-${today}.pdf`);
+};
+
+
+const handleGenerateExpenseReport = () => {
+  const doc = new jsPDF("landscape");
+
+  doc.setFontSize(18);
+  doc.text("Expense Report", 14, 22);
+
+  const columns = [
+    { header: "Title", dataKey: "Title"  },
+    { header: "Amount", dataKey: "Amount" },
+    { header: "Type", dataKey: "Type" },
+    { header: "Account", dataKey: "account" },
+    { header: "Date", dataKey: "createdAt" },
+  ];
+
+  const rows = expenseList.map((expense) => ({
+    ...expense,
+    createdAt: expense.createdAt
+      ? new Date(expense.createdAt).toLocaleDateString()
+      : "N/A",
+  }));
+
+  doc.autoTable({
+    columns,
+    body: rows,
+    startY: 30,
+    theme: "grid",
+    headStyles: { fillColor: [51, 122, 183] },
+  });
+
+  const today = new Date().toISOString().split("T")[0];
+  doc.save(`expense-report-${today}.pdf`);
+};
+
+
 
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
@@ -373,10 +447,10 @@ const ExpenseForm = () => {
   };
 
   const allIncomes = async () => {
-    const res = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
+    const filteredIncomeList = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
 
-    if (res.data.success) {
-      setIncomeList(res.data.incomeList);
+    if (filteredIncomeList.data.success) {
+      setIncomeList(filteredIncomeList.data.incomeList);
     }
   };
 
@@ -946,6 +1020,26 @@ const ExpenseForm = () => {
         </div>
 
         <div className="row">
+          
+           <div className="text-end my-3 flex gap-3">
+              <button
+                className="btn btn-primary "
+                onClick={handleGenerateIncomeReport}
+                disabled={incomeList.length === 0}
+              >
+                Generate All Income Report
+              </button>
+              &nbsp;
+              &nbsp;
+               <button
+                className="btn btn-danger"
+                onClick={handleGenerateExpenseReport}
+                disabled={expenseList.length === 0}
+              >
+                Generate All Expense Report
+              </button>
+            </div>
+            
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Incomes</h2>
             <div className="table-responsive rounded inTable">
@@ -996,20 +1090,9 @@ const ExpenseForm = () => {
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
                       <td>{e?.account || 'null'}</td>
-
-                      {/* <td>
-                        {e.date
-                          ? new Date(e.date).toISOString().split("T")[0]
-                          : "null"}
-                      </td> */}
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
-                      {/* <td
-                        onClick={() => handleIncomeImageClick(e?.fileUrl)}
-                        style={{ cursor: 'pointer' }}
-                      >
-                        <IoDocumentsSharp />
-                      </td> */}
+                     
                       <td>
                         <button
                           className="btn btn-outline text-white"
@@ -1064,11 +1147,11 @@ const ExpenseForm = () => {
                 onClick={() => paginateIncomes(currentPageIncome + 1)}
                 disabled={
                   currentPageIncome ===
-                  Math.ceil(filteredIncomeList.length / incomesPerPage)
+                  Math.ceil(filteredIncomeList.length ===0 ? 1 : filteredIncomeList.length / incomesPerPage) 
                 }
                 style={{ backgroundColor: '#03bb50', color: 'white' }}
               >
-                Next
+                Next 
               </button>
             </div>
 
@@ -1192,7 +1275,7 @@ const ExpenseForm = () => {
                 }
                 style={{ backgroundColor: '#03bb50', color: 'white' }}
               >
-                Next
+                Next 
               </button>
             </div>
 
