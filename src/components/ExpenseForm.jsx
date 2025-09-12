@@ -43,74 +43,117 @@ const ExpenseForm = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
 
-  
-const handleGenerateIncomeReport = () => {
+
+const handleGenerateReport = () => {
   const doc = new jsPDF("landscape");
-
   doc.setFontSize(18);
-  doc.text("Income Report", 14, 22);
-
-  const columns = [
-    { header: "Resident Name", dataKey: "ResidentName" },
-    { header: "Amount", dataKey: "Amount" },
-    { header: "Type", dataKey: "Type" },
-    { header: "Reason", dataKey: "Reason" },
-    { header: "House No", dataKey: "HouseNo" },
-    { header: "Ownership", dataKey: "Ownership" },
-    { header: "Created At", dataKey: "createdAt" },
-  ];
-
-  const rows = incomeList.map((income) => ({
-    ...income,
-    createdAt: new Date(income.createdAt).toLocaleDateString(),
-  }));
-
-  doc.autoTable({
-    columns,
-    body: rows,
-    startY: 30,
-    theme: "grid",
-    headStyles: { fillColor: [51, 122, 183] },
-  });
 
   const today = new Date().toISOString().split("T")[0];
-  doc.save(`income-report-${today}.pdf`);
-};
+  let currentY = 22;
 
+  // Income Report Section
+  let totalIncome = 0;
+  if (incomeList && incomeList.length > 0) {
+    doc.text("Income Report", 14, currentY);
+    currentY += 8;
 
-const handleGenerateExpenseReport = () => {
-  const doc = new jsPDF("landscape");
+    const incomeColumns = [
+      { header: "Resident Name", dataKey: "ResidentName" },
+      { header: "Amount", dataKey: "Amount" },
+      { header: "Type", dataKey: "Type" },
+      { header: "Reason", dataKey: "Reason" },
+      { header: "House No", dataKey: "HouseNo" },
+      { header: "Ownership", dataKey: "Ownership" },
+      { header: "Created At", dataKey: "createdAt" },
+    ];
 
-  doc.setFontSize(18);
-  doc.text("Expense Report", 14, 22);
+    const incomeRows = incomeList.map((income) => {
+      totalIncome += Number(income.Amount || 0);
+      return {
+        ...income,
+        createdAt: new Date(income.createdAt).toLocaleDateString(),
+      };
+    });
 
-  const columns = [
-    { header: "Title", dataKey: "Title"  },
-    { header: "Amount", dataKey: "Amount" },
-    { header: "Type", dataKey: "Type" },
-    { header: "Account", dataKey: "account" },
-    { header: "Date", dataKey: "createdAt" },
+    doc.autoTable({
+      columns: incomeColumns,
+      body: incomeRows,
+      startY: currentY,
+      theme: "grid",
+      headStyles: { fillColor: [51, 122, 183] },
+      didDrawPage: (data) => {
+        currentY = data.cursor.y + 10;
+      },
+    });
+  }
+
+  // Expense Report Section
+  let totalExpense = 0;
+  if (expenseList && expenseList.length > 0) {
+    doc.setFontSize(18);
+    doc.text("Expense Report", 14, currentY);
+    currentY += 8;
+
+    const expenseColumns = [
+      { header: "Title", dataKey: "Title" },
+      { header: "Amount", dataKey: "Amount" },
+      { header: "Type", dataKey: "Type" },
+      { header: "Account", dataKey: "account" },
+      { header: "Date", dataKey: "createdAt" },
+    ];
+
+    const expenseRows = expenseList.map((expense) => {
+      totalExpense += Number(expense.Amount || 0);
+      return {
+        ...expense,
+        createdAt: expense.createdAt
+          ? new Date(expense.createdAt).toLocaleDateString()
+          : "N/A",
+      };
+    });
+
+    doc.autoTable({
+      columns: expenseColumns,
+      body: expenseRows,
+      startY: currentY,
+      theme: "grid",
+      headStyles: { fillColor: [51, 122, 183] },
+      didDrawPage: (data) => {
+        currentY = data.cursor.y + 10;
+      },
+    });
+  }
+
+  // Summary Table
+  const summaryColumns = [
+    { header: "Category", dataKey: "category" },
+    { header: "Total Amount", dataKey: "total" },
   ];
 
-  const rows = expenseList.map((expense) => ({
-    ...expense,
-    createdAt: expense.createdAt
-      ? new Date(expense.createdAt).toLocaleDateString()
-      : "N/A",
-  }));
+  const summaryRows = [
+    { category: "Total Income", total: totalIncome.toLocaleString() },
+    { category: "Total Expense", total: totalExpense.toLocaleString() },
+    {
+      category: "Net Balance",
+      total: (totalIncome - totalExpense).toLocaleString(),
+    },
+  ];
+
+  doc.setFontSize(18);
+  doc.text("Summary", 14, currentY);
+  currentY += 8;
 
   doc.autoTable({
-    columns,
-    body: rows,
-    startY: 30,
+    columns: summaryColumns,
+    body: summaryRows,
+    startY: currentY,
     theme: "grid",
     headStyles: { fillColor: [51, 122, 183] },
+    styles: { fontSize: 14 },
   });
 
-  const today = new Date().toISOString().split("T")[0];
-  doc.save(`expense-report-${today}.pdf`);
+  doc.save(`All-income-&-Expense-report-${today}.pdf`);
 };
-
 
 
   const handleImageClick = (url) => {
@@ -461,18 +504,8 @@ const handleGenerateExpenseReport = () => {
     getMasjidBalance();
   }, []);
 
-  const handleNavigate = () => {
-    navigate('/dashboard/income/report', {
-      state: { data: filteredIncomeList },
-    });
-  };
 
-  const handleExpenseNavigate = () => {
-    navigate('/dashboard/expense/report', {
-      state: { data: filteredExpenseList },
-    });
-  };
-
+  
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [selectedIncomeImageUrl, setSelectedIncomeImageUrl] = useState('');
 
@@ -484,6 +517,118 @@ const handleGenerateExpenseReport = () => {
   const handleCloseIncomeModal = () => {
     setShowIncomeModal(false);
   };
+const FilterGenerateReport = ()=>{
+
+      const doc = new jsPDF("landscape");
+  doc.setFontSize(18);
+
+  const today = new Date().toISOString().split("T")[0];
+  let currentY = 22;
+
+  // Income Report Section
+  let totalIncome = 0;
+  if (filteredIncomeList && filteredIncomeList.length > 0) {
+    doc.text("Income Report", 14, currentY);
+    currentY += 8;
+
+    const incomeColumns = [
+      { header: "Resident Name", dataKey: "ResidentName" },
+      { header: "Amount", dataKey: "Amount" },
+      { header: "Type", dataKey: "Type" },
+      { header: "Reason", dataKey: "Reason" },
+      { header: "House No", dataKey: "HouseNo" },
+      { header: "Ownership", dataKey: "Ownership" },
+      { header: "Created At", dataKey: "createdAt" },
+    ];
+
+    const incomeRows = filteredIncomeList.map((income) => {
+      totalIncome += Number(income.Amount || 0);
+      return {
+        ...income,
+        createdAt: new Date(income.createdAt).toLocaleDateString(),
+      };
+    });
+
+    doc.autoTable({
+      columns: incomeColumns,
+      body: incomeRows,
+      startY: currentY,
+      theme: "grid",
+      headStyles: { fillColor: [51, 122, 183] },
+      didDrawPage: (data) => {
+        currentY = data.cursor.y + 10;
+      },
+    });
+  }
+
+  // Expense Report Section
+  let totalExpense = 0;
+  if (filteredExpenseList && filteredExpenseList.length > 0) {
+    doc.setFontSize(18);
+    doc.text("Expense Report", 14, currentY);
+    currentY += 8;
+
+    const expenseColumns = [
+      { header: "Title", dataKey: "Title" },
+      { header: "Amount", dataKey: "Amount" },
+      { header: "Type", dataKey: "Type" },
+      { header: "Account", dataKey: "account" },
+      { header: "Date", dataKey: "createdAt" },
+    ];
+
+    const expenseRows = filteredExpenseList.map((expense) => {
+      totalExpense += Number(expense.Amount || 0);
+      return {
+        ...expense,
+        createdAt: expense.createdAt
+          ? new Date(expense.createdAt).toLocaleDateString()
+          : "N/A",
+      };
+    });
+
+    doc.autoTable({
+      columns: expenseColumns,
+      body: expenseRows,
+      startY: currentY,
+      theme: "grid",
+      headStyles: { fillColor: [51, 122, 183] },
+      didDrawPage: (data) => {
+        currentY = data.cursor.y + 10;
+      },
+    });
+  }
+
+  // Summary Table
+  const summaryColumns = [
+    { header: "Category", dataKey: "category" },
+    { header: "Total Amount", dataKey: "total" },
+  ];
+
+  const summaryRows = [
+    { category: "Total Income", total: totalIncome.toLocaleString() },
+    { category: "Total Expense", total: totalExpense.toLocaleString() },
+    {
+      category: "Net Balance",
+      total: (totalIncome - totalExpense).toLocaleString(),
+    },
+  ];
+
+  doc.setFontSize(18);
+  doc.text("Summary", 14, currentY);
+  currentY += 8;
+
+  doc.autoTable({
+    columns: summaryColumns,
+    body: summaryRows,
+    startY: currentY,
+    theme: "grid",
+    headStyles: { fillColor: [51, 122, 183] },
+    styles: { fontSize: 14 },
+  });
+
+  doc.save(`Filtered-Income-&-Expense-report-${today}.pdf`);
+}
+
 
   return (
     <>
@@ -1022,21 +1167,15 @@ const handleGenerateExpenseReport = () => {
         <div className="row">
           
            <div className="text-end my-3 flex gap-3">
-              <button
-                className="btn btn-primary "
-                onClick={handleGenerateIncomeReport}
-                disabled={incomeList.length === 0}
-              >
-                Generate All Income Report
-              </button>
+             
               &nbsp;
               &nbsp;
                <button
-                className="btn btn-danger"
-                onClick={handleGenerateExpenseReport}
+                className="btn btn-primary"
+                onClick={handleGenerateReport}
                 disabled={expenseList.length === 0}
               >
-                Generate All Expense Report
+                Generate All Expense & Income Report
               </button>
             </div>
             
@@ -1155,15 +1294,7 @@ const handleGenerateExpenseReport = () => {
               </button>
             </div>
 
-            <div className="text-end my-3">
-              <button
-                className="btn btn-primary"
-                onClick={handleNavigate}
-                disabled={filteredIncomeList.length === 0}
-              >
-                Generate Income Report
-              </button>
-            </div>
+        
           </div>
         </div>
 
@@ -1282,10 +1413,10 @@ const handleGenerateExpenseReport = () => {
             <div className="text-end my-3">
               <button
                 className="btn btn-primary"
-                onClick={handleExpenseNavigate}
+                onClick={FilterGenerateReport}
                 disabled={filteredExpenseList.length === 0}
               >
-                Generate Expense Report
+                Generate Expense & Income  Filter Report
               </button>
             </div>
           </div>
