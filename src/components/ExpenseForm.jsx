@@ -1,160 +1,158 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
-import { ImCross } from 'react-icons/im';
-import { Modal, Button } from 'react-bootstrap';
-import moment from 'moment';
-import { IoIosWallet } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
-import { Audio } from 'react-loader-spinner';
-import { IoDocumentsSharp } from 'react-icons/io5';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { ImCross } from "react-icons/im";
+import { Modal, Button } from "react-bootstrap";
+import moment from "moment";
+import { IoIosWallet } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+import { Audio } from "react-loader-spinner";
+import { IoDocumentsSharp } from "react-icons/io5";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
 // const [filteredIncomeList, setFilteredIncomeList] = useState([])
 
 const ExpenseForm = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const [File, setFile] = useState(null);
   const navigate = useNavigate();
   const [recBalance, setRecBalance] = useState(0);
   const [masjidBalance, setMasjidBalance] = useState(0);
-  const [Title, setTitle] = useState('');
-  const [Type, setType] = useState('');
+  const [Title, setTitle] = useState("");
+  const [Type, setType] = useState("");
   const [show, setShow] = useState(false);
   const [showF, setShowF] = useState(false);
-  const [Amount, setAmount] = useState('');
-  const [FundAmount, setFundAmount] = useState('');
-  const [FullName, setFullName] = useState('');
-  const [Reason, setReason] = useState('');
-  const [Account, setAccount] = useState('');
-  const [date, setDate] = useState('');
+  const [Amount, setAmount] = useState("");
+  const [FundAmount, setFundAmount] = useState("");
+  const [FullName, setFullName] = useState("");
+  const [Reason, setReason] = useState("");
+  const [Account, setAccount] = useState("");
+  const [date, setDate] = useState("");
   const [expenseList, setExpenseList] = useState([]);
   const [incomeList, setIncomeList] = useState([]);
   const [showFilter, setShowFilter] = useState(false);
-  const [selectedAccount, setSelectedAccount] = useState('');
-  const [selectedType, setSelectedType] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState("");
+  const [selectedType, setSelectedType] = useState("");
 
   const [selectedStartDate, setSelectedStartDate] = useState(
-    moment().startOf('year')
+    moment().startOf("year")
   );
   const [selectedEndDate, setSelectedEndDate] = useState(moment());
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
 
-
-const handleGenerateReport = () => {
-  const doc = new jsPDF("landscape");
-  doc.setFontSize(18);
-
-  const today = new Date().toISOString().split("T")[0];
-  let currentY = 22;
-
-  // Income Report Section
-  let totalIncome = 0;
-  if (incomeList && incomeList.length > 0) {
-    doc.text("Income Report", 14, currentY);
-    currentY += 8;
-
-    const incomeColumns = [
-      { header: "Resident Name", dataKey: "ResidentName" },
-      { header: "Amount", dataKey: "Amount" },
-      { header: "Type", dataKey: "Type" },
-      { header: "Reason", dataKey: "Reason" },
-      { header: "House No", dataKey: "HouseNo" },
-      { header: "Ownership", dataKey: "Ownership" },
-      { header: "Created At", dataKey: "createdAt" },
-    ];
-
-    const incomeRows = incomeList.map((income) => {
-      totalIncome += Number(income.Amount || 0);
-      return {
-        ...income,
-        createdAt: new Date(income.createdAt).toLocaleDateString(),
-      };
-    });
-
-    doc.autoTable({
-      columns: incomeColumns,
-      body: incomeRows,
-      startY: currentY,
-      theme: "grid",
-      headStyles: { fillColor: [51, 122, 183] },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10;
-      },
-    });
-  }
-
-  // Expense Report Section
-  let totalExpense = 0;
-  if (expenseList && expenseList.length > 0) {
+  const handleGenerateReport = () => {
+    const doc = new jsPDF("landscape");
     doc.setFontSize(18);
-    doc.text("Expense Report", 14, currentY);
-    currentY += 8;
 
-    const expenseColumns = [
-      { header: "Title", dataKey: "Title" },
-      { header: "Amount", dataKey: "Amount" },
-      { header: "Type", dataKey: "Type" },
-      { header: "Account", dataKey: "account" },
-      { header: "Date", dataKey: "createdAt" },
+    const today = new Date().toISOString().split("T")[0];
+    let currentY = 22;
+
+    // Income Report Section
+    let totalIncome = 0;
+    if (incomeList && incomeList.length > 0) {
+      doc.text("Income Report", 14, currentY);
+      currentY += 8;
+
+      const incomeColumns = [
+        { header: "Resident Name", dataKey: "ResidentName" },
+        { header: "Amount", dataKey: "Amount" },
+        { header: "Type", dataKey: "Type" },
+        { header: "Reason", dataKey: "Reason" },
+        { header: "House No", dataKey: "HouseNo" },
+        { header: "Ownership", dataKey: "Ownership" },
+        { header: "Created At", dataKey: "createdAt" },
+      ];
+
+      const incomeRows = incomeList.map((income) => {
+        totalIncome += Number(income.Amount || 0);
+        return {
+          ...income,
+          createdAt: new Date(income.createdAt).toLocaleDateString(),
+        };
+      });
+
+      doc.autoTable({
+        columns: incomeColumns,
+        body: incomeRows,
+        startY: currentY,
+        theme: "grid",
+        headStyles: { fillColor: [51, 122, 183] },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10;
+        },
+      });
+    }
+
+    // Expense Report Section
+    let totalExpense = 0;
+    if (expenseList && expenseList.length > 0) {
+      doc.setFontSize(18);
+      doc.text("Expense Report", 14, currentY);
+      currentY += 8;
+
+      const expenseColumns = [
+        { header: "Title", dataKey: "Title" },
+        { header: "Amount", dataKey: "Amount" },
+        { header: "Type", dataKey: "Type" },
+        { header: "Account", dataKey: "account" },
+        { header: "Date", dataKey: "createdAt" },
+      ];
+
+      const expenseRows = expenseList.map((expense) => {
+        totalExpense += Number(expense.Amount || 0);
+        return {
+          ...expense,
+          createdAt: expense.createdAt
+            ? new Date(expense.createdAt).toLocaleDateString()
+            : "N/A",
+        };
+      });
+
+      doc.autoTable({
+        columns: expenseColumns,
+        body: expenseRows,
+        startY: currentY,
+        theme: "grid",
+        headStyles: { fillColor: [51, 122, 183] },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10;
+        },
+      });
+    }
+
+    // Summary Table
+    const summaryColumns = [
+      { header: "Category", dataKey: "category" },
+      { header: "Total Amount", dataKey: "total" },
     ];
 
-    const expenseRows = expenseList.map((expense) => {
-      totalExpense += Number(expense.Amount || 0);
-      return {
-        ...expense,
-        createdAt: expense.createdAt
-          ? new Date(expense.createdAt).toLocaleDateString()
-          : "N/A",
-      };
-    });
+    const summaryRows = [
+      { category: "Total Income", total: totalIncome.toLocaleString() },
+      { category: "Total Expense", total: totalExpense.toLocaleString() },
+      {
+        category: "Net Balance",
+        total: (totalIncome - totalExpense).toLocaleString(),
+      },
+    ];
+
+    doc.setFontSize(18);
+    doc.text("Summary", 14, currentY);
+    currentY += 8;
 
     doc.autoTable({
-      columns: expenseColumns,
-      body: expenseRows,
+      columns: summaryColumns,
+      body: summaryRows,
       startY: currentY,
       theme: "grid",
       headStyles: { fillColor: [51, 122, 183] },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10;
-      },
+      styles: { fontSize: 14 },
     });
-  }
 
-  // Summary Table
-  const summaryColumns = [
-    { header: "Category", dataKey: "category" },
-    { header: "Total Amount", dataKey: "total" },
-  ];
-
-  const summaryRows = [
-    { category: "Total Income", total: totalIncome.toLocaleString() },
-    { category: "Total Expense", total: totalExpense.toLocaleString() },
-    {
-      category: "Net Balance",
-      total: (totalIncome - totalExpense).toLocaleString(),
-    },
-  ];
-
-  doc.setFontSize(18);
-  doc.text("Summary", 14, currentY);
-  currentY += 8;
-
-  doc.autoTable({
-    columns: summaryColumns,
-    body: summaryRows,
-    startY: currentY,
-    theme: "grid",
-    headStyles: { fillColor: [51, 122, 183] },
-    styles: { fontSize: 14 },
-  });
-
-  doc.save(`All-income-&-Expense-report-${today}.pdf`);
-};
-
+    doc.save(`All-income-&-Expense-report-${today}.pdf`);
+  };
 
   const handleImageClick = (url) => {
     setSelectedImageUrl(url);
@@ -163,27 +161,27 @@ const handleGenerateReport = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedImageUrl('');
+    setSelectedImageUrl("");
   };
 
   // Corrected filter functions with proper variable names
   const filteredExpenseList = expenseList.filter((e) => {
     const expenseDate = moment(e?.createdAt);
     return (
-      expenseDate.isSameOrAfter(selectedStartDate, 'month') &&
-      expenseDate.isSameOrBefore(selectedEndDate, 'month') &&
+      expenseDate.isSameOrAfter(selectedStartDate, "month") &&
+      expenseDate.isSameOrBefore(selectedEndDate, "month") &&
       (selectedAccount ? e.account === selectedAccount : true) &&
-      (selectedType === 'expense' || selectedType === '' ? true : false)
+      (selectedType === "expense" || selectedType === "" ? true : false)
     );
   });
 
   const filteredIncomeList = incomeList.filter((e) => {
     const incomeDate = moment(e?.createdAt);
     return (
-      incomeDate.isSameOrAfter(selectedStartDate, 'month') &&
-      incomeDate.isSameOrBefore(selectedEndDate, 'month') &&
+      incomeDate.isSameOrAfter(selectedStartDate, "month") &&
+      incomeDate.isSameOrBefore(selectedEndDate, "month") &&
       (selectedAccount ? e.account === selectedAccount : true) &&
-      (selectedType === 'income' || selectedType === '' ? true : false)
+      (selectedType === "income" || selectedType === "" ? true : false)
     );
   });
 
@@ -232,11 +230,11 @@ const handleGenerateReport = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      let fileUrl = '';
+      let fileUrl = "";
       if (File) {
         const formData = new FormData();
-        formData.append('file', File);
-        formData.append('upload_preset', 'images_preset');
+        formData.append("file", File);
+        formData.append("upload_preset", "images_preset");
         const cloudinaryRes = await axios.post(
           `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`,
           formData
@@ -259,15 +257,15 @@ const handleGenerateReport = () => {
 
       if (res.data.success) {
         toast.success(res.data.message);
-        setTitle('');
-        setAmount('');
-        setType('');
-        setDate('');
+        setTitle("");
+        setAmount("");
+        setType("");
+        setDate("");
         setFile(null);
-        if (Account === 'rec') {
+        if (Account === "rec") {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
-            toast.error('Please enter a valid amount');
+            toast.error("Please enter a valid amount");
             return;
           }
           const re1 = await axios.get(
@@ -280,10 +278,10 @@ const handleGenerateReport = () => {
             { Balance: finalRecBalance }
           );
         }
-        if (Account === 'masjid') {
+        if (Account === "masjid") {
           const feeAmountNumber = parseFloat(Amount);
           if (isNaN(feeAmountNumber)) {
-            toast.error('Please enter a valid amount');
+            toast.error("Please enter a valid amount");
             return;
           }
           const re = await axios.get(
@@ -309,11 +307,11 @@ const handleGenerateReport = () => {
   const submitFundHandler = async (e) => {
     e.preventDefault();
     try {
-      let fileUrl = '';
+      let fileUrl = "";
       if (File) {
         const formData = new FormData();
-        formData.append('file', File);
-        formData.append('upload_preset', 'images_preset');
+        formData.append("file", File);
+        formData.append("upload_preset", "images_preset");
         const cloudinaryRes = await axios.post(
           `https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload`,
           formData
@@ -324,7 +322,7 @@ const handleGenerateReport = () => {
       const fundAmountNumber = parseFloat(FundAmount);
 
       if (isNaN(fundAmountNumber)) {
-        toast.error('Please enter a valid amount');
+        toast.error("Please enter a valid amount");
         return;
       }
       console.log(fileUrl);
@@ -334,14 +332,14 @@ const handleGenerateReport = () => {
         Amount: fundAmountNumber,
         account: Account,
         Reason,
-        Type: 'Donation',
+        Type: "Donation",
         date: date,
         fileUrl,
       });
 
       if (resIn.data.success) {
         // Update balances based on the account type
-        if (Account === 'rec') {
+        if (Account === "rec") {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
@@ -351,7 +349,7 @@ const handleGenerateReport = () => {
             `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
             { Balance: finalRecBalance }
           );
-        } else if (Account === 'masjid') {
+        } else if (Account === "masjid") {
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
@@ -365,19 +363,19 @@ const handleGenerateReport = () => {
 
         // Reset form states and fetch updated data
         setShowF(false);
-        setFundAmount('');
-        setFullName('');
-        setReason('');
-        setDate('');
+        setFundAmount("");
+        setFullName("");
+        setReason("");
+        setDate("");
         setFile(null);
         allExpenses();
         allIncomes();
         getMasjidBalance();
         getRecBalance();
-        toast.success('Successfully added donation and updated balance');
+        toast.success("Successfully added donation and updated balance");
       }
     } catch (err) {
-      toast.error('Error in adding fund');
+      toast.error("Error in adding fund");
     }
   };
 
@@ -388,14 +386,14 @@ const handleGenerateReport = () => {
       );
 
       if (res.data.success) {
-        toast.success('Expense deleted successfully!');
+        toast.success("Expense deleted successfully!");
         const feeAmountNumber = parseFloat(amount);
 
         if (isNaN(feeAmountNumber)) {
-          toast.error('Invalid amount');
+          toast.error("Invalid amount");
           return;
         }
-        if (account === 'rec') {
+        if (account === "rec") {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
@@ -408,7 +406,7 @@ const handleGenerateReport = () => {
           );
         }
 
-        if (account === 'masjid') {
+        if (account === "masjid") {
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
@@ -426,11 +424,11 @@ const handleGenerateReport = () => {
         getRecBalance();
         allIncomes();
       } else {
-        toast.error(res.data.message || 'Failed to delete expense');
+        toast.error(res.data.message || "Failed to delete expense");
       }
     } catch (error) {
       console.error(error);
-      toast.error('An error occurred while deleting the expense');
+      toast.error("An error occurred while deleting the expense");
     }
   };
 
@@ -441,13 +439,13 @@ const handleGenerateReport = () => {
       );
 
       if (res.data.success) {
-        toast.success('Income Delete Successfully');
+        toast.success("Income Delete Successfully");
         const feeAmountNumber = parseFloat(amount);
         if (isNaN(feeAmountNumber)) {
-          toast.error('Invalid amount');
+          toast.error("Invalid amount");
           return;
         }
-        if (account === 'rec') {
+        if (account === "rec") {
           const re1 = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
           );
@@ -458,7 +456,7 @@ const handleGenerateReport = () => {
             { Balance: finalRecBalance }
           );
         }
-        if (account === 'masjid') {
+        if (account === "masjid") {
           const re = await axios.get(
             `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
           );
@@ -474,11 +472,11 @@ const handleGenerateReport = () => {
         getMasjidBalance();
         getRecBalance();
       } else {
-        toast.error(res.data.message || 'Failed to delete Income');
+        toast.error(res.data.message || "Failed to delete Income");
       }
     } catch (error) {
       console.error(error);
-      toast.error('An error occurred while deleting the Income');
+      toast.error("An error occurred while deleting the Income");
     }
   };
 
@@ -490,7 +488,9 @@ const handleGenerateReport = () => {
   };
 
   const allIncomes = async () => {
-    const filteredIncomeList = await axios.get(`${backendURL}/api/v1/income/allIncomes`);
+    const filteredIncomeList = await axios.get(
+      `${backendURL}/api/v1/income/allIncomes`
+    );
 
     if (filteredIncomeList.data.success) {
       setIncomeList(filteredIncomeList.data.incomeList);
@@ -504,10 +504,8 @@ const handleGenerateReport = () => {
     getMasjidBalance();
   }, []);
 
-
-  
   const [showIncomeModal, setShowIncomeModal] = useState(false);
-  const [selectedIncomeImageUrl, setSelectedIncomeImageUrl] = useState('');
+  const [selectedIncomeImageUrl, setSelectedIncomeImageUrl] = useState("");
 
   const handleIncomeImageClick = (url) => {
     setSelectedIncomeImageUrl(url);
@@ -517,118 +515,116 @@ const handleGenerateReport = () => {
   const handleCloseIncomeModal = () => {
     setShowIncomeModal(false);
   };
-const FilterGenerateReport = ()=>{
-
-      const doc = new jsPDF("landscape");
-  doc.setFontSize(18);
-
-  const today = new Date().toISOString().split("T")[0];
-  let currentY = 22;
-
-  // Income Report Section
-  let totalIncome = 0;
-  if (filteredIncomeList && filteredIncomeList.length > 0) {
-    doc.text("Income Report", 14, currentY);
-    currentY += 8;
-
-    const incomeColumns = [
-      { header: "Resident Name", dataKey: "ResidentName" },
-      { header: "Amount", dataKey: "Amount" },
-      { header: "Type", dataKey: "Type" },
-      { header: "Reason", dataKey: "Reason" },
-      { header: "House No", dataKey: "HouseNo" },
-      { header: "Ownership", dataKey: "Ownership" },
-      { header: "Created At", dataKey: "createdAt" },
-    ];
-
-    const incomeRows = filteredIncomeList.map((income) => {
-      totalIncome += Number(income.Amount || 0);
-      return {
-        ...income,
-        createdAt: new Date(income.createdAt).toLocaleDateString(),
-      };
-    });
-
-    doc.autoTable({
-      columns: incomeColumns,
-      body: incomeRows,
-      startY: currentY,
-      theme: "grid",
-      headStyles: { fillColor: [51, 122, 183] },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10;
-      },
-    });
-  }
-
-  // Expense Report Section
-  let totalExpense = 0;
-  if (filteredExpenseList && filteredExpenseList.length > 0) {
+  const FilterGenerateReport = () => {
+    const doc = new jsPDF("landscape");
     doc.setFontSize(18);
-    doc.text("Expense Report", 14, currentY);
-    currentY += 8;
 
-    const expenseColumns = [
-      { header: "Title", dataKey: "Title" },
-      { header: "Amount", dataKey: "Amount" },
-      { header: "Type", dataKey: "Type" },
-      { header: "Account", dataKey: "account" },
-      { header: "Date", dataKey: "createdAt" },
+    const today = new Date().toISOString().split("T")[0];
+    let currentY = 22;
+
+    // Income Report Section
+    let totalIncome = 0;
+    if (filteredIncomeList && filteredIncomeList.length > 0) {
+      doc.text("Income Report", 14, currentY);
+      currentY += 8;
+
+      const incomeColumns = [
+        { header: "Resident Name", dataKey: "ResidentName" },
+        { header: "Amount", dataKey: "Amount" },
+        { header: "Type", dataKey: "Type" },
+        { header: "Reason", dataKey: "Reason" },
+        { header: "House No", dataKey: "HouseNo" },
+        { header: "Ownership", dataKey: "Ownership" },
+        { header: "Created At", dataKey: "createdAt" },
+      ];
+
+      const incomeRows = filteredIncomeList.map((income) => {
+        totalIncome += Number(income.Amount || 0);
+        return {
+          ...income,
+          createdAt: new Date(income.createdAt).toLocaleDateString(),
+        };
+      });
+
+      doc.autoTable({
+        columns: incomeColumns,
+        body: incomeRows,
+        startY: currentY,
+        theme: "grid",
+        headStyles: { fillColor: [51, 122, 183] },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10;
+        },
+      });
+    }
+
+    // Expense Report Section
+    let totalExpense = 0;
+    if (filteredExpenseList && filteredExpenseList.length > 0) {
+      doc.setFontSize(18);
+      doc.text("Expense Report", 14, currentY);
+      currentY += 8;
+
+      const expenseColumns = [
+        { header: "Title", dataKey: "Title" },
+        { header: "Amount", dataKey: "Amount" },
+        { header: "Type", dataKey: "Type" },
+        { header: "Account", dataKey: "account" },
+        { header: "Date", dataKey: "createdAt" },
+      ];
+
+      const expenseRows = filteredExpenseList.map((expense) => {
+        totalExpense += Number(expense.Amount || 0);
+        return {
+          ...expense,
+          createdAt: expense.createdAt
+            ? new Date(expense.createdAt).toLocaleDateString()
+            : "N/A",
+        };
+      });
+
+      doc.autoTable({
+        columns: expenseColumns,
+        body: expenseRows,
+        startY: currentY,
+        theme: "grid",
+        headStyles: { fillColor: [51, 122, 183] },
+        didDrawPage: (data) => {
+          currentY = data.cursor.y + 10;
+        },
+      });
+    }
+
+    // Summary Table
+    const summaryColumns = [
+      { header: "Category", dataKey: "category" },
+      { header: "Total Amount", dataKey: "total" },
     ];
 
-    const expenseRows = filteredExpenseList.map((expense) => {
-      totalExpense += Number(expense.Amount || 0);
-      return {
-        ...expense,
-        createdAt: expense.createdAt
-          ? new Date(expense.createdAt).toLocaleDateString()
-          : "N/A",
-      };
-    });
+    const summaryRows = [
+      { category: "Total Income", total: totalIncome.toLocaleString() },
+      { category: "Total Expense", total: totalExpense.toLocaleString() },
+      {
+        category: "Net Balance",
+        total: (totalIncome - totalExpense).toLocaleString(),
+      },
+    ];
+
+    doc.setFontSize(18);
+    doc.text("Summary", 14, currentY);
+    currentY += 8;
 
     doc.autoTable({
-      columns: expenseColumns,
-      body: expenseRows,
+      columns: summaryColumns,
+      body: summaryRows,
       startY: currentY,
       theme: "grid",
       headStyles: { fillColor: [51, 122, 183] },
-      didDrawPage: (data) => {
-        currentY = data.cursor.y + 10;
-      },
+      styles: { fontSize: 14 },
     });
-  }
 
-  // Summary Table
-  const summaryColumns = [
-    { header: "Category", dataKey: "category" },
-    { header: "Total Amount", dataKey: "total" },
-  ];
-
-  const summaryRows = [
-    { category: "Total Income", total: totalIncome.toLocaleString() },
-    { category: "Total Expense", total: totalExpense.toLocaleString() },
-    {
-      category: "Net Balance",
-      total: (totalIncome - totalExpense).toLocaleString(),
-    },
-  ];
-
-  doc.setFontSize(18);
-  doc.text("Summary", 14, currentY);
-  currentY += 8;
-
-  doc.autoTable({
-    columns: summaryColumns,
-    body: summaryRows,
-    startY: currentY,
-    theme: "grid",
-    headStyles: { fillColor: [51, 122, 183] },
-    styles: { fontSize: 14 },
-  });
-
-  doc.save(`Filtered-Income-&-Expense-report-${today}.pdf`);
-}
-
+    doc.save(`Filtered-Income-&-Expense-report-${today}.pdf`);
+  };
 
   return (
     <>
@@ -638,7 +634,7 @@ const FilterGenerateReport = ()=>{
             {showF ? (
               <ImCross
                 onClick={() => setShowF(!showF)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               />
             ) : (
               <button
@@ -657,7 +653,7 @@ const FilterGenerateReport = ()=>{
             {show ? (
               <ImCross
                 onClick={() => setShow(!show)}
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
               />
             ) : (
               <>
@@ -674,7 +670,7 @@ const FilterGenerateReport = ()=>{
                   className="btn btn-primary px-2 py-2 mx-2 rounded shadow-sm"
                   onClick={() => setShowFilter(!showFilter)}
                 >
-                  {showFilter ? 'Hide Filters ✖' : 'Show Filters '}
+                  {showFilter ? "Hide Filters ✖" : "Show Filters "}
                 </button>
               </>
             )}
@@ -684,7 +680,7 @@ const FilterGenerateReport = ()=>{
             {showFilter && (
               <div
                 className="mt-4 p-4 rounded shadow-lg border border-gray-300"
-                style={{ backgroundColor: '#f9fafb' }}
+                style={{ backgroundColor: "#f9fafb" }}
               >
                 <h4 className="mb-3 text-start text-primary fw-bold">
                   Apply Filters
@@ -732,7 +728,7 @@ const FilterGenerateReport = ()=>{
                       <input
                         type="month"
                         className="form-control shadow-sm"
-                        value={selectedStartDate.format('YYYY-MM')}
+                        value={selectedStartDate.format("YYYY-MM")}
                         onChange={(e) =>
                           setSelectedStartDate(moment(e.target.value))
                         }
@@ -741,7 +737,7 @@ const FilterGenerateReport = ()=>{
                       <input
                         type="month"
                         className="form-control shadow-sm"
-                        value={selectedEndDate.format('YYYY-MM')}
+                        value={selectedEndDate.format("YYYY-MM")}
                         onChange={(e) =>
                           setSelectedEndDate(moment(e.target.value))
                         }
@@ -755,9 +751,9 @@ const FilterGenerateReport = ()=>{
                   <button
                     className="btn btn-sm btn-outline-danger px-3"
                     onClick={() => {
-                      setSelectedAccount('');
-                      setSelectedType('');
-                      setSelectedStartDate(moment().startOf('year'));
+                      setSelectedAccount("");
+                      setSelectedType("");
+                      setSelectedStartDate(moment().startOf("year"));
                       setSelectedEndDate(moment());
                     }}
                   >
@@ -774,7 +770,7 @@ const FilterGenerateReport = ()=>{
             className="py-3 rounded"
             style={{
               boxShadow:
-                'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             }}
           >
             <h5>Add Expense</h5>
@@ -792,12 +788,12 @@ const FilterGenerateReport = ()=>{
                 placeholder="Title"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -810,14 +806,14 @@ const FilterGenerateReport = ()=>{
                 placeholder="Amount"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 type="date"
@@ -828,14 +824,14 @@ const FilterGenerateReport = ()=>{
                 id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 type="date"
@@ -846,12 +842,12 @@ const FilterGenerateReport = ()=>{
                 id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               ></input>
               {/* type */}
@@ -860,12 +856,12 @@ const FilterGenerateReport = ()=>{
                   onChange={(e) => setType(e.target.value)}
                   className="form-select my-3 w-100 py-2"
                   style={{
-                    backgroundColor: 'transparent',
-                    color: 'black',
-                    borderBottom: '1px solid white',
-                    borderRadius: '12px',
-                    textIndent: '12px',
-                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                   }}
                 >
                   <option>Select Type</option>
@@ -929,12 +925,12 @@ const FilterGenerateReport = ()=>{
                   onChange={(e) => setAccount(e.target.value)}
                   className="form-select mt-4 w-100 py-2"
                   style={{
-                    backgroundColor: 'transparent',
-                    color: 'black',
-                    borderBottom: '1px solid white',
-                    borderRadius: '12px',
-                    textIndent: '12px',
-                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                   }}
                 >
                   <option>Select Account</option>
@@ -946,15 +942,15 @@ const FilterGenerateReport = ()=>{
               <label
                 className="w-75 mb-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {File ? File.name : 'Upload Document'}
+                {File ? File.name : "Upload Document"}
                 <input
                   type="file"
                   name="photo"
@@ -966,7 +962,7 @@ const FilterGenerateReport = ()=>{
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: '12px' }}
+                style={{ borderRadius: "12px" }}
               >
                 ADD
               </button>
@@ -979,7 +975,7 @@ const FilterGenerateReport = ()=>{
             className="py-3 rounded"
             style={{
               boxShadow:
-                'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
+                "rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px",
             }}
           >
             <h5>Add Donation</h5>
@@ -997,14 +993,14 @@ const FilterGenerateReport = ()=>{
                 placeholder="Full Name"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={FundAmount}
@@ -1015,14 +1011,14 @@ const FilterGenerateReport = ()=>{
                 placeholder="Amount"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <input
                 type="text"
                 placeholder="Reason for donations"
@@ -1032,12 +1028,12 @@ const FilterGenerateReport = ()=>{
                 id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               ></input>
               <input
@@ -1049,12 +1045,12 @@ const FilterGenerateReport = ()=>{
                 id="reason"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               ></input>
               <div className="w-75 mx-auto">
@@ -1062,12 +1058,12 @@ const FilterGenerateReport = ()=>{
                   onChange={(e) => setAccount(e.target.value)}
                   className="form-select my-3 w-100 py-2"
                   style={{
-                    backgroundColor: 'transparent',
-                    color: 'black',
-                    borderBottom: '1px solid white',
-                    borderRadius: '12px',
-                    textIndent: '12px',
-                    boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                    backgroundColor: "transparent",
+                    color: "black",
+                    borderBottom: "1px solid white",
+                    borderRadius: "12px",
+                    textIndent: "12px",
+                    boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                   }}
                 >
                   <option>Select Account</option>
@@ -1078,15 +1074,15 @@ const FilterGenerateReport = ()=>{
               <label
                 className="w-75 mb-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {File ? File.name : 'Upload Document'}
+                {File ? File.name : "Upload Document"}
                 <input
                   type="file"
                   name="photo"
@@ -1098,7 +1094,7 @@ const FilterGenerateReport = ()=>{
               <button
                 type="submit"
                 className="btn btn-success w-75 mt-1"
-                style={{ borderRadius: '12px' }}
+                style={{ borderRadius: "12px" }}
               >
                 ADD
               </button>
@@ -1111,14 +1107,14 @@ const FilterGenerateReport = ()=>{
             className="cards"
             style={{
               boxShadow:
-                'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
             }}
           >
             <div className="card-inner">
               <h6 className="opacity-50">REC Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h3 style={{ color: '#03bb50' }}>
+            <h3 style={{ color: "#03bb50" }}>
               {!recBalance ? (
                 <Audio
                   height="50"
@@ -1139,14 +1135,14 @@ const FilterGenerateReport = ()=>{
             className="cards"
             style={{
               boxShadow:
-                'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+                "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
             }}
           >
             <div className="card-inner">
               <h6 className="opacity-50">Masjid Account Balance</h6>
               <IoIosWallet className="card-icon" />
             </div>
-            <h2 style={{ color: '#03bb50' }}>
+            <h2 style={{ color: "#03bb50" }}>
               {!masjidBalance ? (
                 <Audio
                   height="50"
@@ -1165,48 +1161,54 @@ const FilterGenerateReport = ()=>{
         </div>
 
         <div className="row">
-          
-           <div className="text-end my-3 flex gap-3">
-             
-              &nbsp;
-              &nbsp;
-               <button
+          <div className="row">
+            <div className="d-flex justify-content-end my-3 gap-3">
+              <button
+                className="btn btn-success"
+                onClick={FilterGenerateReport}
+                disabled={filteredExpenseList.length === 0}
+              >
+                Generate Filtered Report
+              </button>
+
+              <button
                 className="btn btn-primary"
                 onClick={handleGenerateReport}
                 disabled={expenseList.length === 0}
               >
-                Generate All Expense & Income Report
+                Generate Full Report
               </button>
             </div>
-            
+          </div>
+
           <div className="col-md-12 mt-4">
             <h2 className="mb-3">Incomes</h2>
             <div className="table-responsive rounded inTable">
               <table className="table table-dark table-hover table-striped">
                 <thead className="bg-light py-5">
                   <tr className="text-center py-5">
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Resident
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       House Number
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Amount
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Account
                     </th>
                     {/* <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
                     </th> */}
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Residency
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Type
                     </th>
                     {/* <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
@@ -1215,7 +1217,7 @@ const FilterGenerateReport = ()=>{
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
+                      style={{ color: "#03bb50" }}
                     >
                       Action
                     </th>
@@ -1224,18 +1226,18 @@ const FilterGenerateReport = ()=>{
                 <tbody>
                   {currentIncomes.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{moment(e?.createdAt).format('MMMM Do, YYYY')}</td>
+                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.ResidentName}</td>
                       <td>{e?.HouseNo}</td>
                       <td>{e?.Amount}</td>
-                      <td>{e?.account || 'null'}</td>
+                      <td>{e?.account || "null"}</td>
                       <td>{e?.Ownership}</td>
                       <td>{e?.Type}</td>
-                     
+
                       <td>
                         <button
                           className="btn btn-outline text-white"
-                          style={{ backgroundColor: ' rgb(182, 1, 1)' }}
+                          style={{ backgroundColor: " rgb(182, 1, 1)" }}
                           onClick={() =>
                             handleDeleteIncome(e._id, e.Amount, e.account)
                           }
@@ -1258,7 +1260,7 @@ const FilterGenerateReport = ()=>{
                 <img
                   src={selectedIncomeImageUrl}
                   alt="Document"
-                  style={{ width: '75%' }}
+                  style={{ width: "75%" }}
                 />
               </Modal.Body>
               <Modal.Footer>
@@ -1273,12 +1275,12 @@ const FilterGenerateReport = ()=>{
                 className="btn mx-2"
                 onClick={() => paginateIncomes(currentPageIncome - 1)}
                 disabled={currentPageIncome === 1}
-                style={{ backgroundColor: '#03bb50', color: 'white' }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
                 Previous
               </button>
               <span className="mx-2 my-2">
-                Page {currentPageIncome} of{' '}
+                Page {currentPageIncome} of{" "}
                 {Math.ceil(filteredIncomeList.length / incomesPerPage)}
               </span>
               <button
@@ -1286,15 +1288,17 @@ const FilterGenerateReport = ()=>{
                 onClick={() => paginateIncomes(currentPageIncome + 1)}
                 disabled={
                   currentPageIncome ===
-                  Math.ceil(filteredIncomeList.length ===0 ? 1 : filteredIncomeList.length / incomesPerPage) 
+                  Math.ceil(
+                    filteredIncomeList.length === 0
+                      ? 1
+                      : filteredIncomeList.length / incomesPerPage
+                  )
                 }
-                style={{ backgroundColor: '#03bb50', color: 'white' }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
-                Next 
+                Next
               </button>
             </div>
-
-        
           </div>
         </div>
 
@@ -1305,29 +1309,29 @@ const FilterGenerateReport = ()=>{
               <table className="table table-dark table-hover table-striped">
                 <thead className="bg-light py-5">
                   <tr className="text-center py-5">
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Date
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Title
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Amount
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Type
                     </th>
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Account
                     </th>
 
-                    <th className="py-3 fs-5" style={{ color: '#03bb50' }}>
+                    <th className="py-3 fs-5" style={{ color: "#03bb50" }}>
                       Document
                     </th>
                     <th
                       scope="col"
                       className="py-3 fs-5"
-                      style={{ color: '#03bb50' }}
+                      style={{ color: "#03bb50" }}
                     >
                       Action
                     </th>
@@ -1336,22 +1340,22 @@ const FilterGenerateReport = ()=>{
                 <tbody>
                   {currentExpenses.map((e, i) => (
                     <tr key={i} className="text-center align-middle">
-                      <td>{moment(e?.createdAt).format('MMMM Do, YYYY')}</td>
+                      <td>{moment(e?.createdAt).format("MMMM Do, YYYY")}</td>
                       <td>{e?.Title}</td>
                       <td>{e?.Amount}</td>
                       <td>{e?.Type}</td>
-                      <td>{e?.account || 'null'}</td>
+                      <td>{e?.account || "null"}</td>
 
                       <td
                         onClick={() => handleImageClick(e?.fileUrl)}
-                        style={{ cursor: 'pointer' }}
+                        style={{ cursor: "pointer" }}
                       >
                         {e?.fileUrl && <IoDocumentsSharp />}
                       </td>
                       <td>
                         <button
                           className="btn btn-outline text-white"
-                          style={{ backgroundColor: ' rgb(182, 1, 1)' }}
+                          style={{ backgroundColor: " rgb(182, 1, 1)" }}
                           onClick={() =>
                             handleDeleteExpense(e._id, e.Amount, e.account)
                           }
@@ -1374,7 +1378,7 @@ const FilterGenerateReport = ()=>{
                 <img
                   src={selectedImageUrl}
                   alt="Document"
-                  style={{ width: '75%' }}
+                  style={{ width: "75%" }}
                 />
               </Modal.Body>
               <Modal.Footer>
@@ -1389,12 +1393,12 @@ const FilterGenerateReport = ()=>{
                 className="btn mx-2"
                 onClick={() => paginateExpenses(currentPageExpense - 1)}
                 disabled={currentPageExpense === 1}
-                style={{ backgroundColor: '#03bb50', color: 'white' }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
                 Previous
               </button>
               <span className="mx-2 my-2">
-                Page {currentPageExpense} of{' '}
+                Page {currentPageExpense} of{" "}
                 {Math.ceil(filteredExpenseList.length / expensesPerPage)}
               </span>
               <button
@@ -1404,19 +1408,9 @@ const FilterGenerateReport = ()=>{
                   currentPageExpense ===
                   Math.ceil(filteredExpenseList.length / expensesPerPage)
                 }
-                style={{ backgroundColor: '#03bb50', color: 'white' }}
+                style={{ backgroundColor: "#03bb50", color: "white" }}
               >
-                Next 
-              </button>
-            </div>
-
-            <div className="text-end my-3">
-              <button
-                className="btn btn-primary"
-                onClick={FilterGenerateReport}
-                disabled={filteredExpenseList.length === 0}
-              >
-                Generate Expense & Income  Filter Report
+                Next
               </button>
             </div>
           </div>
