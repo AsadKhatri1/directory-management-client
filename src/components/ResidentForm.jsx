@@ -1,58 +1,58 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { FaPlus } from 'react-icons/fa';
-import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
-import { Audio } from 'react-loader-spinner';
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import { Audio } from "react-loader-spinner";
 // Configure Cloudinary with your credentials
 
 const ResidentForm = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
-  const [FullName, setFullName] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Phone, setPhone] = useState('');
-  const [HouseNumber, setHouseNumber] = useState('');
-  const [Profession, setProfession] = useState('');
-  const [officeTel, setOfficeTel] = useState('');
-  const [Qualification, setQualification] = useState('');
-  const [bAddress, setBAddress] = useState('');
-  const [NOCHolder, setNOCHolder] = useState('');
-  const [NOCIssue, setNOCIssue] = useState('');
-  const [NOCNo, setNOCNo] = useState('');
-  const [DOB, setDOB] = useState('');
-  const [CNIC, setCNIC] = useState('');
-  const [Photo, setPhoto] = useState('');
-  const [cnicFile, setCnicFile] = useState('');
-  const [nocFile, setNocFile] = useState('');
-  const [cantPass, setCantPass] = useState('');
-  const [policeV, setPoliceV] = useState('');
-  const [lisence, setLisence] = useState('');
+  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const [FullName, setFullName] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [HouseNumber, setHouseNumber] = useState("");
+  const [Profession, setProfession] = useState("");
+  const [officeTel, setOfficeTel] = useState("");
+  const [Qualification, setQualification] = useState("");
+  const [bAddress, setBAddress] = useState("");
+  const [NOCHolder, setNOCHolder] = useState("");
+  const [NOCIssue, setNOCIssue] = useState("");
+  const [NOCNo, setNOCNo] = useState("");
+  const [DOB, setDOB] = useState("");
+  const [CNIC, setCNIC] = useState("");
+  const [Photo, setPhoto] = useState("");
+  const [cnicFile, setCnicFile] = useState("");
+  const [nocFile, setNocFile] = useState("");
+  const [cantPass, setCantPass] = useState("");
+  const [policeV, setPoliceV] = useState("");
+  const [lisence, setLisence] = useState("");
   const [loader, setLoader] = useState(false);
-  const [residentType, setResidentType] = useState('');
+  const [residentType, setResidentType] = useState("");
 
   const [vehicles, setVehicles] = useState([
     {
-      type: '',
-      make: '',
-      model: '',
-      year: '',
-      colour: '',
-      stickerNumber: '',
-      registrationNumber: '',
-      paperDocument: '',
+      type: "",
+      make: "",
+      model: "",
+      year: "",
+      colour: "",
+      stickerNumber: "",
+      registrationNumber: "",
+      paperDocument: "",
     },
   ]);
   const [maids, setMaids] = useState([
     {
-      name: '',
-      dob: '',
-      address: '',
-      guardian: '',
-      number: '',
-      cnic: '',
-      cnicUrl: '',
-      cantPassUrl: '',
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
     },
   ]);
 
@@ -69,13 +69,13 @@ const ResidentForm = () => {
   // upload single files to cloudinary
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'images_preset');
+    formData.append("file", file);
+    formData.append("upload_preset", "images_preset");
 
     const response = await fetch(
-      'https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload',
+      "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
       {
-        method: 'POST',
+        method: "POST",
         body: formData,
       }
     );
@@ -158,22 +158,22 @@ const ResidentForm = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include 'Bearer' prefix for most token types
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
           },
         }
       );
       if (response.data.success) {
         console.log(response.data);
         toast.success(response.data.message);
-        setCNIC('');
-        setEmail('');
-        setFullName('');
-        setHouseNumber('');
-        setProfession('');
-        setQualification('');
-        setPhone('');
-        setResidentType('');
-        navigate('/dashboard/residents');
+        setCNIC("");
+        setEmail("");
+        setFullName("");
+        setHouseNumber("");
+        setProfession("");
+        setQualification("");
+        setPhone("");
+        setResidentType("");
+        navigate("/dashboard/residents");
       }
     } catch (err) {
       toast.error(err?.response?.data.message);
@@ -203,8 +203,8 @@ const ResidentForm = () => {
         return updatedVehicles;
       });
     } catch (error) {
-      console.error('Error uploading document:', error);
-      alert('Error uploading document. Please try again.'); // Inform the user
+      console.error("Error uploading document:", error);
+      alert("Error uploading document. Please try again."); // Inform the user
     }
   };
 
@@ -230,8 +230,8 @@ const ResidentForm = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleRelativeCnicUpload = async (index, event) => {
@@ -255,8 +255,8 @@ const ResidentForm = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   // uploading tanent cnic and photo
@@ -281,8 +281,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleTanentCnicUpload = async (index, event) => {
@@ -306,8 +306,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleTanentNocUpload = async (index, event) => {
@@ -331,8 +331,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -357,8 +357,8 @@ const ResidentForm = () => {
         return updatedMaids;
       });
     } catch (error) {
-      console.error('Error uploading maid photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleMaidCnicUpload = async (index, event) => {
@@ -382,8 +382,8 @@ const ResidentForm = () => {
         return updatedMaids;
       });
     } catch (error) {
-      console.error('Error uploading maid photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -397,28 +397,28 @@ const ResidentForm = () => {
     setVehicles([
       ...vehicles,
       {
-        type: '',
-        make: '',
-        model: '',
-        year: '',
-        colour: '',
-        stickerNumber: '',
-        registrationNumber: '',
-        paperDocument: '',
+        type: "",
+        make: "",
+        model: "",
+        year: "",
+        colour: "",
+        stickerNumber: "",
+        registrationNumber: "",
+        paperDocument: "",
       },
     ]);
   };
   // family members
   const [relatives, setRelatives] = useState([
     {
-      name: '',
-      relation: '',
-      dob: '',
-      occupation: '',
-      cnic: '', // Existing CNIC property
-      number: '',
-      photoUrl: '', // New property for photo URL
-      cnicUrl: '', // New property for CNIC URL (assuming it's an uploaded document)
+      name: "",
+      relation: "",
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
     },
   ]);
 
@@ -432,14 +432,14 @@ const ResidentForm = () => {
     setRelatives([
       ...relatives,
       {
-        name: '',
-        relation: '',
-        dob: '',
-        occupation: '',
-        cnic: '',
-        number: '',
-        photoUrl: '',
-        cnicUrl: '',
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
       },
     ]);
   };
@@ -456,14 +456,14 @@ const ResidentForm = () => {
     setMaids([
       ...maids,
       {
-        name: '',
-        dob: '',
-        address: '',
-        guardian: '',
-        number: '',
-        cnic: '',
-        cnicUrl: '',
-        cantPassUrl: '',
+        name: "",
+        dob: "",
+        address: "",
+        guardian: "",
+        number: "",
+        cnic: "",
+        cnicUrl: "",
+        cantPassUrl: "",
       },
     ]);
   };
@@ -472,17 +472,17 @@ const ResidentForm = () => {
 
   const [tanents, setTanents] = useState([
     {
-      name: '',
+      name: "",
 
-      dob: '',
-      occupation: '',
-      cnic: '', // Existing CNIC property
-      nocIssue: '',
-      nocNo: '',
-      number: '',
-      photoUrl: '', // New property for photo URL
-      cnicUrl: '', // New property for CNIC URL (assuming it's an uploaded document)
-      nocUrl: '',
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      nocIssue: "",
+      nocNo: "",
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+      nocUrl: "",
     },
   ]);
 
@@ -496,17 +496,17 @@ const ResidentForm = () => {
     setTanents([
       ...tanents,
       {
-        name: '',
-        relation: '',
-        dob: '',
-        occupation: '',
-        cnic: '',
-        nocIssue: '',
-        nocNo: '',
-        number: '',
-        photoUrl: '',
-        cnicUrl: '',
-        nocUrl: '',
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        nocIssue: "",
+        nocNo: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
+        nocUrl: "",
       },
     ]);
   };
@@ -516,12 +516,12 @@ const ResidentForm = () => {
       <h1 className="my-3 fw-bold">Add A New Resident</h1>
       {showForm && (
         <div className="d-flex w-100 align-items-center justify-content-end px-5">
-          {' '}
+          {" "}
           <span
             style={{
-              fontSize: '24px',
-              cursor: 'pointer',
-              color: 'red',
+              fontSize: "24px",
+              cursor: "pointer",
+              color: "red",
             }}
             onClick={() => setShowForm(false)}
           >
@@ -538,15 +538,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {Photo ? Photo.name : 'Upload image'}
+                {Photo ? Photo.name : "Upload image"}
                 <input
                   type="file"
                   name="photo"
@@ -558,15 +558,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {cnicFile ? cnicFile.name : 'Upload CNIC'}
+                {cnicFile ? cnicFile.name : "Upload CNIC"}
                 <input
                   type="file"
                   name="cnicFile"
@@ -578,15 +578,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {nocFile ? nocFile.name : 'Upload NOC '}
+                {nocFile ? nocFile.name : "Upload NOC "}
                 <input
                   type="file"
                   name="nocFile"
@@ -598,15 +598,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {cantPass ? cantPass.name : 'Upload Cant Pass'}
+                {cantPass ? cantPass.name : "Upload Cant Pass"}
                 <input
                   type="file"
                   name="nocFile"
@@ -618,15 +618,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {policeV ? policeV.name : 'Upload Police Verification'}
+                {policeV ? policeV.name : "Upload Police Verification"}
                 <input
                   type="file"
                   name="nocFile"
@@ -638,15 +638,15 @@ const ResidentForm = () => {
               <label
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                {lisence ? lisence.name : 'Upload Driving Lisence'}
+                {lisence ? lisence.name : "Upload Driving Lisence"}
                 <input
                   type="file"
                   name="nocFile"
@@ -665,12 +665,12 @@ const ResidentForm = () => {
                 placeholder="Full Name"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -683,12 +683,12 @@ const ResidentForm = () => {
                 placeholder="Email"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -701,12 +701,12 @@ const ResidentForm = () => {
                 placeholder="Profession"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -719,12 +719,12 @@ const ResidentForm = () => {
                 placeholder="Qualification"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
             </div>
@@ -739,14 +739,14 @@ const ResidentForm = () => {
                 placeholder="Phone Number"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={HouseNumber}
@@ -757,12 +757,12 @@ const ResidentForm = () => {
                 placeholder="House Number"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -773,37 +773,21 @@ const ResidentForm = () => {
                 id="residentType"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                }}
-              />
-              <br />
-              <select
-                value={residentType}
-                onChange={(e) => setResidentType(e.target.value)}
-                name="residentType"
-                id="residentType"
-                className="w-75 my-3 text-white py-2"
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               >
-                <option value="" style={{ background: 'black' }} disabled>
+                <option value="" style={{ background: "black" }} disabled>
                   Select Resident Type
                 </option>
-                <option value="owner" style={{ background: 'black' }}>
+                <option value="owner" style={{ background: "black" }}>
                   Owner
                 </option>
-                <option value="tenant" style={{ background: 'black' }}>
+                <option value="tenant" style={{ background: "black" }}>
                   Tenant
                 </option>
               </select>
@@ -817,12 +801,12 @@ const ResidentForm = () => {
                 placeholder="CNIC"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -836,14 +820,14 @@ const ResidentForm = () => {
                 placeholder="Date Of Birth"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <input
                 value={officeTel}
                 onChange={(e) => setOfficeTel(e.target.value)}
@@ -853,12 +837,12 @@ const ResidentForm = () => {
                 placeholder="Tel (office)"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -871,14 +855,14 @@ const ResidentForm = () => {
                 placeholder="Business/Office Address"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={NOCHolder}
@@ -889,14 +873,14 @@ const ResidentForm = () => {
                 placeholder="NOC Holder's Name"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
               <input
@@ -908,14 +892,14 @@ const ResidentForm = () => {
                 placeholder="NOC Issueance Date"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={NOCNo}
@@ -926,12 +910,12 @@ const ResidentForm = () => {
                 placeholder="NOC Number"
                 className="w-75 my-3 text-white py-2"
                 style={{
-                  background: 'transparent',
-                  border: 'none',
-                  borderBottom: '1px solid white',
-                  borderRadius: '12px',
-                  textIndent: '12px',
-                  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                  background: "transparent",
+                  border: "none",
+                  borderBottom: "1px solid white",
+                  borderRadius: "12px",
+                  textIndent: "12px",
+                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                 }}
               />
               <br />
@@ -943,9 +927,9 @@ const ResidentForm = () => {
               onClick={() => setShowForm(true)}
               // className="col-md-2 cards my-2"
               style={{
-                fontSize: '34px',
-                cursor: 'pointer',
-                color: 'green',
+                fontSize: "34px",
+                cursor: "pointer",
+                color: "green",
               }}
             />
           </div>
@@ -962,11 +946,11 @@ const ResidentForm = () => {
                 setShowVehicle(false);
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showFam ? 'Hide Family Member Form' : 'Add Family Members'}
+            {showFam ? "Hide Family Member Form" : "Add Family Members"}
           </div>
           <div
             className="col-md-2 cards"
@@ -978,11 +962,11 @@ const ResidentForm = () => {
                 setShowVehicle(false);
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showServant ? 'Hide Servant Form' : 'Add Servant'}
+            {showServant ? "Hide Servant Form" : "Add Servant"}
           </div>
           <div
             className="col-md-2 cards"
@@ -994,11 +978,11 @@ const ResidentForm = () => {
                 setShowVehicle(!showVehicle);
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showVehicle ? 'Hide Vehicle Form' : 'Add Vehicle'}
+            {showVehicle ? "Hide Vehicle Form" : "Add Vehicle"}
           </div>
           <div
             className="col-md-2 cards"
@@ -1010,11 +994,11 @@ const ResidentForm = () => {
                 setShowVehicle(false);
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showTanent ? 'Hide Tanent Form' : 'Add Tanent'}
+            {showTanent ? "Hide Tanent Form" : "Add Tanent"}
           </div>
         </div>
 
@@ -1029,56 +1013,56 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={relative.name}
-                      onChange={(e) => handleRelativeChange(index, 'name', e)}
+                      onChange={(e) => handleRelativeChange(index, "name", e)}
                       type="text"
                       name="name"
                       placeholder="Faily Member Name"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <select
                       value={relative.relation}
                       onChange={(e) =>
-                        handleRelativeChange(index, 'relation', e)
+                        handleRelativeChange(index, "relation", e)
                       }
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
                       <option
                         value=""
                         style={{
-                          background: 'black',
-                          border: 'none',
-                          borderBottom: '1px solid white',
-                          borderRadius: '12px',
-                          textIndent: '12px',
-                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                         }}
                       >
                         Select Relation
                       </option>
                       <option
                         style={{
-                          background: 'black',
-                          border: 'none',
-                          borderBottom: '1px solid white',
-                          borderRadius: '12px',
-                          textIndent: '12px',
-                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                         }}
                         value="Father"
                       >
@@ -1087,12 +1071,12 @@ const ResidentForm = () => {
                       <option
                         value="Mother"
                         style={{
-                          background: 'black',
-                          border: 'none',
-                          borderBottom: '1px solid white',
-                          borderRadius: '12px',
-                          textIndent: '12px',
-                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                         }}
                       >
                         Mother
@@ -1100,12 +1084,12 @@ const ResidentForm = () => {
                       <option
                         value="Husband/Wife"
                         style={{
-                          background: 'black',
-                          border: 'none',
-                          borderBottom: '1px solid white',
-                          borderRadius: '12px',
-                          textIndent: '12px',
-                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                         }}
                       >
                         Husband/Wife
@@ -1113,12 +1097,12 @@ const ResidentForm = () => {
                       <option
                         value="Child"
                         style={{
-                          background: 'black',
-                          border: 'none',
-                          borderBottom: '1px solid white',
-                          borderRadius: '12px',
-                          textIndent: '12px',
-                          boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                          background: "black",
+                          border: "none",
+                          borderBottom: "1px solid white",
+                          borderRadius: "12px",
+                          textIndent: "12px",
+                          boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                         }}
                       >
                         Child
@@ -1127,36 +1111,36 @@ const ResidentForm = () => {
                     </select>
                     <input
                       value={relative.cnic}
-                      onChange={(e) => handleRelativeChange(index, 'cnic', e)}
+                      onChange={(e) => handleRelativeChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
                       value={relative.occupation}
                       onChange={(e) =>
-                        handleRelativeChange(index, 'occupation', e)
+                        handleRelativeChange(index, "occupation", e)
                       }
                       type="text"
                       name="occupation"
                       placeholder="Occupation"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                   </div>
@@ -1165,18 +1149,18 @@ const ResidentForm = () => {
                   <div>
                     <input
                       value={relative.number}
-                      onChange={(e) => handleRelativeChange(index, 'number', e)}
+                      onChange={(e) => handleRelativeChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone No"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
@@ -1184,34 +1168,34 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={relative.dob}
-                      onChange={(e) => handleRelativeChange(index, 'dob', e)}
+                      onChange={(e) => handleRelativeChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
                       {relative.photoUrl
                         ? relative.photoUrl.name
-                        : 'Upload Photo'}
+                        : "Upload Photo"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1225,15 +1209,15 @@ const ResidentForm = () => {
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
-                      {relative.cnicUrl ? relative.cnicUrl.name : 'Upload CNIC'}
+                      {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1271,73 +1255,73 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={maid.name}
-                      onChange={(e) => handleMaidChange(index, 'name', e)}
+                      onChange={(e) => handleMaidChange(index, "name", e)}
                       type="text"
                       name="name"
                       className="w-75 my-3 text-white py-2"
                       placeholder="Servant's Name"
                       // Add your styling here
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
                     <input
                       value={maid.dob}
-                      onChange={(e) => handleMaidChange(index, 'dob', e)}
+                      onChange={(e) => handleMaidChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
                       // Add your styling here
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
                     <input
                       value={maid.address}
-                      onChange={(e) => handleMaidChange(index, 'address', e)}
+                      onChange={(e) => handleMaidChange(index, "address", e)}
                       type="text"
                       name="address"
                       placeholder="Address"
                       // Add your styling here
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
                     <input
                       value={maid.guardian}
-                      onChange={(e) => handleMaidChange(index, 'guardian', e)}
+                      onChange={(e) => handleMaidChange(index, "guardian", e)}
                       type="text"
                       name="guardian"
                       placeholder="Guardian's Name"
                       // Add your styling here
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
@@ -1347,52 +1331,52 @@ const ResidentForm = () => {
                   <div>
                     <input
                       value={maid.number}
-                      onChange={(e) => handleMaidChange(index, 'number', e)}
+                      onChange={(e) => handleMaidChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone Number"
                       // Add your styling here
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
                     <input
                       value={maid.cnic}
-                      onChange={(e) => handleMaidChange(index, 'cnic', e)}
+                      onChange={(e) => handleMaidChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC Number"
                       // Add your styling here
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
-                      {maid.cnicUrl ? maid.cnicUrl.name : 'Upload CNIC'}
+                      {maid.cnicUrl ? maid.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="cnicFile"
@@ -1404,17 +1388,17 @@ const ResidentForm = () => {
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
                       {maid.cantPassUrl
                         ? maid.cantPassUrl.name
-                        : 'Upload Cant Pass'}
+                        : "Upload Cant Pass"}
                       <input
                         type="file"
                         name="cantPassFile"
@@ -1460,12 +1444,12 @@ const ResidentForm = () => {
                       placeholder="Vehicle Type | Car or Motorcycle"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
@@ -1476,12 +1460,12 @@ const ResidentForm = () => {
                       placeholder="Colour"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
 
@@ -1493,12 +1477,12 @@ const ResidentForm = () => {
                       placeholder="Vehicle Make"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
@@ -1509,12 +1493,12 @@ const ResidentForm = () => {
                       placeholder="Vehicle Model Name"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                   </div>
@@ -1529,12 +1513,12 @@ const ResidentForm = () => {
                       placeholder="Vehicle Year"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
@@ -1545,12 +1529,12 @@ const ResidentForm = () => {
                       placeholder="Sticker Number"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
@@ -1561,28 +1545,28 @@ const ResidentForm = () => {
                       placeholder="Vehicle Registration Number"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
                       {vehicle.paperDocument
                         ? vehicle.paperDocument.name
-                        : 'Upload Document'}
+                        : "Upload Document"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1620,68 +1604,68 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={tanent.name}
-                      onChange={(e) => handleTanentChange(index, 'name', e)}
+                      onChange={(e) => handleTanentChange(index, "name", e)}
                       type="text"
                       name="name"
                       placeholder="Tanent Name"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
                       value={tanent.cnic}
-                      onChange={(e) => handleTanentChange(index, 'cnic', e)}
+                      onChange={(e) => handleTanentChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
                       value={tanent.occupation}
                       onChange={(e) =>
-                        handleTanentChange(index, 'occupation', e)
+                        handleTanentChange(index, "occupation", e)
                       }
                       type="text"
                       name="occupation"
                       placeholder="Occupation"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <input
                       value={tanent.number}
-                      onChange={(e) => handleTanentChange(index, 'number', e)}
+                      onChange={(e) => handleTanentChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone No"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <br />
@@ -1689,18 +1673,18 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={tanent.dob}
-                      onChange={(e) => handleTanentChange(index, 'dob', e)}
+                      onChange={(e) => handleTanentChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                   </div>
@@ -1712,51 +1696,51 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={tanent.NOCIssue}
-                      onChange={(e) => handleTanentChange(index, 'nocIssue', e)}
+                      onChange={(e) => handleTanentChange(index, "nocIssue", e)}
                       type="date"
                       name="nocIssue"
                       id="nocIssue"
                       placeholder="NOC Issueance Date"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
-                    />{' '}
+                    />{" "}
                     <br />
                     <input
                       value={tanent.nocNo}
-                      onChange={(e) => handleTanentChange(index, 'nocNo', e)}
+                      onChange={(e) => handleTanentChange(index, "nocNo", e)}
                       type="text"
                       name="nocNo"
                       id="nocno"
                       placeholder="NOC Number"
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     />
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
-                      {tanent.photoUrl ? tanent.photoUrl.name : 'Upload Photo'}
+                      {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1770,15 +1754,15 @@ const ResidentForm = () => {
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
-                      {tanent.cnicUrl ? tanent.cnicUrl.name : 'Upload CNIC'}
+                      {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="cnicFile"
@@ -1792,15 +1776,15 @@ const ResidentForm = () => {
                     <label
                       className="w-75 my-3 text-white py-2"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: '1px solid white',
-                        borderRadius: '12px',
-                        textIndent: '12px',
-                        boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                        background: "transparent",
+                        border: "none",
+                        borderBottom: "1px solid white",
+                        borderRadius: "12px",
+                        textIndent: "12px",
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                       }}
                     >
-                      {tanent.nocUrl ? tanent.nocUrl.name : 'Upload NOC'}
+                      {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1846,7 +1830,7 @@ const ResidentForm = () => {
           <button
             type="submit"
             className="btn w-75 mt-1 fw-bold"
-            style={{ borderRadius: '12px', backgroundColor: '#03bb50' }}
+            style={{ borderRadius: "12px", backgroundColor: "#03bb50" }}
           >
             SUBMIT
           </button>
