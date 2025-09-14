@@ -9,6 +9,7 @@ import moment from 'moment';
 import axios from 'axios';
 import { Modal, Button } from 'react-bootstrap';
 
+
 const ResidentDetail = () => {
   const backendURL = 'https://directory-management-g8gf.onrender.com';
   const [paid, setPaid] = useState(false);
@@ -35,6 +36,7 @@ const ResidentDetail = () => {
   const [showView, setShowView] = useState(true);
 
   const [account, setAccount] = useState('');
+  const [editingMember, setEditingMember] = useState(false);
 
   const [relatives, setRelatives] = useState([
     {
@@ -48,6 +50,83 @@ const ResidentDetail = () => {
       cnicUrl: '',
     },
   ]);
+
+
+const [editformData, setEditformData] = useState({
+  name: '',
+  relation: '',
+  number: '', // ✅ this must exist
+  dob: '',
+  occupation: '',
+  cnic: '',
+  cnicType: '',
+  photo: null,
+  cnicPhoto: null
+});
+const handleEditClick = (member) => {
+  setEditingMember(member._id);
+  setEditformData({
+    name: member.name || '',
+    relation: member.relation || '',
+    number: member.number || '', // ✅ this must be set
+    dob: member.dob ? member.dob.slice(0, 10) : '',
+    occupation: member.occupation || '',
+    cnic: member.cnic || '',
+    cnicType: member.cnicType || '',
+    photo: null,
+    cnicPhoto: null
+  });
+};
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditformData((prevData) => ({
+      ...prevData,
+      [name]: value,
+   
+    }));
+  };
+
+
+  const handlePhotoUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const uploadedUrl = await uploadFileToCloudinary(file);
+    setEditformData((prev) => ({ ...prev, photoUrl: uploadedUrl }));
+  } catch (error) {
+    console.error('Error uploading profile photo:', error);
+    alert('Error uploading photo. Please try again.');
+  }
+};
+
+const handleCnicPhotoUpload = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const uploadedUrl = await uploadFileToCloudinary(file);
+    setEditformData((prev) => ({ ...prev, cnicUrl: uploadedUrl }));
+  } catch (error) {
+    console.error('Error uploading CNIC photo:', error);
+    alert('Error uploading photo. Please try again.');
+  }
+};
+
+  const handleUpdate = async () => {
+    try {      
+      const response = await axios.put(
+        `${backendURL}/api/v1/resident/${id}/family-members/${editingMember}`,
+        editformData
+      );
+      console.log(response);
+      
+      setEditingMember(null);
+      toast.success('Member updated successfully');
+      // Optionally refresh members list
+    } catch (error) {
+      console.error('Update failed:', error);
+    }
+  };
 
   const handleRelativeChange = (index, name, event) => {
     const { value } = event.target;
@@ -651,12 +730,10 @@ const ResidentDetail = () => {
                 }}
               >
                 {!showTanents
-                  ? `View ${
-                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                    } Details`
-                  : `Hide ${
-                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                    } details`}
+                  ? `View ${resident.residentType === 'owner' ? 'Tenants' : 'Owner'
+                  } Details`
+                  : `Hide ${resident.residentType === 'owner' ? 'Tenants' : 'Owner'
+                  } details`}
               </button>
             </div>
           </div>
@@ -723,6 +800,9 @@ const ResidentDetail = () => {
                                 >
                                   Delete
                                 </button>
+                                <button className='btn btn-primary m-1 text-center ' onClick={() => handleEditClick(r,r._id)}>
+                                  Edit
+                                </button>
                               </td>
                             </tr>
                           ))}
@@ -757,6 +837,140 @@ const ResidentDetail = () => {
                   </button>
                 </div>
               ) : null}
+
+              {editingMember && (
+                <div className="modal show d-block  bg-opacity-50" style={{ backdropFilter: 'blur(5px)' }}>
+                  <div className="modal-dialog modal-lg">
+                    <div className="modal-content text-white text-start bg-black">
+                      {/* Header */}
+                      <div className="modal-header bg-black text-white">
+                        <h5 className="modal-title">Edit Member</h5>
+                        <button className="btn-close text-white border-0 text-center" onClick={() => setEditingMember(false)}>X</button>
+                      </div>
+
+                      {/* Body */}
+                      <div className="modal-body">
+                 
+                        <label htmlFor="name" className="form-label">Name</label>
+                        <input
+                          name="name"
+                          value={editformData.name}
+                          onChange={handleChange}
+                          className="form-control mb-3"
+                          placeholder="Full Name"
+                        />
+
+                        {/* Relation */}
+                        <label htmlFor="relation" className="form-label">Relation</label>
+                        <select
+                          name="relation"
+                          value={editformData.relation}
+                          onChange={handleChange}
+                          className="form-select mb-3"
+                        >
+                          <option value="">Select Relation</option>
+                          <option value="Father">Father</option>
+                          <option value="Mother">Mother</option>
+                          <option value="Brother">Brother</option>
+                          <option value="Sister">Sister</option>
+                          <option value="Spouse">Spouse</option>
+                          <option value="Son">Son</option>
+                          <option value="Daughter">Daughter</option>
+                          <option value="Other">Other</option>
+                        </select>
+
+                        {/* Mobile Number */}
+                        <label htmlFor="number" className="form-label">Mobile Number</label>
+                        <input
+                          name="number"
+                          value={editformData.number}
+                          onChange={handleChange}
+                          className="form-control mb-3"
+                          placeholder="e.g. 0300-1234567"
+                        />
+
+                        {/* Date of Birth */}
+                        <label htmlFor="dob" className="form-label">Date of Birth</label>
+                        <input
+                          name="dob"
+                          type="date"
+                          value={editformData.dob}
+                          onChange={handleChange}
+                          className="form-control mb-3"
+                        />
+
+                        {/* Occupation */}
+                        <label htmlFor="occupation" className="form-label">Occupation</label>
+                        <input
+                          name="occupation"
+                          value={editformData.occupation}
+                          onChange={handleChange}
+                          className="form-control mb-3"
+                          placeholder="Job Title or Role"
+                        />
+
+                        {/* CNIC Number */}
+                        <label htmlFor="cnic" className="form-label">CNIC Number</label>
+                        <input
+                          name="cnic"
+                          value={editformData.cnic}
+                          onChange={handleChange}
+                          className="form-control mb-3"
+                          placeholder="e.g. 42101-1234567-1"
+                        />
+
+
+                        {/* Profile Photo */}
+                        <label htmlFor="photo" className="form-label">Profile Photo</label>
+                        <input
+                          type="file"
+                          name="photo"
+                          accept="image/*"
+                          // onChange={handlePhotoUpload}
+                          className="form-control mb-3"
+                        />
+                        {editformData.photo && (
+                          <img
+                            src={URL.createObjectURL(editformData.photo)}
+                            alt="Profile Preview"
+                            className="img-thumbnail mb-3"
+                            style={{ maxHeight: '150px' }}
+                          />
+                        )}
+
+                        {/* CNIC Photo */}
+                        <label htmlFor="cnicPhoto" className="form-label">CNIC Photo</label>
+                        <input
+                          type="file"
+                          name="cnicPhoto"
+                          accept="image/*"
+                          // onChange={handleCnicPhotoUpload}
+                          className="form-control mb-3"
+                        />
+                        {editformData.cnicPhoto && (
+                          <img
+                            src={URL.createObjectURL(editformData.cnicPhoto)}
+                            alt="CNIC Preview"
+                            className="img-thumbnail mb-3"
+                            style={{ maxHeight: '150px' }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Footer */}
+                      <div className="modal-footer">
+                        <button className="btn btn-secondary" onClick={() => setEditingMember(null)}>
+                          Cancel
+                        </button>
+                        <button className="btn btn-success" onClick={()=>{handleUpdate(editformData)}}>
+                          Update
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
 
               {resident.residentType === 'owner' &&
                 showTanents &&
@@ -1743,8 +1957,8 @@ const ResidentDetail = () => {
                                 transition: 'transform 0.2s ease-in-out',
                               }}
                               onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                              (e.currentTarget.style.transform =
+                                'scale(1.03)')
                               }
                               onMouseLeave={(e) =>
                                 (e.currentTarget.style.transform = 'scale(1)')
@@ -1772,12 +1986,12 @@ const ResidentDetail = () => {
                                   handleImageClick(resident.CnicFile)
                                 }
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff66')
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff33')
                                 }
                               />
                             </div>
@@ -1793,8 +2007,8 @@ const ResidentDetail = () => {
                                 transition: 'transform 0.2s ease-in-out',
                               }}
                               onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                              (e.currentTarget.style.transform =
+                                'scale(1.03)')
                               }
                               onMouseLeave={(e) =>
                                 (e.currentTarget.style.transform = 'scale(1)')
@@ -1822,12 +2036,12 @@ const ResidentDetail = () => {
                                   handleImageClick(resident.NocFile)
                                 }
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff66')
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff33')
                                 }
                               />
                             </div>
@@ -1843,8 +2057,8 @@ const ResidentDetail = () => {
                                 transition: 'transform 0.2s ease-in-out',
                               }}
                               onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                              (e.currentTarget.style.transform =
+                                'scale(1.03)')
                               }
                               onMouseLeave={(e) =>
                                 (e.currentTarget.style.transform = 'scale(1)')
@@ -1872,12 +2086,12 @@ const ResidentDetail = () => {
                                   handleImageClick(resident.CantFile)
                                 }
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff66')
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                (e.currentTarget.style.borderColor =
+                                  '#ffffff33')
                                 }
                               />
                             </div>
