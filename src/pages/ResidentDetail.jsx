@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { FaPlus } from 'react-icons/fa';
 import { Audio } from 'react-loader-spinner';
 import moment from 'moment';
@@ -121,7 +121,7 @@ const handleCnicPhotoUpload = async (event) => {
       console.log(response);
       
       setEditingMember(null);
-      toast.success('Member updated successfully');
+      toast.success(response.data.message);
       // Optionally refresh members list
     } catch (error) {
       console.error('Update failed:', error);
@@ -876,6 +876,7 @@ const handleCnicPhotoUpload = async (event) => {
                           <option value="Spouse">Spouse</option>
                           <option value="Son">Son</option>
                           <option value="Daughter">Daughter</option>
+                          <option value="Child">Child</option>
                           <option value="Other">Other</option>
                         </select>
 
@@ -926,7 +927,7 @@ const handleCnicPhotoUpload = async (event) => {
                           type="file"
                           name="photo"
                           accept="image/*"
-                          // onChange={handlePhotoUpload}
+                          onChange={handlePhotoUpload}
                           className="form-control mb-3"
                         />
                         {editformData.photo && (
@@ -944,7 +945,7 @@ const handleCnicPhotoUpload = async (event) => {
                           type="file"
                           name="cnicPhoto"
                           accept="image/*"
-                          // onChange={handleCnicPhotoUpload}
+                          onChange={handleCnicPhotoUpload}
                           className="form-control mb-3"
                         />
                         {editformData.cnicPhoto && (
@@ -2306,6 +2307,7 @@ const handleCnicPhotoUpload = async (event) => {
           )}
         </div>
       </div>
+      <ToastContainer/>
     </div>
   );
 };
