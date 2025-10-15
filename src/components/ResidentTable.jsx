@@ -366,7 +366,7 @@ const ResidentTable = () => {
                       height="60"
                       width="50"
                       radius="9"
-                      color="rgba(255, 255, 0.2)"
+                      color="#242424"
                       ariaLabel="loading"
                       wrapperStyle={{}}
                       wrapperClass=""

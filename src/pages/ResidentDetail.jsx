@@ -7,14 +7,14 @@ import { FaPlus } from 'react-icons/fa';
 import { Audio } from 'react-loader-spinner';
 import moment from 'moment';
 import axios from 'axios';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Tabs, Tab } from 'react-bootstrap';
 
 const ResidentDetail = () => {
   const backendURL = 'https://directory-management-g8gf.onrender.com';
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
-  const [monthsInput, setMonthsInput] = useState('');
+  const [monthsInput, setMonthsInput] = useState(1);
   const [sidebaropen, setSidebaropen] = useState(false);
   const [vehicle, setVehicle] = useState([]);
   const [members, setMembers] = useState([]);
@@ -24,8 +24,8 @@ const ResidentDetail = () => {
   const [showS, setShowS] = useState(false);
   const [showT, setShowT] = useState(false);
   const [showAmountInput, setShowAmountInput] = useState(false);
-  const [feeAmount, setFeeAmount] = useState('');
-  const [Ownership, setOwnership] = useState('');
+  const [feeAmount, setFeeAmount] = useState(0);
+  const [Ownership, setOwnership] = useState(resident?.residentType || '');
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
@@ -35,7 +35,7 @@ const ResidentDetail = () => {
   const [showView, setShowView] = useState(true);
 
   const [account, setAccount] = useState('');
-
+  console.log('resident', resident);
   const [relatives, setRelatives] = useState([
     {
       name: '',
@@ -533,7 +533,8 @@ const ResidentDetail = () => {
       if (data.success) {
         toast.success(data.message);
         setPaid(false);
-        navigate('/dashboard');
+        setShowPaymentModal(false);
+        // navigate('/dashboard');
       }
     } catch (err) {
       console.log(err);
@@ -569,6 +570,16 @@ const ResidentDetail = () => {
 
   // console.log(ownerResident);
 
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+
+  const handlePaymentClick = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handleClosePaymentModal = () => {
+    setShowPaymentModal(false);
+  };
+
   return (
     <div className="grid-container">
       <Header openSideBar={sideBarToggle}></Header>
@@ -579,1519 +590,1430 @@ const ResidentDetail = () => {
       <div className="main-container mb-4">
         <div className="text-center">
           <h1 className="mb-5">RESIDENT DETAILS</h1>
-          <div className="row my-1">
-            <div className="col-md-3 ">
-              <button
-                className="btn mt-2 mb-2 border"
-                style={{
-                  backgroundColor: '#263043',
-                  color: 'white',
-                  transition: 'all 0.5s',
-                }}
-                onClick={() => {
-                  setShowM(!showM);
-                  setShowS(false);
-                  setShowV(false);
-                  setShowT(false);
-                  setShowServant(false);
-                  setShowVehicle(false);
-                }}
-              >
-                {!showM ? 'View Family Members' : 'Hide Family Members'}
-              </button>
-            </div>
-            <div className="col-md-3">
-              <button
-                className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: '#263043', color: 'white' }}
-                onClick={() => {
-                  setShowS(!showS);
-                  setShowM(false);
-                  setShowV(false);
-                  setShowT(false);
-                  // setOwnerResident(false);
-                  setAddMember(false);
-                  setShowVehicle(false);
-                }}
-              >
-                {!showS ? 'View Servant Details' : 'Hide Servant details'}
-              </button>
-            </div>
-            <div className="col-md-3">
-              <button
-                className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: '#263043', color: 'white' }}
-                onClick={() => {
-                  setShowV(!showV);
-                  setShowM(false);
-                  setShowVehicle(false);
-                  setShowS(false);
-                  setShowT(false);
-                  setAddMember(false);
-                  setShowServant(false);
-                }}
-              >
-                {!showV ? 'View Vehicle Details' : 'Hide Vehicle details'}
-              </button>
-            </div>
-            <div className="col-md-3">
-              <button
-                className="btn mt-2 mb-2 border"
-                style={{ backgroundColor: '#263043', color: 'white' }}
-                onClick={() => {
-                  setShowTanents(!showTanents);
-                  setShowV(false);
-                  setShowM(false);
-                  setShowVehicle(false);
-                  setShowS(false);
-                  setShowT(false);
-                  setAddMember(false);
-                  setShowServant(false);
-                  setShowVehicle(false);
-                }}
-              >
-                {!showTanents
-                  ? `View ${
-                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                    } Details`
-                  : `Hide ${
-                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                    } details`}
-              </button>
-            </div>
+          <div className="d-flex justify-content-center mb-4">
+            <button
+              className="btn btn-outline-success w-15"
+              onClick={handlePaymentClick}
+            >
+              Update Payment Status
+            </button>
           </div>
-          {resident.length < 1 ? (
-            <div className="d-flex align-items-center justify-content-center">
-              <Audio
-                height="80"
-                width="100"
-                radius="9"
-                color="rgba(255, 255, 255, 0.2)"
-                ariaLabel="loading"
-                wrapperStyle
-                wrapperClass
-              />
-            </div>
-          ) : (
-            <>
-              <br />
-              {showM && members.length > 0 ? (
-                <div className="text-center">
-                  <div className="my-5">
-                    <h2 className="my-5 text-secondary">Family Members</h2>
-                    <div className="table-responsive">
-                      <table className="table table-dark table-bordered table-hover">
-                        <thead className="bg-light">
-                          <tr className="text-center">
-                            <th scope="col">PHOTO</th>
-                            <th scope="col">NAME</th>
-                            <th scope="col">RELATION</th>
-                            <th scope="col">MOBILE NUMBER</th>
-                            <th scope="col">DOB</th>
-                            <th scope="col">OCCUPATION</th>
-                            <th scope="col">CNIC Number</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">ACTIONS</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {members.map((r) => (
-                            <tr
-                              key={r._id}
-                              className="text-center align-middle"
+          <Modal
+            show={showPaymentModal}
+            onHide={handleClosePaymentModal}
+            centered
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Update Payment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <form onSubmit={updateHandler}>
+                <div className="form-check form-switch mb-3">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckPaid"
+                    checked={paid}
+                    onChange={() => {
+                      setPaid(true);
+                      setShowAmountInput(true);
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="flexSwitchCheckPaid"
+                  >
+                    Payment Received?
+                  </label>
+                </div>
+                <div className="form-check form-switch mb-3">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="flexSwitchCheckNotPaid"
+                    checked={!paid}
+                    onChange={() => {
+                      setPaid(false);
+                      setShowAmountInput(false);
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="flexSwitchCheckNotPaid"
+                  >
+                    Payment Not Received?
+                  </label>
+                </div>
+                {showAmountInput && (
+                  <>
+                    <label htmlFor="">Amount Received</label> <br />
+                    <input
+                      value={feeAmount}
+                      onChange={(e) => setFeeAmount(e.target.value)}
+                      type="number"
+                      placeholder="Received Amount"
+                      className="form-control mb-3 placeholder-black"
+                    />
+                    <label htmlFor="">No. of Months</label> <br />
+                    <input
+                      value={monthsInput}
+                      onChange={(e) => setMonthsInput(e.target.value)}
+                      type="number"
+                      placeholder="Number of Months"
+                      className="form-control mb-3 placeholder-black"
+                    />
+                    <select
+                      value={Ownership}
+                      onChange={(e) => setOwnership(e.target.value)}
+                      className="form-select mb-3"
+                      required
+                    >
+                      <option value="">Ownership</option>
+                      <option value="owner">Owner</option>
+                      <option value="tanent">Tenant</option>
+                    </select>
+                    <select
+                      value={account}
+                      onChange={(e) => setAccount(e.target.value)}
+                      className="form-select mb-3"
+                      required
+                    >
+                      <option value="">Select Account Type</option>
+                      <option value="masjid">Masjid</option>
+                      <option value="rec">Rec</option>
+                    </select>
+                  </>
+                )}
+                <div className="text-end">
+                  <Button
+                    variant="secondary"
+                    onClick={handleClosePaymentModal}
+                    className="me-2"
+                  >
+                    Cancel
+                  </Button>
+                  <Button variant="success" type="submit">
+                    Save Changes
+                  </Button>
+                </div>
+              </form>
+            </Modal.Body>
+          </Modal>
+          <div className="row my-1 justify-content-center">
+            {resident.length < 1 ? (
+              <div className="d-flex align-items-center justify-content-center">
+                <Audio
+                  height="80"
+                  width="100"
+                  radius="9"
+                  color="rgba(255, 255, 255, 0.2)"
+                  ariaLabel="loading"
+                  wrapperStyle
+                  wrapperClass
+                />
+              </div>
+            ) : (
+              <>
+                <br />
+                <Tabs
+                  defaultActiveKey="resident"
+                  id="resident-tabs"
+                  className="mb-3 justify-content-center"
+                  variant="pills"
+                  pills
+                >
+                  <Tab eventKey="resident" title="Resident Details">
+                    <div className="mt-2 mb-5">
+                      <img
+                        src={resident?.Photo}
+                        alt="image"
+                        style={{
+                          borderRadius: '100%',
+                          height: '200px',
+                          width: '200px',
+                        }}
+                      />
+                      <h1 className="my-3">{resident?.FullName}</h1>
+                      <div
+                        className="row my-4 py-4 mx-3"
+                        style={{
+                          backgroundColor: '#2A354A',
+                          borderRadius: '16px',
+                          boxShadow:
+                            'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
+                          transition: 'transform 0.2s ease-in-out',
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.transform = 'scale(1.01)')
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.transform = 'scale(1)')
+                        }
+                      >
+                        <div className="col-md-6 px-4">
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
                             >
-                              <td>
-                                {r.photoUrl ? renderImage(r.photoUrl) : 'N/A'}
-                              </td>
-                              <td>{r.name || 'N/A'}</td>
-                              <td>{r.relation || 'N/A'}</td>
-                              <td>{r.number || 'N/A'}</td>
-                              <td>
-                                {r.dob
-                                  ? moment(r.dob).format('MMMM Do, YYYY')
-                                  : 'N/A'}
-                              </td>
-                              <td>{r.occupation || 'N/A'}</td>
-                              <td>{r.cnic || 'N/A'}</td>
-                              <td>
-                                {r.cnicUrl ? renderImage(r.cnicUrl) : 'N/A'}
-                              </td>
-                              <td>
-                                <button
-                                  className="text-center btn btn-outline-primary m-1"
-                                  onClick={deleteMember(r._id)}
-                                >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                      <button
-                        className="btn btn-outline-secondary mb-3"
-                        onClick={() => {
-                          setAddMember(true);
-                          setShowM(false);
+                              <span style={{ color: '#A0AEC0' }}>Email:</span>{' '}
+                              {resident?.Email || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>Phone #:</span>{' '}
+                              {resident?.Phone || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>House #:</span>{' '}
+                              {resident?.HouseNumber || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>DOB:</span>{' '}
+                              {birthDate || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>CNIC #:</span>{' '}
+                              {resident?.CNIC || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>NOC #:</span>{' '}
+                              {resident?.NOCNo || 'N/A'}
+                            </h5>
+                          </div>
+                        </div>
+                        <div className="col-md-6 px-4">
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>
+                                Profession:
+                              </span>{' '}
+                              {resident?.Profession || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>
+                                Qualification:
+                              </span>{' '}
+                              {resident?.Qualification || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>
+                                Business Address:
+                              </span>{' '}
+                              {resident?.bAddress || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>
+                                NOC Holder:
+                              </span>{' '}
+                              {resident?.NOCHolder || 'N/A'}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              className="text-light"
+                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                            >
+                              <span style={{ color: '#A0AEC0' }}>
+                                NOC Issue Date:
+                              </span>{' '}
+                              {nocdate || 'N/A'}
+                            </h5>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className="my-4 py-4 mx-3 px-4"
+                        style={{
+                          backgroundColor: '#2A354A',
+                          borderRadius: '16px',
+                          boxShadow:
+                            'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
                         }}
                       >
-                        Add Family Member
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ) : showM ? (
-                <div
-                  className="text-center py-3 pt-4"
-                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
-                >
-                  <h3 className="text-light">No Family Members To Show</h3>
-                  <button
-                    className="btn btn-outline-success m-5 mt-2 w-25"
-                    onClick={() => {
-                      setAddMember(true);
-                      setShowM(false);
-                    }}
-                  >
-                    Add Family Member
-                  </button>
-                </div>
-              ) : null}
-
-              {resident.residentType === 'owner' &&
-                showTanents &&
-                tanents.length > 0 && (
-                  <div className="text-center">
-                    <div className="my-5">
-                      <h2 className="my-5 text-secondary">Tanents Details</h2>
-                      <div className="table-responsive">
-                        <table className="table table-dark table-bordered table-hover">
-                          <thead className="bg-light">
-                            <tr className="text-center">
-                              <th scope="col">NAME</th>
-                              <th scope="col">EMAIL</th>
-                              <th scope="col">CNIC</th>
-                              <th scope="col">House Number</th>
-                              <th scope="col">NOC HOLDER</th>
-                              <th scope="col">OCCUPATION</th>
-                              <th scope="col">MOBILE NUMBER</th>
-                              <th scope="col">CNIC</th>
-                              <th scope="col">Photo</th>
-                              <th scope="col">Action</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {ownerResident?.map((t) => (
-                              <tr
-                                key={t._id}
-                                className="text-center align-middle"
+                        <h2
+                          className="text-center text-light mb-4"
+                          style={{ fontSize: '1.8rem', fontWeight: '600' }}
+                        >
+                          Uploaded Files
+                        </h2>
+                        <div className="row justify-content-center g-3">
+                          {resident?.CnicFile && (
+                            <div className="col-md-4 col-sm-6 text-center">
+                              <div
+                                className="p-3"
+                                style={{
+                                  backgroundColor: '#33415C',
+                                  borderRadius: '12px',
+                                  transition: 'transform 0.2s ease-in-out',
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    'scale(1.03)')
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = 'scale(1)')
+                                }
                               >
-                                <td>{t?.FullName || 'N/A'}</td>
-                                <td>{t.Email || 'N/A'}</td>
-                                <td>{t.CNIC || 'N/A'}</td>
-                                <td>{t.HouseNumber || 'N/A'}</td>
-                                <td>{t.NOCHolder || 'N/A'}</td>
-                                <td>{t.Profession || 'N/A'}</td>
-                                <td>{t.Phone || 'N/A'}</td>
-                                <td>
-                                  {t.CnicFile ? renderImage(t.CnicFile) : 'N/A'}
-                                </td>
-                                <td>
-                                  {t.Photo ? renderImage(t.Photo) : 'N/A'}
-                                </td>
-                                <td>
-                                  <button
-                                    className="btn btn-outline-primary m-1"
-                                    onClick={() => {
-                                      setShowTanents(false);
-                                      navigate(`/dashboard/resident/${t._id}`);
-                                    }}
-                                  >
-                                    View
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-              {resident.residentType === 'tenant' && showTanents && (
-                <div className="text-center">
-                  <div className="my-5">
-                    <h2 className="my-5 text-secondary">Owner Details</h2>
-                    <div className="table-responsive">
-                      <table className="table table-dark table-bordered table-hover">
-                        <thead className="bg-light">
-                          <tr className="text-center">
-                            <th scope="col">NAME</th>
-                            <th scope="col">EMAIL</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">House Number</th>
-                            <th scope="col">NOC HOLDER</th>
-                            <th scope="col">OCCUPATION</th>
-                            <th scope="col">MOBILE NUMBER</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">Photo</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {ownerResident.map((t) => (
-                            <tr
-                              key={t._id}
-                              className="text-center align-middle"
-                            >
-                              <td>{t?.FullName || 'N/A'}</td>
-                              <td>{t.Email || 'N/A'}</td>
-                              <td>{t.CNIC || 'N/A'}</td>
-                              <td>{t.HouseNumber || 'N/A'}</td>
-                              <td>{t.NOCHolder || 'N/A'}</td>
-                              <td>{t.Profession || 'N/A'}</td>
-                              <td>{t.Phone || 'N/A'}</td>
-                              <td>
-                                {t.CnicFile ? renderImage(t.CnicFile) : 'N/A'}
-                              </td>
-                              <td>{t.Photo ? renderImage(t.Photo) : 'N/A'}</td>
-                              <td>
-                                <button
-                                  className="btn btn-outline-primary m-1"
-                                  onClick={() => {
-                                    setShowTanents(false);
-                                    navigate(`/dashboard/resident/${t._id}`);
+                                <h5
+                                  className="text-light mb-3"
+                                  style={{ fontSize: '1.2rem' }}
+                                >
+                                  CNIC
+                                </h5>
+                                <img
+                                  src={resident.CnicFile}
+                                  alt="CNIC Document"
+                                  style={{
+                                    width: '100px',
+                                    height: '100px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px',
+                                    border: '2px solid #ffffff33',
+                                    cursor: 'pointer',
+                                    transition: 'border-color 0.2s',
+                                  }}
+                                  onClick={() =>
+                                    handleImageClick(resident.CnicFile)
+                                  }
+                                  onMouseEnter={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff66')
+                                  }
+                                  onMouseLeave={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff33')
+                                  }
+                                />
+                              </div>
+                            </div>
+                          )}
+                          {resident?.NocFile && (
+                            <div className="col-md-4 col-sm-6 text-center">
+                              <div
+                                className="p-3"
+                                style={{
+                                  backgroundColor: '#33415C',
+                                  borderRadius: '12px',
+                                  transition: 'transform 0.2s ease-in-out',
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    'scale(1.03)')
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = 'scale(1)')
+                                }
+                              >
+                                <h5
+                                  className="text-light mb-3"
+                                  style={{ fontSize: '1.2rem' }}
+                                >
+                                  NOC
+                                </h5>
+                                <img
+                                  src={resident.NocFile}
+                                  alt="NOC Document"
+                                  style={{
+                                    width: '100px',
+                                    height: '100px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px',
+                                    border: '2px solid #ffffff33',
+                                    cursor: 'pointer',
+                                    transition: 'border-color 0.2s',
+                                  }}
+                                  onClick={() =>
+                                    handleImageClick(resident.NocFile)
+                                  }
+                                  onMouseEnter={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff66')
+                                  }
+                                  onMouseLeave={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff33')
+                                  }
+                                />
+                              </div>
+                            </div>
+                          )}
+                          {resident?.CantFile && (
+                            <div className="col-md-4 col-sm-6 text-center">
+                              <div
+                                className="p-3"
+                                style={{
+                                  backgroundColor: '#33415C',
+                                  borderRadius: '12px',
+                                  transition: 'transform 0.2s ease-in-out',
+                                }}
+                                onMouseEnter={(e) =>
+                                  (e.currentTarget.style.transform =
+                                    'scale(1.03)')
+                                }
+                                onMouseLeave={(e) =>
+                                  (e.currentTarget.style.transform = 'scale(1)')
+                                }
+                              >
+                                <h5
+                                  className="text-light mb-3"
+                                  style={{ fontSize: '1.2rem' }}
+                                >
+                                  Cant Pass
+                                </h5>
+                                <img
+                                  src={resident.CantFile}
+                                  alt="Cant Pass Document"
+                                  style={{
+                                    width: '100px',
+                                    height: '100px',
+                                    objectFit: 'cover',
+                                    borderRadius: '8px',
+                                    border: '2px solid #ffffff33',
+                                    cursor: 'pointer',
+                                    transition: 'border-color 0.2s',
+                                  }}
+                                  onClick={() =>
+                                    handleImageClick(resident.CantFile)
+                                  }
+                                  onMouseEnter={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff66')
+                                  }
+                                  onMouseLeave={(e) =>
+                                    (e.currentTarget.style.borderColor =
+                                      '#ffffff33')
+                                  }
+                                />
+                              </div>
+                            </div>
+                          )}
+                          {!resident?.CnicFile &&
+                            !resident?.NocFile &&
+                            !resident?.CantFile && (
+                              <div className="text-center py-3">
+                                <h5
+                                  className="text-light"
+                                  style={{
+                                    fontSize: '1.3rem',
+                                    backgroundColor: '#33415C',
+                                    borderRadius: '8px',
+                                    padding: '15px',
+                                    display: 'inline-block',
                                   }}
                                 >
-                                  View
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                                  No Uploaded Files Available
+                                </h5>
+                              </div>
+                            )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              {addMember && (
-                <div className="row">
-                  <hr />
-                  <h1 className="my-3 fw-bold text-center">
-                    Enter Family Members
-                  </h1>
-                  {relatives.map((relative, index) => (
-                    <React.Fragment key={index}>
-                      <div className="col-md-6">
-                        <div>
+                  </Tab>
+                  <Tab eventKey="family" title="Family Members">
+                    {members.length > 0 ? (
+                      <div className="text-center">
+                        <div className="my-5">
+                          <h2 className="my-5 text-light">Family Members</h2>
+                          <div className="table-responsive">
+                            <table className="table table-dark table-bordered table-hover">
+                              <thead className="bg-light">
+                                <tr className="text-center">
+                                  <th scope="col">PHOTO</th>
+                                  <th scope="col">NAME</th>
+                                  <th scope="col">RELATION</th>
+                                  <th scope="col">MOBILE NUMBER</th>
+                                  <th scope="col">DOB</th>
+                                  <th scope="col">OCCUPATION</th>
+                                  <th scope="col">CNIC Number</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">ACTIONS</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {members.map((r) => (
+                                  <tr
+                                    key={r._id}
+                                    className="text-center align-middle"
+                                  >
+                                    <td>
+                                      {r.photoUrl
+                                        ? renderImage(r.photoUrl)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>{r.name || 'N/A'}</td>
+                                    <td>{r.relation || 'N/A'}</td>
+                                    <td>{r.number || 'N/A'}</td>
+                                    <td>
+                                      {r.dob
+                                        ? moment(r.dob).format('MMMM Do, YYYY')
+                                        : 'N/A'}
+                                    </td>
+                                    <td>{r.occupation || 'N/A'}</td>
+                                    <td>{r.cnic || 'N/A'}</td>
+                                    <td>
+                                      {r.cnicUrl
+                                        ? renderImage(r.cnicUrl)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="text-center btn btn-outline-primary m-1"
+                                        onClick={deleteMember(r._id)}
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                            <button
+                              className="btn btn-outline-secondary mb-3"
+                              onClick={() => {
+                                setAddMember(true);
+                              }}
+                            >
+                              Add Family Member
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className="text-center py-3 pt-4"
+                        style={{
+                          backgroundColor: '#263043',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        <h3 className="text-light">
+                          No Family Members To Show
+                        </h3>
+                        <button
+                          className="btn btn-outline-success m-5 mt-2 w-25"
+                          onClick={() => {
+                            setAddMember(true);
+                          }}
+                        >
+                          Add Family Member
+                        </button>
+                      </div>
+                    )}
+                    {addMember && (
+                      <div className="row">
+                        <hr />
+                        <h1 className="my-3 fw-bold text-center">
+                          Enter Family Members
+                        </h1>
+                        {relatives.map((relative, index) => (
+                          <React.Fragment key={index}>
+                            <div className="col-md-6">
+                              <div>
+                                <input
+                                  value={relative.name}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'name', e)
+                                  }
+                                  type="text"
+                                  name="name"
+                                  placeholder="Family Member Name"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                                <select
+                                  value={relative.relation}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'relation', e)
+                                  }
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                >
+                                  <option
+                                    value=""
+                                    style={{ background: 'black' }}
+                                  >
+                                    Select Relation
+                                  </option>
+                                  <option
+                                    value="Father"
+                                    style={{ background: 'black' }}
+                                  >
+                                    Father
+                                  </option>
+                                  <option
+                                    value="Mother"
+                                    style={{ background: 'black' }}
+                                  >
+                                    Mother
+                                  </option>
+                                  <option
+                                    value="Husband/Wife"
+                                    style={{ background: 'black' }}
+                                  >
+                                    Husband/Wife
+                                  </option>
+                                  <option
+                                    value="Child"
+                                    style={{ background: 'black' }}
+                                  >
+                                    Child
+                                  </option>
+                                </select>
+                                <input
+                                  value={relative.cnic}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'cnic', e)
+                                  }
+                                  type="text"
+                                  name="cnic"
+                                  placeholder="CNIC"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                                <input
+                                  value={relative.occupation}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'occupation', e)
+                                  }
+                                  type="text"
+                                  name="occupation"
+                                  placeholder="Occupation"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-md-6">
+                              <div>
+                                <input
+                                  value={relative.number}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'number', e)
+                                  }
+                                  type="tel"
+                                  name="number"
+                                  placeholder="Phone No"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                                <label htmlFor="date">Date Of Birth</label>
+                                <input
+                                  value={relative.dob}
+                                  onChange={(e) =>
+                                    handleRelativeChange(index, 'dob', e)
+                                  }
+                                  type="date"
+                                  name="dob"
+                                  placeholder="Date Of Birth"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                                <label
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                >
+                                  {relative.photoUrl
+                                    ? relative.photoUrl.name
+                                    : 'Upload Photo'}
+                                  <input
+                                    type="file"
+                                    name="nocFile"
+                                    accept="image/*"
+                                    onChange={(event) =>
+                                      handleRelativePhotoUpload(index, event)
+                                    }
+                                    hidden
+                                  />
+                                </label>
+                                <label
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                >
+                                  {relative.cnicUrl
+                                    ? relative.cnicUrl.name
+                                    : 'Upload CNIC'}
+                                  <input
+                                    type="file"
+                                    name="nocFile"
+                                    accept="image/*"
+                                    onChange={(event) =>
+                                      handleRelativeCnicUpload(index, event)
+                                    }
+                                    hidden
+                                  />
+                                </label>
+                              </div>
+                            </div>
+                          </React.Fragment>
+                        ))}
+                        <div className="w-100 text-center">
+                          <button
+                            type="button"
+                            onClick={addRelativeField}
+                            className="btn btn-outline-success m-5 mt-2 w-25"
+                          >
+                            Submit Member
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </Tab>
+                  <Tab eventKey="servants" title="Servant Details">
+                    {maids.length > 0 ? (
+                      <div className="text-center">
+                        <div className="my-5">
+                          <h2 className="my-5 text-light">Servant Details</h2>
+                          <div className="table-responsive">
+                            <table className="table table-dark table-bordered table-hover">
+                              <thead className="bg-light">
+                                <tr className="text-center">
+                                  <th scope="col">NAME</th>
+                                  <th scope="col">DATE OF BIRTH</th>
+                                  <th scope="col">MOBILE NUMBER</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">ADDRESS</th>
+                                  <th scope="col">GUARDIAN'S NAME</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">CANT PASS</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {maids.map((r) => (
+                                  <tr
+                                    key={r._id}
+                                    className="text-center align-middle"
+                                  >
+                                    <td>{r.name || 'N/A'}</td>
+                                    <td>
+                                      {r.dob
+                                        ? moment(r.dob).format('MMMM Do, YYYY')
+                                        : 'N/A'}
+                                    </td>
+                                    <td>{r.number || 'N/A'}</td>
+                                    <td>{r.cnic || 'N/A'}</td>
+                                    <td>{r.address || 'N/A'}</td>
+                                    <td>{r.guardian || 'N/A'}</td>
+                                    <td>
+                                      {r.cnicUrl
+                                        ? renderImage(r.cnicUrl)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>
+                                      {r.cantPassUrl
+                                        ? renderImage(r.cantPassUrl)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="text-center btn btn-outline-primary m-1"
+                                        onClick={deleteServant(r._id)}
+                                      >
+                                        Delete
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                          <button
+                            className="btn btn-outline-success m-5 mt-2 w-25"
+                            onClick={() => {
+                              setShowServant(true);
+                            }}
+                          >
+                            Add Servant
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className="text-center py-3 pt-4"
+                        style={{
+                          backgroundColor: '#263043',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        <h3 className="text-light">
+                          No Servant Details To Show
+                        </h3>
+                        <button
+                          className="btn btn-outline-success m-5 mt-2 w-25"
+                          onClick={() => {
+                            setShowServant(true);
+                          }}
+                        >
+                          Add Servant
+                        </button>
+                      </div>
+                    )}
+                    {showServant && (
+                      <div className="row">
+                        <hr />
+                        <h1 className="my-3 fw-bold text-center">
+                          Enter servant details
+                        </h1>
+                        <div className="col-md-6">
                           <input
-                            value={relative.name}
+                            value={maid.name}
                             onChange={(e) =>
-                              handleRelativeChange(index, 'name', e)
+                              handleMaidChange('name', e.target.value)
                             }
                             type="text"
                             name="name"
-                            placeholder="Family Member Name"
                             className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
+                            placeholder="Servant's Name"
+                            style={inputStyle}
                           />
-                          <select
-                            value={relative.relation}
-                            onChange={(e) =>
-                              handleRelativeChange(index, 'relation', e)
-                            }
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          >
-                            <option value="" style={{ background: 'black' }}>
-                              Select Relation
-                            </option>
-                            <option
-                              value="Father"
-                              style={{ background: 'black' }}
-                            >
-                              Father
-                            </option>
-                            <option
-                              value="Mother"
-                              style={{ background: 'black' }}
-                            >
-                              Mother
-                            </option>
-                            <option
-                              value="Husband/Wife"
-                              style={{ background: 'black' }}
-                            >
-                              Husband/Wife
-                            </option>
-                            <option
-                              value="Child"
-                              style={{ background: 'black' }}
-                            >
-                              Child
-                            </option>
-                          </select>
+                          <br />
                           <input
-                            value={relative.cnic}
+                            value={maid.dob}
                             onChange={(e) =>
-                              handleRelativeChange(index, 'cnic', e)
-                            }
-                            type="text"
-                            name="cnic"
-                            placeholder="CNIC"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <input
-                            value={relative.occupation}
-                            onChange={(e) =>
-                              handleRelativeChange(index, 'occupation', e)
-                            }
-                            type="text"
-                            name="occupation"
-                            placeholder="Occupation"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div>
-                          <input
-                            value={relative.number}
-                            onChange={(e) =>
-                              handleRelativeChange(index, 'number', e)
-                            }
-                            type="tel"
-                            name="number"
-                            placeholder="Phone No"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <label htmlFor="date">Date Of Birth</label>
-                          <input
-                            value={relative.dob}
-                            onChange={(e) =>
-                              handleRelativeChange(index, 'dob', e)
+                              handleMaidChange('dob', e.target.value)
                             }
                             type="date"
                             name="dob"
                             placeholder="Date Of Birth"
                             className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
+                            style={inputStyle}
                           />
+                          <br />
+                          <input
+                            value={maid.address}
+                            onChange={(e) =>
+                              handleMaidChange('address', e.target.value)
+                            }
+                            type="text"
+                            name="address"
+                            placeholder="Address"
+                            className="w-75 my-3 text-white py-2"
+                            style={inputStyle}
+                          />
+                          <br />
+                          <input
+                            value={maid.guardian}
+                            onChange={(e) =>
+                              handleMaidChange('guardian', e.target.value)
+                            }
+                            type="text"
+                            name="guardian"
+                            placeholder="Guardian's Name"
+                            className="w-75 my-3 text-white py-2"
+                            style={inputStyle}
+                          />
+                          <br />
+                        </div>
+                        <div className="col-md-6">
+                          <input
+                            value={maid.number}
+                            onChange={(e) =>
+                              handleMaidChange('number', e.target.value)
+                            }
+                            type="tel"
+                            name="number"
+                            placeholder="Phone Number"
+                            className="w-75 my-3 text-white py-2"
+                            style={inputStyle}
+                          />
+                          <br />
+                          <input
+                            value={maid.cnic}
+                            onChange={(e) =>
+                              handleMaidChange('cnic', e.target.value)
+                            }
+                            type="text"
+                            name="cnic"
+                            placeholder="CNIC Number"
+                            className="w-75 my-3 text-white py-2"
+                            style={inputStyle}
+                          />
+                          <br />
+
                           <label
                             className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
+                            style={inputStyle}
                           >
-                            {relative.photoUrl
-                              ? relative.photoUrl.name
-                              : 'Upload Photo'}
+                            {maid.cnicUrl ? 'CNIC Uploaded' : 'Upload CNIC'}
                             <input
                               type="file"
-                              name="nocFile"
+                              name="cnicFile"
                               accept="image/*"
-                              onChange={(event) =>
-                                handleRelativePhotoUpload(index, event)
-                              }
+                              onChange={handleMaidCnicUpload}
                               hidden
                             />
                           </label>
                           <label
                             className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
+                            style={inputStyle}
                           >
-                            {relative.cnicUrl
-                              ? relative.cnicUrl.name
-                              : 'Upload CNIC'}
+                            {maid.cantPassUrl
+                              ? 'Cant Pass Uploaded'
+                              : 'Upload Cant Pass'}
                             <input
                               type="file"
-                              name="nocFile"
+                              name="cantPassFile"
                               accept="image/*"
-                              onChange={(event) =>
-                                handleRelativeCnicUpload(index, event)
-                              }
+                              onChange={handleMaidCantPassUpload}
                               hidden
                             />
                           </label>
                         </div>
-                      </div>
-                    </React.Fragment>
-                  ))}
-                  <div className="w-100 text-center">
-                    <button
-                      type="button"
-                      onClick={addRelativeField}
-                      className="btn btn-outline-success m-5 mt-2 w-25"
-                    >
-                      Submit Member
-                    </button>
-                  </div>
-                </div>
-              )}
 
-              {showS && maids.length > 0 ? (
-                <div className="text-center">
-                  <div className="my-5">
-                    <h2 className="my-5 text-secondary">Servant Details</h2>
-                    <div className="table-responsive">
-                      <table className="table table-dark table-bordered table-hover">
-                        <thead className="bg-light">
-                          <tr className="text-center">
-                            <th scope="col">NAME</th>
-                            <th scope="col">DATE OF BIRTH</th>
-                            <th scope="col">MOBILE NUMBER</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">ADDRESS</th>
-                            <th scope="col">GUARDIAN'S NAME</th>
-                            <th scope="col">CNIC</th>
-                            <th scope="col">CANT PASS</th>
-                            <th scope="col">Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {maids.map((r) => (
-                            <tr
-                              key={r._id}
-                              className="text-center align-middle"
-                            >
-                              <td>{r.name || 'N/A'}</td>
-                              <td>
-                                {r.dob
-                                  ? moment(r.dob).format('MMMM Do, YYYY')
-                                  : 'N/A'}
-                              </td>
-                              <td>{r.number || 'N/A'}</td>
-                              <td>{r.cnic || 'N/A'}</td>
-                              <td>{r.address || 'N/A'}</td>
-                              <td>{r.guardian || 'N/A'}</td>
-                              <td>
-                                {r.cnicUrl ? renderImage(r.cnicUrl) : 'N/A'}
-                              </td>
-                              <td>
-                                {r.cantPassUrl
-                                  ? renderImage(r.cantPassUrl)
-                                  : 'N/A'}
-                              </td>
-                              <td>
-                                <button
-                                  className="text-center btn btn-outline-primary m-1"
-                                  onClick={deleteServant(r._id)}
+                        <div className="text-center pt-2">
+                          <button
+                            className="btn btn-success m-5 mt-2 w-25 pt-2"
+                            onClick={() => {
+                              addMaidField();
+                            }}
+                          >
+                            Submit
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </Tab>
+                  <Tab eventKey="vehicles" title="Vehicle Details">
+                    {vehicle.length > 0 ? (
+                      <div className="text-center">
+                        <h2 className="my-5 text-light">Vehicle Details</h2>
+                        <div className="table-responsive">
+                          <table className="table table-dark table-bordered table-hover">
+                            <thead className="bg-light">
+                              <tr className="text-center">
+                                <th scope="col">TYPE</th>
+                                <th scope="col">MAKE</th>
+                                <th scope="col">MODEL</th>
+                                <th scope="col">MODEL YEAR</th>
+                                <th scope="col">COLOUR</th>
+                                <th scope="col">REGISTRATION NUMBER</th>
+                                <th scope="col">STICKER NUMBER</th>
+                                <th scope="col">DOCUMENT</th>
+                                <th scope="col">Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {vehicle.map((r) => (
+                                <tr
+                                  key={r._id}
+                                  className="text-center align-middle"
                                 >
-                                  Delete
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    <button
-                      className="btn btn-outline-success m-5 mt-2 w-25"
-                      onClick={() => {
-                        setShowServant(true);
-                        setShowS(false);
-                      }}
-                    >
-                      Add Servant
-                    </button>
-                  </div>
-                </div>
-              ) : showS ? (
-                <div
-                  className="text-center py-3 pt-4"
-                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
-                >
-                  <h3 className="text-light">No Servant Details To Show</h3>
-                  <button
-                    className="btn btn-outline-success m-5 mt-2 w-25"
-                    onClick={() => {
-                      setShowServant(true);
-                      setShowS(false);
-                    }}
-                  >
-                    Add Servant
-                  </button>
-                </div>
-              ) : null}
-
-              {/* servant details */}
-
-              {showServant && (
-                <div className="row">
-                  <hr />
-                  <h1 className="my-3 fw-bold text-center">
-                    Enter servant details
-                  </h1>
-                  <div className="col-md-6">
-                    <input
-                      value={maid.name}
-                      onChange={(e) => handleMaidChange('name', e.target.value)}
-                      type="text"
-                      name="name"
-                      className="w-75 my-3 text-white py-2"
-                      placeholder="Servant's Name"
-                      style={inputStyle}
-                    />
-                    <br />
-                    <input
-                      value={maid.dob}
-                      onChange={(e) => handleMaidChange('dob', e.target.value)}
-                      type="date"
-                      name="dob"
-                      placeholder="Date Of Birth"
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    />
-                    <br />
-                    <input
-                      value={maid.address}
-                      onChange={(e) =>
-                        handleMaidChange('address', e.target.value)
-                      }
-                      type="text"
-                      name="address"
-                      placeholder="Address"
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    />
-                    <br />
-                    <input
-                      value={maid.guardian}
-                      onChange={(e) =>
-                        handleMaidChange('guardian', e.target.value)
-                      }
-                      type="text"
-                      name="guardian"
-                      placeholder="Guardian's Name"
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    />
-                    <br />
-                  </div>
-                  <div className="col-md-6">
-                    <input
-                      value={maid.number}
-                      onChange={(e) =>
-                        handleMaidChange('number', e.target.value)
-                      }
-                      type="tel"
-                      name="number"
-                      placeholder="Phone Number"
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    />
-                    <br />
-                    <input
-                      value={maid.cnic}
-                      onChange={(e) => handleMaidChange('cnic', e.target.value)}
-                      type="text"
-                      name="cnic"
-                      placeholder="CNIC Number"
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    />
-                    <br />
-
-                    <label
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    >
-                      {maid.cnicUrl ? 'CNIC Uploaded' : 'Upload CNIC'}
-                      <input
-                        type="file"
-                        name="cnicFile"
-                        accept="image/*"
-                        onChange={handleMaidCnicUpload}
-                        hidden
-                      />
-                    </label>
-                    <label
-                      className="w-75 my-3 text-white py-2"
-                      style={inputStyle}
-                    >
-                      {maid.cantPassUrl
-                        ? 'Cant Pass Uploaded'
-                        : 'Upload Cant Pass'}
-                      <input
-                        type="file"
-                        name="cantPassFile"
-                        accept="image/*"
-                        onChange={handleMaidCantPassUpload}
-                        hidden
-                      />
-                    </label>
-                  </div>
-
-                  <div className="text-center pt-2">
-                    <button
-                      className="btn btn-success m-5 mt-2 w-25 pt-2"
-                      onClick={() => {
-                        addMaidField();
-                      }}
-                    >
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {showV && vehicle.length > 0 ? (
-                <div className="text-center">
-                  <h2 className="my-5 text-secondary">Vehicle Details</h2>
-                  <div className="table-responsive">
-                    <table className="table table-dark table-bordered table-hover">
-                      <thead className="bg-light">
-                        <tr className="text-center">
-                          <th scope="col">TYPE</th>
-                          <th scope="col">MAKE</th>
-                          <th scope="col">MODEL</th>
-                          <th scope="col">MODEL YEAR</th>
-                          <th scope="col">COLOUR</th>
-                          <th scope="col">REGISTRATION NUMBER</th>
-                          <th scope="col">STICKER NUMBER</th>
-                          <th scope="col">DOCUMENT</th>
-                          <th scope="col">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {vehicle.map((r) => (
-                          <tr key={r._id} className="text-center align-middle">
-                            <td>{r.type || 'N/A'}</td>
-                            <td>{r.make || 'N/A'}</td>
-                            <td>{r.model || 'N/A'}</td>
-                            <td>{r.year || 'N/A'}</td>
-                            <td>{r.colour || 'N/A'}</td>
-                            <td>{r.registrationNumber || 'N/A'}</td>
-                            <td>{r.stickerNumber || 'N/A'}</td>
-                            <td>
-                              {r.paperDocument
-                                ? renderImage(r.paperDocument)
-                                : 'N/A'}
-                            </td>
-                            <td>
-                              <button
-                                className="text-center btn btn-outline-primary m-1"
-                                onClick={() => {
-                                  deleteVehicle(r._id);
-                                }}
-                              >
-                                Delete
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    <button
-                      className="btn btn-outline-secondary mb-3"
-                      onClick={() => {
-                        setShowVehicle(true);
-                        setShowV(false);
-                      }}
-                    >
-                      Add Vehicle
-                    </button>
-                  </div>
-                </div>
-              ) : showV ? (
-                <div
-                  className="text-center py-3 pt-4"
-                  style={{ backgroundColor: '#263043', borderRadius: '12px' }}
-                >
-                  <h3 className="text-light">No Vehicle Details To Show</h3>
-                  <button
-                    className="btn btn-outline-success m-5 mt-2 w-25"
-                    onClick={() => {
-                      setShowVehicle(true);
-                      setShowV(false);
-                    }}
-                  >
-                    Add Vehicle
-                  </button>
-                </div>
-              ) : null}
-
-              {/* vehicle details */}
-
-              {/* vehicle details */}
-              {showVehicle && (
-                <div className="row text-center">
-                  <hr />
-                  <h1 className="my-3 fw-bold">Enter vehicle details</h1>
-                  {vehicles?.map((vehicle, index) => (
-                    <>
-                      <div className="col-md-6">
-                        <div key={index}>
-                          {/* selection */}
-
-                          <input
-                            value={vehicle.type}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="type"
-                            placeholder="Vehicle Type | Car or Motorcycle"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  <td>{r.type || 'N/A'}</td>
+                                  <td>{r.make || 'N/A'}</td>
+                                  <td>{r.model || 'N/A'}</td>
+                                  <td>{r.year || 'N/A'}</td>
+                                  <td>{r.colour || 'N/A'}</td>
+                                  <td>{r.registrationNumber || 'N/A'}</td>
+                                  <td>{r.stickerNumber || 'N/A'}</td>
+                                  <td>
+                                    {r.paperDocument
+                                      ? renderImage(r.paperDocument)
+                                      : 'N/A'}
+                                  </td>
+                                  <td>
+                                    <button
+                                      className="text-center btn btn-outline-primary m-1"
+                                      onClick={() => {
+                                        deleteVehicle(r._id);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          <button
+                            className="btn btn-outline-secondary mb-3"
+                            onClick={() => {
+                              setShowVehicle(true);
                             }}
-                          />
-                          <input
-                            value={vehicle.colour}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="colour"
-                            placeholder="Colour"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-
-                          <input
-                            value={vehicle.make}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="make"
-                            placeholder="Vehicle Make"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <input
-                            value={vehicle.model}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="model"
-                            placeholder="Vehicle Model Name"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
+                          >
+                            Add Vehicle
+                          </button>
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <div>
-                          <input
-                            value={vehicle.year}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="year"
-                            placeholder="Vehicle Year"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <input
-                            value={vehicle.stickerNumber}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="stickerNumber"
-                            placeholder="Sticker Number"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <input
-                            value={vehicle.registrationNumber}
-                            onChange={(e) => handleVehicleChange(index, e)}
-                            type="text"
-                            name="registrationNumber"
-                            placeholder="Vehicle Registration Number"
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          />
-                          <label
-                            className="w-75 my-3 text-white py-2"
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              borderBottom: '1px solid white',
-                              borderRadius: '12px',
-                              textIndent: '12px',
-                              boxShadow:
-                                'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                            }}
-                          >
-                            {vehicle.paperDocument
-                              ? vehicle.paperDocument.name
-                              : 'Upload Document'}
-                            <input
-                              type="file"
-                              name="nocFile"
-                              accept="image/*"
-                              onChange={(event) =>
-                                handlePaperDocumentUpload(event, index)
-                              }
-                              hidden
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </>
-                  ))}
-                  <div className="text-center mt-3">
-                    <button
-                      type="button"
-                      onClick={addVehicleField}
-                      className="btn btn-outline-primary w-25 m-5 mt-2"
-                    >
-                      Submit Vehicle
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Document</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <img
-                    src={selectedImageUrl}
-                    alt="Document"
-                    style={{ width: '100%' }}
-                  />
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="danger" onClick={handleCloseModal}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-              {showView && (
-                <>
-                  <div className="mt-2 mb-5">
-                    <img
-                      src={resident?.Photo}
-                      alt="image"
-                      style={{
-                        borderRadius: '100%',
-                        height: '200px',
-                        width: '200px',
-                      }}
-                    />
-                    <h1 className="my-3">{resident?.FullName}</h1>
-                    <div
-                      className="row my-4 py-4 mx-3"
-                      style={{
-                        backgroundColor: '#2A354A',
-                        borderRadius: '16px',
-                        boxShadow:
-                          'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
-                        transition: 'transform 0.2s ease-in-out',
-                      }}
-                      onMouseEnter={(e) =>
-                        (e.currentTarget.style.transform = 'scale(1.01)')
-                      }
-                      onMouseLeave={(e) =>
-                        (e.currentTarget.style.transform = 'scale(1)')
-                      }
-                    >
-                      <div className="col-md-6 px-4">
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>Email:</span>{' '}
-                            {resident?.Email || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>Phone #:</span>{' '}
-                            {resident?.Phone || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>House #:</span>{' '}
-                            {resident?.HouseNumber || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>DOB:</span>{' '}
-                            {birthDate || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>CNIC #:</span>{' '}
-                            {resident?.CNIC || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>NOC #:</span>{' '}
-                            {resident?.NOCNo || 'N/A'}
-                          </h5>
-                        </div>
-                      </div>
-                      <div className="col-md-6 px-4">
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>
-                              Profession:
-                            </span>{' '}
-                            {resident?.Profession || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>
-                              Qualification:
-                            </span>{' '}
-                            {resident?.Qualification || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>
-                              Business Address:
-                            </span>{' '}
-                            {resident?.bAddress || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>
-                              NOC Holder:
-                            </span>{' '}
-                            {resident?.NOCHolder || 'N/A'}
-                          </h5>
-                        </div>
-                        <div className="mb-3">
-                          <h5
-                            className="text-light"
-                            style={{ fontSize: '1.2rem', fontWeight: '500' }}
-                          >
-                            <span style={{ color: '#A0AEC0' }}>
-                              NOC Issue Date:
-                            </span>{' '}
-                            {nocdate || 'N/A'}
-                          </h5>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      className="my-4 py-4 mx-3 px-4"
-                      style={{
-                        backgroundColor: '#2A354A',
-                        borderRadius: '16px',
-                        boxShadow:
-                          'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
-                      }}
-                    >
-                      <h2
-                        className="text-center text-secondary mb-4"
-                        style={{ fontSize: '1.8rem', fontWeight: '600' }}
+                    ) : (
+                      <div
+                        className="text-center py-3 pt-4"
+                        style={{
+                          backgroundColor: '#263043',
+                          borderRadius: '12px',
+                        }}
                       >
-                        Uploaded Files
-                      </h2>
-                      <div className="row justify-content-center g-3">
-                        {resident?.CnicFile && (
-                          <div className="col-md-4 col-sm-6 text-center">
-                            <div
-                              className="p-3"
-                              style={{
-                                backgroundColor: '#33415C',
-                                borderRadius: '12px',
-                                transition: 'transform 0.2s ease-in-out',
-                              }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.transform = 'scale(1)')
-                              }
-                            >
-                              <h5
-                                className="text-light mb-3"
-                                style={{ fontSize: '1.2rem' }}
-                              >
-                                CNIC
-                              </h5>
-                              <img
-                                src={resident.CnicFile}
-                                alt="CNIC Document"
-                                style={{
-                                  width: '100px',
-                                  height: '100px',
-                                  objectFit: 'cover',
-                                  borderRadius: '8px',
-                                  border: '2px solid #ffffff33',
-                                  cursor: 'pointer',
-                                  transition: 'border-color 0.2s',
-                                }}
-                                onClick={() =>
-                                  handleImageClick(resident.CnicFile)
-                                }
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-                        {resident?.NocFile && (
-                          <div className="col-md-4 col-sm-6 text-center">
-                            <div
-                              className="p-3"
-                              style={{
-                                backgroundColor: '#33415C',
-                                borderRadius: '12px',
-                                transition: 'transform 0.2s ease-in-out',
-                              }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.transform = 'scale(1)')
-                              }
-                            >
-                              <h5
-                                className="text-light mb-3"
-                                style={{ fontSize: '1.2rem' }}
-                              >
-                                NOC
-                              </h5>
-                              <img
-                                src={resident.NocFile}
-                                alt="NOC Document"
-                                style={{
-                                  width: '100px',
-                                  height: '100px',
-                                  objectFit: 'cover',
-                                  borderRadius: '8px',
-                                  border: '2px solid #ffffff33',
-                                  cursor: 'pointer',
-                                  transition: 'border-color 0.2s',
-                                }}
-                                onClick={() =>
-                                  handleImageClick(resident.NocFile)
-                                }
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-                        {resident?.CantFile && (
-                          <div className="col-md-4 col-sm-6 text-center">
-                            <div
-                              className="p-3"
-                              style={{
-                                backgroundColor: '#33415C',
-                                borderRadius: '12px',
-                                transition: 'transform 0.2s ease-in-out',
-                              }}
-                              onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
-                              }
-                              onMouseLeave={(e) =>
-                                (e.currentTarget.style.transform = 'scale(1)')
-                              }
-                            >
-                              <h5
-                                className="text-light mb-3"
-                                style={{ fontSize: '1.2rem' }}
-                              >
-                                Cant Pass
-                              </h5>
-                              <img
-                                src={resident.CantFile}
-                                alt="Cant Pass Document"
-                                style={{
-                                  width: '100px',
-                                  height: '100px',
-                                  objectFit: 'cover',
-                                  borderRadius: '8px',
-                                  border: '2px solid #ffffff33',
-                                  cursor: 'pointer',
-                                  transition: 'border-color 0.2s',
-                                }}
-                                onClick={() =>
-                                  handleImageClick(resident.CantFile)
-                                }
-                                onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
-                                }
-                                onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-                        {!resident?.CnicFile &&
-                          !resident?.NocFile &&
-                          !resident?.CantFile && (
-                            <div className="text-center py-3">
-                              <h5
-                                className="text-light"
-                                style={{
-                                  fontSize: '1.3rem',
-                                  backgroundColor: '#33415C',
-                                  borderRadius: '8px',
-                                  padding: '15px',
-                                  display: 'inline-block',
-                                }}
-                              >
-                                No Uploaded Files Available
-                              </h5>
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                  <form action="PUT" onSubmit={updateHandler}>
-                    <div className="form-check">
-                      <div className="form-check form-switch">
-                        <input
-                          className="form-check-input form-check-input-yes"
-                          type="checkbox"
-                          role="switch"
-                          id="flexSwitchCheckDefault"
+                        <h3 className="text-light">
+                          No Vehicle Details To Show
+                        </h3>
+                        <button
+                          className="btn btn-outline-success m-5 mt-2 w-25"
                           onClick={() => {
-                            setPaid(true);
-                            setShowAmountInput(true);
+                            setShowVehicle(true);
                           }}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexSwitchCheckDefault"
                         >
-                          Payment Received?
-                        </label>
-                        <br />
-                        {showAmountInput ? (
+                          Add Vehicle
+                        </button>
+                      </div>
+                    )}
+                    {showVehicle && (
+                      <div className="row text-center">
+                        <hr />
+                        <h1 className="my-3 fw-bold">Enter vehicle details</h1>
+                        {vehicles?.map((vehicle, index) => (
                           <>
-                            <input
-                              value={feeAmount}
-                              onChange={(e) => setFeeAmount(e.target.value)}
-                              type="number"
-                              name="Fee Amount"
-                              id="FeeAmount"
-                              placeholder="Received Amount"
-                              className="w-50 my-3 text-white py-2"
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                borderBottom: '1px solid white',
-                                borderRadius: '12px',
-                                textIndent: '12px',
-                                boxShadow:
-                                  'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                              }}
-                            />
-                            <br />
-                            <input
-                              value={monthsInput}
-                              onChange={(e) => setMonthsInput(e.target.value)}
-                              type="number"
-                              name="Number"
-                              id="FeeAmount"
-                              placeholder="Number of Months"
-                              className="w-50 my-3 text-white py-2"
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                borderBottom: '1px solid white',
-                                borderRadius: '12px',
-                                textIndent: '12px',
-                                boxShadow:
-                                  'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                              }}
-                            />
+                            <div className="col-md-6">
+                              <div key={index}>
+                                {/* selection */}
 
-                            <div className="form-group">
-                              <select
-                                className="w-50 my-3 text-white py-2"
-                                id="account"
-                                value={Ownership}
-                                onChange={(e) => setOwnership(e.target.value)}
-                                required
-                                style={{
-                                  background: 'transparent',
-                                  border: 'none',
-                                  borderBottom: '1px solid white',
-                                  borderRadius: '12px',
-                                  textIndent: '12px',
-                                  boxShadow:
-                                    'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                                }}
-                              >
-                                <option
-                                  value=""
+                                <input
+                                  value={vehicle.type}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="type"
+                                  placeholder="Vehicle Type | Car or Motorcycle"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
-                                >
-                                  Ownership
-                                </option>
-                                <option
-                                  value="owner"
+                                />
+                                <input
+                                  value={vehicle.colour}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="colour"
+                                  placeholder="Colour"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
-                                >
-                                  Owner
-                                </option>
-                                <option
-                                  value="tanent"
+                                />
+
+                                <input
+                                  value={vehicle.make}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="make"
+                                  placeholder="Vehicle Make"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
-                                >
-                                  Tanent
-                                </option>
-                              </select>
+                                />
+                                <input
+                                  value={vehicle.model}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="model"
+                                  placeholder="Vehicle Model Name"
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                              </div>
                             </div>
-
-                            <div className="form-group">
-                              <select
-                                className="w-50 my-3 text-white py-2"
-                                id="account"
-                                value={account}
-                                onChange={(e) => setAccount(e.target.value)}
-                                required
-                                style={{
-                                  background: 'transparent',
-                                  border: 'none',
-                                  borderBottom: '1px solid white',
-                                  borderRadius: '12px',
-                                  textIndent: '12px',
-                                  boxShadow:
-                                    'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
-                                }}
-                              >
-                                <option
-                                  value=""
+                            <div className="col-md-6">
+                              <div>
+                                <input
+                                  value={vehicle.year}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="year"
+                                  placeholder="Vehicle Year"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
-                                >
-                                  Select Account Type
-                                </option>
-                                <option
-                                  value="masjid"
+                                />
+                                <input
+                                  value={vehicle.stickerNumber}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="stickerNumber"
+                                  placeholder="Sticker Number"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
-                                >
-                                  Masjid
-                                </option>
-                                <option
-                                  value="rec"
+                                />
+                                <input
+                                  value={vehicle.registrationNumber}
+                                  onChange={(e) =>
+                                    handleVehicleChange(index, e)
+                                  }
+                                  type="text"
+                                  name="registrationNumber"
+                                  placeholder="Vehicle Registration Number"
+                                  className="w-75 my-3 text-white py-2"
                                   style={{
                                     background: 'transparent',
-                                    color: 'black',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                  }}
+                                />
+                                <label
+                                  className="w-75 my-3 text-white py-2"
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: '1px solid white',
+                                    borderRadius: '12px',
+                                    textIndent: '12px',
+                                    boxShadow:
+                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
                                   }}
                                 >
-                                  Rec
-                                </option>
-                              </select>
+                                  {vehicle.paperDocument
+                                    ? vehicle.paperDocument.name
+                                    : 'Upload Document'}
+                                  <input
+                                    type="file"
+                                    name="nocFile"
+                                    accept="image/*"
+                                    onChange={(event) =>
+                                      handlePaperDocumentUpload(event, index)
+                                    }
+                                    hidden
+                                  />
+                                </label>
+                              </div>
                             </div>
                           </>
-                        ) : (
-                          <></>
-                        )}
-                        <br />
-                        <input
-                          className="form-check-input form-check-input-no"
-                          type="checkbox"
-                          role="switch"
-                          id="flexSwitchCheckDefault"
-                          onClick={() => {
-                            setPaid(false);
-                          }}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor="flexSwitchCheckDefault"
-                        >
-                          Payment Not Received?
-                        </label>
+                        ))}
+                        <div className="text-center mt-3">
+                          <button
+                            type="button"
+                            onClick={addVehicleField}
+                            className="btn btn-outline-primary w-25 m-5 mt-2"
+                          >
+                            Submit Vehicle
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        type="submit"
-                        className="btn btn-outline-success mt-2"
+                    )}
+                  </Tab>
+                  <Tab
+                    eventKey="tenants"
+                    title={`${
+                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
+                    } Details`}
+                  >
+                    {resident.residentType === 'owner' && tanents.length > 0 ? (
+                      <div className="text-center">
+                        <div className="my-5">
+                          <h2 className="my-5 text-light">Tanents Details</h2>
+                          <div className="table-responsive">
+                            <table className="table table-dark table-bordered table-hover">
+                              <thead className="bg-light">
+                                <tr className="text-center">
+                                  <th scope="col">NAME</th>
+                                  <th scope="col">EMAIL</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">House Number</th>
+                                  <th scope="col">NOC HOLDER</th>
+                                  <th scope="col">OCCUPATION</th>
+                                  <th scope="col">MOBILE NUMBER</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">Photo</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ownerResident?.map((t) => (
+                                  <tr
+                                    key={t._id}
+                                    className="text-center align-middle"
+                                  >
+                                    <td>{t?.FullName || 'N/A'}</td>
+                                    <td>{t.Email || 'N/A'}</td>
+                                    <td>{t.CNIC || 'N/A'}</td>
+                                    <td>{t.HouseNumber || 'N/A'}</td>
+                                    <td>{t.NOCHolder || 'N/A'}</td>
+                                    <td>{t.Profession || 'N/A'}</td>
+                                    <td>{t.Phone || 'N/A'}</td>
+                                    <td>
+                                      {t.CnicFile
+                                        ? renderImage(t.CnicFile)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>
+                                      {t.Photo ? renderImage(t.Photo) : 'N/A'}
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="btn btn-outline-primary m-1"
+                                        onClick={() => {
+                                          navigate(
+                                            `/dashboard/resident/${t._id}`
+                                          );
+                                        }}
+                                      >
+                                        View
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    ) : resident.residentType === 'tenant' ? (
+                      <div className="text-center">
+                        <div className="my-5">
+                          <h2 className="my-5 text-light">Owner Details</h2>
+                          <div className="table-responsive">
+                            <table className="table table-dark table-bordered table-hover">
+                              <thead className="bg-light">
+                                <tr className="text-center">
+                                  <th scope="col">NAME</th>
+                                  <th scope="col">EMAIL</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">House Number</th>
+                                  <th scope="col">NOC HOLDER</th>
+                                  <th scope="col">OCCUPATION</th>
+                                  <th scope="col">MOBILE NUMBER</th>
+                                  <th scope="col">CNIC</th>
+                                  <th scope="col">Photo</th>
+                                  <th scope="col">Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {ownerResident.map((t) => (
+                                  <tr
+                                    key={t._id}
+                                    className="text-center align-middle"
+                                  >
+                                    <td>{t?.FullName || 'N/A'}</td>
+                                    <td>{t.Email || 'N/A'}</td>
+                                    <td>{t.CNIC || 'N/A'}</td>
+                                    <td>{t.HouseNumber || 'N/A'}</td>
+                                    <td>{t.NOCHolder || 'N/A'}</td>
+                                    <td>{t.Profession || 'N/A'}</td>
+                                    <td>{t.Phone || 'N/A'}</td>
+                                    <td>
+                                      {t.CnicFile
+                                        ? renderImage(t.CnicFile)
+                                        : 'N/A'}
+                                    </td>
+                                    <td>
+                                      {t.Photo ? renderImage(t.Photo) : 'N/A'}
+                                    </td>
+                                    <td>
+                                      <button
+                                        className="btn btn-outline-primary m-1"
+                                        onClick={() => {
+                                          navigate(
+                                            `/dashboard/resident/${t._id}`
+                                          );
+                                        }}
+                                      >
+                                        View
+                                      </button>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        className="text-center py-3 pt-4"
+                        style={{
+                          backgroundColor: '#263043',
+                          borderRadius: '12px',
+                        }}
                       >
-                        Save Changes
-                      </button>
-                    </div>
-                  </form>
-                </>
-              )}
-            </>
-          )}
+                        <h3 className="text-light">No Details To Show</h3>
+                      </div>
+                    )}
+                  </Tab>
+                </Tabs>
+              </>
+            )}
+          </div>
         </div>
       </div>
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Document</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <img
+            src={selectedImageUrl}
+            alt="Document"
+            style={{ width: '100%' }}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
