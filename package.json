@@ -15,6 +15,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "cloudinary": "^2.2.0",
+    "file-saver": "^2.0.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.3",
@@ -29,7 +30,8 @@
     "react-router-dom": "^6.23.0",
     "react-to-print": "^2.15.1",
     "react-toastify": "^10.0.5",
-    "recharts": "^2.12.6"
+    "recharts": "^2.12.6",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

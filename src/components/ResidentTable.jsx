@@ -6,6 +6,9 @@ import { Audio } from 'react-loader-spinner';
 import { ToastContainer } from 'react-bootstrap';
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
 const ResidentTable = () => {
@@ -151,6 +154,50 @@ const ResidentTable = () => {
       setLoading(false);
     }
   };
+  const exportToExcel = () => {
+    if (!filteredResidents.length) {
+      toast.warn('No resident data to export');
+      return;
+    }
+
+    // Prepare data for export
+    const exportData = filteredResidents.map((r, index) => ({
+      'S.No': index + 1,
+      'Full Name': r.FullName || 'N/A',
+      Email: r.Email || 'N/A',
+      Phone: r.Phone || 'N/A',
+      'House Number': r.HouseNumber || 'N/A',
+      CNIC: r.CNIC || 'N/A',
+      'Resident Type': r.residentType || 'N/A',
+      'Payment Status': r.paid ? 'Paid' : 'Unpaid',
+    }));
+
+    // Create worksheet and workbook
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Residents');
+
+    // Apply column widths (optional, for readability)
+    const colWidths = [
+      { wch: 5 }, // S.No
+      { wch: 25 }, // Full Name
+      { wch: 30 }, // Email
+      { wch: 15 }, // Phone
+      { wch: 15 }, // House Number
+      { wch: 20 }, // CNIC
+      { wch: 12 }, // Resident Type
+      { wch: 12 }, // Payment Status
+    ];
+    worksheet['!cols'] = colWidths;
+
+    // Generate and save Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, `Residents_${moment().format('YYYY-MM-DD_HH-mm')}.xlsx`);
+  };
 
   const filteredResidents = useMemo(() => {
     if (showTenantsOnly) {
@@ -236,7 +283,11 @@ const ResidentTable = () => {
           Total residents: {filteredResidents.length}
         </p>
       </div>
-
+      <div className="text-end my-3 mx-2">
+        <button className="btn btn-success" onClick={exportToExcel}>
+          Export to Excel
+        </button>
+      </div>
       <div className="main-table w-100 table-responsive mt-2">
         <table className="table table-dark table-hover rounded table-striped">
           <thead className="bg-light">
