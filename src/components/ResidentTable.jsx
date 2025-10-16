@@ -1,29 +1,29 @@
-import axios from 'axios';
-import { useEffect, useState, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { Audio } from 'react-loader-spinner';
-import { ToastContainer } from 'react-bootstrap';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import axios from "axios";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Audio } from "react-loader-spinner";
+import { ToastContainer } from "react-bootstrap";
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 
 const ResidentTable = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
-  const token = localStorage.getItem('token');
+  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [selectedDates, setSelectedDates] = useState({});
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTenantsOnly, setShowTenantsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [residentId, setResidentId] = useState('');
+  const [residentId, setResidentId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [houseSearch, setHouseSearch] = useState('');
+  const [houseSearch, setHouseSearch] = useState("");
   const [activeDatePickerId, setActiveDatePickerId] = useState(null);
 
   const allResidents = async () => {
@@ -43,7 +43,7 @@ const ResidentTable = () => {
         setSelectedDates(
           res.data.residents.reduce((acc, resident) => {
             acc[resident._id] = {
-              start: moment().subtract(1, 'months').toDate(),
+              start: moment().subtract(1, "months").toDate(),
               end: moment().toDate(),
             };
             return acc;
@@ -51,7 +51,7 @@ const ResidentTable = () => {
         );
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error fetching residents');
+      toast.error(err.response?.data?.message || "Error fetching residents");
     } finally {
       setLoading(false);
     }
@@ -76,10 +76,10 @@ const ResidentTable = () => {
         toast.success(res.data.message);
         allResidents();
       } else {
-        toast.error(res?.data?.message || 'Failed to delete resident');
+        toast.error(res?.data?.message || "Failed to delete resident");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error deleting resident');
+      toast.error(err.response?.data?.message || "Error deleting resident");
     } finally {
       setLoading(false);
     }
@@ -102,29 +102,29 @@ const ResidentTable = () => {
 
       // Ensure start date is not after end date
       if (startDate.isAfter(endDate)) {
-        toast.warn('Start date cannot be after end date');
+        toast.warn("Start date cannot be after end date");
         setLoading(false);
         return;
       }
 
       // Generate array of months between start and end dates
-      const current = startDate.clone().startOf('month');
-      while (current.isSameOrBefore(endDate, 'month')) {
-        months.push(current.format('YYYY-MM'));
-        current.add(1, 'month');
+      const current = startDate.clone().startOf("month");
+      while (current.isSameOrBefore(endDate, "month")) {
+        months.push(current.format("YYYY-MM"));
+        current.add(1, "month");
       }
     }
 
     const numberOfMonths = months.length;
 
     if (numberOfMonths === 0) {
-      toast.warn('Please select valid start and end dates');
+      toast.warn("Please select valid start and end dates");
       setLoading(false);
       return;
     }
 
-    localStorage.setItem('PaymentMode', paymentMode);
-    localStorage.setItem('NumberOfMonths', JSON.stringify(months));
+    localStorage.setItem("PaymentMode", paymentMode);
+    localStorage.setItem("NumberOfMonths", JSON.stringify(months));
 
     try {
       const response = await axios.post(
@@ -137,45 +137,46 @@ const ResidentTable = () => {
         }
       );
       if (response.data.success) {
-        localStorage.setItem('amount', JSON.stringify(response.data.totalFee));
+        localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
         localStorage.setItem(
-          'resident',
+          "resident",
           JSON.stringify(response.data.resident)
         );
-        localStorage.setItem('months', JSON.stringify(months));
+        localStorage.setItem("months", JSON.stringify(months));
         setIsOpen(false);
-        navigate('/dashboard/resident/invoice');
+        navigate("/dashboard/resident/invoice");
       } else {
-        toast.error(response.data.message || 'Failed to generate fee slip');
+        toast.error(response.data.message || "Failed to generate fee slip");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error generating fee slip');
+      toast.error(error.response?.data?.message || "Error generating fee slip");
     } finally {
       setLoading(false);
     }
   };
   const exportToExcel = () => {
     if (!filteredResidents.length) {
-      toast.warn('No resident data to export');
+      toast.warn("No resident data to export");
       return;
     }
 
     // Prepare data for export
     const exportData = filteredResidents.map((r, index) => ({
-      'S.No': index + 1,
-      'Full Name': r.FullName || 'N/A',
-      Email: r.Email || 'N/A',
-      Phone: r.Phone || 'N/A',
-      'House Number': r.HouseNumber || 'N/A',
-      CNIC: r.CNIC || 'N/A',
-      'Resident Type': r.residentType || 'N/A',
-      'Payment Status': r.paid ? 'Paid' : 'Unpaid',
+      "S.No": index + 1,
+      "Full Name": r.FullName || "N/A",
+      Email: r.Email || "N/A",
+      Phone: r.Phone || "N/A",
+      "House Number": r.HouseNumber || "N/A",
+      CNIC: r.CNIC || "N/A",
+      "Resident Type": r.residentType || "N/A",
+      "NOC Number": r?.NOCNo || "N/A",
+      "Payment Status": r.paid ? "Paid" : "Unpaid",
     }));
 
     // Create worksheet and workbook
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Residents');
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Residents");
 
     // Apply column widths (optional, for readability)
     const colWidths = [
@@ -186,37 +187,38 @@ const ResidentTable = () => {
       { wch: 15 }, // House Number
       { wch: 20 }, // CNIC
       { wch: 12 }, // Resident Type
+      { wch: 12 }, // Resident Type
       { wch: 12 }, // Payment Status
     ];
-    worksheet['!cols'] = colWidths;
+    worksheet["!cols"] = colWidths;
 
     // Generate and save Excel file
     const excelBuffer = XLSX.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
+      bookType: "xlsx",
+      type: "array",
     });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(blob, `Residents_${moment().format('YYYY-MM-DD_HH-mm')}.xlsx`);
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, `Residents_${moment().format("YYYY-MM-DD_HH-mm")}.xlsx`);
   };
 
   const filteredResidents = useMemo(() => {
     if (showTenantsOnly) {
       return residents.filter(
-        (item) => (item.residentType || '').toLowerCase() === 'tenant'
+        (item) => (item.residentType || "").toLowerCase() === "tenant"
       );
     }
     return residents.filter((item) => {
       const houseMatch =
-        houseSearch.trim() === '' ||
-        (item.HouseNumber || '')
+        houseSearch.trim() === "" ||
+        (item.HouseNumber || "")
           .toLowerCase()
           .includes(houseSearch.toLowerCase());
       const generalMatch =
-        search.trim() === '' ||
-        (item.FullName || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.Email || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.Phone || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.CNIC || '').toLowerCase().includes(search.toLowerCase());
+        search.trim() === "" ||
+        (item.FullName || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Email || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Phone || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.CNIC || "").toLowerCase().includes(search.toLowerCase());
       const matchesUnpaid = !showUnpaidOnly || !item.paid;
       return houseMatch && generalMatch && matchesUnpaid;
     });
@@ -235,7 +237,7 @@ const ResidentTable = () => {
             type="text"
             className="input mx-2 py-2"
             onChange={(e) => setSearch(e.target.value)}
-            style={{ border: '2px solid #009843' }}
+            style={{ border: "2px solid #009843" }}
           />
           <input
             value={houseSearch}
@@ -243,7 +245,7 @@ const ResidentTable = () => {
             type="text"
             className="input py-2"
             onChange={(e) => setHouseSearch(e.target.value)}
-            style={{ border: '2px solid #0d6efd' }}
+            style={{ border: "2px solid #0d6efd" }}
           />
         </form>
       </div>
@@ -253,10 +255,10 @@ const ResidentTable = () => {
       <div
         className="my-3 py-3"
         style={{
-          backgroundColor: '#263043',
-          borderRadius: '12px',
+          backgroundColor: "#263043",
+          borderRadius: "12px",
           boxShadow:
-            'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+            "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
         }}
       >
         <h3 className="mb-3">FILTERS</h3>
@@ -279,7 +281,7 @@ const ResidentTable = () => {
           />
           Tenants
         </label>
-        <p style={{ color: '#03bb50', fontSize: '1.24em', padding: '10px' }}>
+        <p style={{ color: "#03bb50", fontSize: "1.24em", padding: "10px" }}>
           Total residents: {filteredResidents.length}
         </p>
       </div>
@@ -295,63 +297,63 @@ const ResidentTable = () => {
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Full Name
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Email
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Phone
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 House Number
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 CNIC
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Type
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Payment Status
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Payment Slip
               </th>
               <th
                 scope="col"
                 className="py-3 fs-6"
-                style={{ color: '#03bb50' }}
+                style={{ color: "#03bb50" }}
               >
                 Action
               </th>
@@ -382,23 +384,23 @@ const ResidentTable = () => {
                 <tr
                   key={r._id}
                   className="text-center align-middle"
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
-                  <td>{r.FullName || 'N/A'}</td>
-                  <td>{r.Email || 'N/A'}</td>
-                  <td>{r.Phone || 'N/A'}</td>
-                  <td>{r.HouseNumber || 'N/A'}</td>
-                  <td>{r.CNIC || 'N/A'}</td>
-                  <td>{r.residentType || 'N/A'}</td>
-                  <td style={{ color: r.paid ? 'green' : 'red' }}>
-                    {r.paid ? 'Paid' : 'Unpaid'}
+                  <td>{r.FullName || "N/A"}</td>
+                  <td>{r.Email || "N/A"}</td>
+                  <td>{r.Phone || "N/A"}</td>
+                  <td>{r.HouseNumber || "N/A"}</td>
+                  <td>{r.CNIC || "N/A"}</td>
+                  <td>{r.residentType || "N/A"}</td>
+                  <td style={{ color: r.paid ? "green" : "red" }}>
+                    {r.paid ? "Paid" : "Unpaid"}
                   </td>
                   <td>
                     <button
                       className={
                         !r.paid
-                          ? 'btn btn-outline-info m-1'
-                          : 'btn btn-outline-secondary m-1 disabled'
+                          ? "btn btn-outline-info m-1"
+                          : "btn btn-outline-secondary m-1 disabled"
                       }
                       onClick={() => Slippopup(r._id)}
                     >
@@ -409,7 +411,7 @@ const ResidentTable = () => {
                     <button
                       className="btn btn-outline-danger"
                       onClick={() => {
-                        if (confirm('Are you sure you want to delete?')) {
+                        if (confirm("Are you sure you want to delete?")) {
                           handleDelete(r._id);
                         }
                       }}
@@ -466,7 +468,7 @@ const ResidentTable = () => {
                     newEnd &&
                     moment(newStart).isAfter(moment(newEnd))
                   ) {
-                    toast.warn('Start date cannot be after end date');
+                    toast.warn("Start date cannot be after end date");
                     return;
                   }
                   setSelectedDates({
@@ -477,7 +479,7 @@ const ResidentTable = () => {
                     },
                   });
                 }}
-                minDate={new Date('2000-01-01')}
+                minDate={new Date("2000-01-01")}
                 // Removed maxDate restriction to allow future dates
                 dateFormat="MMMM yyyy"
                 showMonthYearPicker
@@ -495,13 +497,13 @@ const ResidentTable = () => {
                   const newEnd = date;
                   const newStart =
                     selectedDates[residentId]?.start ||
-                    moment().subtract(1, 'months').toDate();
+                    moment().subtract(1, "months").toDate();
                   if (
                     newEnd &&
                     newStart &&
                     moment(newEnd).isBefore(moment(newStart))
                   ) {
-                    toast.warn('End date cannot be before start date');
+                    toast.warn("End date cannot be before start date");
                     return;
                   }
                   setSelectedDates({
@@ -512,7 +514,7 @@ const ResidentTable = () => {
                     },
                   });
                 }}
-                minDate={new Date('2000-01-01')}
+                minDate={new Date("2000-01-01")}
                 // Removed maxDate restriction to allow future dates
                 dateFormat="MMMM yyyy"
                 showMonthYearPicker
@@ -523,25 +525,25 @@ const ResidentTable = () => {
               />
             </div>
             <p className="mb-3">
-              Selected period:{' '}
+              Selected period:{" "}
               <strong>
                 {selectedDates[residentId]?.start &&
                 selectedDates[residentId]?.end
                   ? `${moment(selectedDates[residentId].start).format(
-                      'MMMM YYYY'
+                      "MMMM YYYY"
                     )} - ${moment(selectedDates[residentId].end).format(
-                      'MMMM YYYY'
+                      "MMMM YYYY"
                     )}`
-                  : 'None selected'}
+                  : "None selected"}
               </strong>
               <br />
-              Total months:{' '}
+              Total months:{" "}
               <strong>
                 {selectedDates[residentId]?.start &&
                 selectedDates[residentId]?.end
                   ? moment(selectedDates[residentId].end).diff(
                       moment(selectedDates[residentId].start),
-                      'months'
+                      "months"
                     ) + 1
                   : 0}
               </strong>
@@ -549,13 +551,13 @@ const ResidentTable = () => {
             <div className="d-flex justify-content-end">
               <button
                 className="btn btn-success mx-2"
-                onClick={() => generateFeeSlip(residentId, 'IBFT')}
+                onClick={() => generateFeeSlip(residentId, "IBFT")}
               >
                 IBFT
               </button>
               <button
                 className="btn btn-success mx-2"
-                onClick={() => generateFeeSlip(residentId, 'Cash')}
+                onClick={() => generateFeeSlip(residentId, "Cash")}
               >
                 Cash
               </button>
