@@ -80,15 +80,21 @@ const Auth = () => {
           backgroundColor: 'white',
         }}
       >
-        <div className="col-md-6 text-dark rounded-start bg-white d-flex flex-column align-items-center justify-content-center p-5">
-          <h2 className="fw-bold mb-4" style={{ color: '#111827', fontSize: '2rem' }}>
+        <div className="col-12 col-md-6 text-dark rounded-start bg-white d-flex flex-column align-items-center justify-content-center p-4 p-md-5">
+          <img
+            src={logo}
+            alt="logo"
+            className="d-md-none mb-4"
+            style={{ height: '80px', objectFit: 'contain' }}
+          />
+          <h2 className="fw-bold mb-2 mb-md-4 text-center" style={{ color: '#111827', fontSize: '1.75rem' }}>
             Welcome Back
           </h2>
-          <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
+          <p className="text-center" style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
             Sign in to access your directory
           </p>
           <form className="w-100" onSubmit={submitHandler}>
-            <div className="mb-4">
+            <div className="mb-3 mb-md-4">
               <label
                 htmlFor="exampleInputEmail1"
                 className="form-label"
@@ -111,7 +117,7 @@ const Auth = () => {
                 }}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-3 mb-md-4">
               <label
                 htmlFor="exampleInputPassword1"
                 className="form-label"
@@ -160,7 +166,7 @@ const Auth = () => {
 
             <button
               type="submit"
-              className="btn w-100 mt-3"
+              className="btn w-100 mt-2 mt-md-3"
               style={{
                 background: '#03bb50',
                 color: 'white',
@@ -191,7 +197,7 @@ const Auth = () => {
           </div>
         </div>
         <div
-          className="col-md-6 rounded-end d-flex flex-column align-items-center justify-content-center p-5"
+          className="col-md-6 rounded-end d-none d-md-flex flex-column align-items-center justify-content-center p-5"
           style={{
             background: 'linear-gradient(135deg, #03bb50 0%, #029e43 100%)',
           }}
