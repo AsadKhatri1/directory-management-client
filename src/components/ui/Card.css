@@ -1,0 +1,46 @@
+.ui-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.ui-card--hoverable:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.ui-card--clickable {
+    cursor: pointer;
+}
+
+.ui-card__header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ui-card__title {
+    margin: 0;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.ui-card__subtitle {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.ui-card__body {
+    padding: 1.5rem;
+}
+
+.ui-card__footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    border-bottom-left-radius: 0.75rem;
+    border-bottom-right-radius: 0.75rem;
+}

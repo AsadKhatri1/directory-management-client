@@ -33,6 +33,7 @@ const ResidentDetail = () => {
   const { id } = useParams();
   const [showTanents, setShowTanents] = useState(false);
   const [showView, setShowView] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const [account, setAccount] = useState('');
   console.log('resident', resident);
@@ -327,6 +328,7 @@ const ResidentDetail = () => {
   );
 
   const getResident = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get(
         `${backendURL}/api/v1/resident/getResident/${params.id}`,
@@ -349,6 +351,8 @@ const ResidentDetail = () => {
       toast.error(
         err.response?.data?.message || 'Error fetching resident data'
       );
+    } finally {
+      setLoading(false);
     }
   };
   // Vehicle
@@ -462,7 +466,7 @@ const ResidentDetail = () => {
 
   useEffect(() => {
     getResident();
-  }, [resident]);
+  }, [params.id]);
 
   const sideBarToggle = () => {
     setSidebaropen(!sidebaropen);
@@ -589,11 +593,19 @@ const ResidentDetail = () => {
       ></Sidebar>
       <div className="main-container mb-4">
         <div className="text-center">
-          <h1 className="mb-5">RESIDENT DETAILS</h1>
+          <h1 className="mb-5" style={{ color: '#111827', fontWeight: 700 }}>RESIDENT DETAILS</h1>
           <div className="d-flex justify-content-center mb-4">
             <button
-              className="btn btn-outline-success w-15"
+              className="btn w-15"
               onClick={handlePaymentClick}
+              style={{
+                backgroundColor: '#03bb50',
+                color: 'white',
+                padding: '0.625rem 1.25rem',
+                borderRadius: '0.5rem',
+                fontWeight: 500,
+                border: 'none'
+              }}
             >
               Update Payment Status
             </button>
@@ -702,13 +714,16 @@ const ResidentDetail = () => {
             </Modal.Body>
           </Modal>
           <div className="row my-1 justify-content-center">
-            {resident.length < 1 ? (
-              <div className="d-flex align-items-center justify-content-center">
+            {loading ? (
+              <div
+                className="d-flex align-items-center justify-content-center"
+                style={{ minHeight: '60vh' }}
+              >
                 <Audio
-                  height="80"
+                  height="100"
                   width="100"
                   radius="9"
-                  color="rgba(255, 255, 255, 0.2)"
+                  color="#03bb50"
                   ariaLabel="loading"
                   wrapperStyle
                   wrapperClass
@@ -739,10 +754,10 @@ const ResidentDetail = () => {
                       <div
                         className="row my-4 py-4 mx-3"
                         style={{
-                          backgroundColor: '#2A354A',
+                          backgroundColor: 'white',
                           borderRadius: '16px',
-                          boxShadow:
-                            'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
+                          border: '1px solid #e5e7eb',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                           transition: 'transform 0.2s ease-in-out',
                         }}
                         onMouseEnter={(e) =>
@@ -755,55 +770,49 @@ const ResidentDetail = () => {
                         <div className="col-md-6 px-4">
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>Email:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>Email:</span>{' '}
                               {resident?.Email || 'N/A'}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>Phone #:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>Phone #:</span>{' '}
                               {resident?.Phone || 'N/A'}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>House #:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>House #:</span>{' '}
                               {resident?.HouseNumber || 'N/A'}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>DOB:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>DOB:</span>{' '}
                               {birthDate || 'N/A'}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>CNIC #:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>CNIC #:</span>{' '}
                               {resident?.CNIC || 'N/A'}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>NOC #:</span>{' '}
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>NOC #:</span>{' '}
                               {resident?.NOCNo || 'N/A'}
                             </h5>
                           </div>
@@ -811,10 +820,9 @@ const ResidentDetail = () => {
                         <div className="col-md-6 px-4">
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
                                 Profession:
                               </span>{' '}
                               {resident?.Profession || 'N/A'}
@@ -822,10 +830,9 @@ const ResidentDetail = () => {
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
                                 Qualification:
                               </span>{' '}
                               {resident?.Qualification || 'N/A'}
@@ -833,10 +840,9 @@ const ResidentDetail = () => {
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
                                 Business Address:
                               </span>{' '}
                               {resident?.bAddress || 'N/A'}
@@ -844,10 +850,9 @@ const ResidentDetail = () => {
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
                                 NOC Holder:
                               </span>{' '}
                               {resident?.NOCHolder || 'N/A'}
@@ -855,10 +860,9 @@ const ResidentDetail = () => {
                           </div>
                           <div className="mb-3">
                             <h5
-                              className="text-light"
-                              style={{ fontSize: '1.2rem', fontWeight: '500' }}
+                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
                             >
-                              <span style={{ color: '#A0AEC0' }}>
+                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
                                 NOC Issue Date:
                               </span>{' '}
                               {nocdate || 'N/A'}
@@ -869,15 +873,15 @@ const ResidentDetail = () => {
                       <div
                         className="my-4 py-4 mx-3 px-4"
                         style={{
-                          backgroundColor: '#2A354A',
+                          backgroundColor: 'white',
                           borderRadius: '16px',
-                          boxShadow:
-                            'rgba(0, 0, 0, 0.15) 0px 8px 16px, rgba(0, 0, 0, 0.1) 0px 4px 8px',
+                          border: '1px solid #e5e7eb',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                         }}
                       >
                         <h2
-                          className="text-center text-light mb-4"
-                          style={{ fontSize: '1.8rem', fontWeight: '600' }}
+                          className="text-center mb-4"
+                          style={{ fontSize: '1.8rem', fontWeight: '700', color: '#111827' }}
                         >
                           Uploaded Files
                         </h2>
@@ -887,20 +891,21 @@ const ResidentDetail = () => {
                               <div
                                 className="p-3"
                                 style={{
-                                  backgroundColor: '#33415C',
+                                  backgroundColor: '#f9fafb',
                                   borderRadius: '12px',
+                                  border: '1px solid #4b4b4bff',
                                   transition: 'transform 0.2s ease-in-out',
                                 }}
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform =
-                                    'scale(1.03)')
+                                (e.currentTarget.style.transform =
+                                  'scale(1.03)')
                                 }
                                 onMouseLeave={(e) =>
                                   (e.currentTarget.style.transform = 'scale(1)')
                                 }
                               >
                                 <h5
-                                  className="text-light mb-3"
+                                  className="text-dark mb-3"
                                   style={{ fontSize: '1.2rem' }}
                                 >
                                   CNIC
@@ -921,12 +926,12 @@ const ResidentDetail = () => {
                                     handleImageClick(resident.CnicFile)
                                   }
                                   onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff66')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff66')
                                   }
                                   onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff33')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff33')
                                   }
                                 />
                               </div>
@@ -937,20 +942,21 @@ const ResidentDetail = () => {
                               <div
                                 className="p-3"
                                 style={{
-                                  backgroundColor: '#33415C',
+                                  backgroundColor: "#f9fafb",
                                   borderRadius: '12px',
+                                  border: '1px solid #4b4b4bff',
                                   transition: 'transform 0.2s ease-in-out',
                                 }}
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform =
-                                    'scale(1.03)')
+                                (e.currentTarget.style.transform =
+                                  'scale(1.03)')
                                 }
                                 onMouseLeave={(e) =>
                                   (e.currentTarget.style.transform = 'scale(1)')
                                 }
                               >
                                 <h5
-                                  className="text-light mb-3"
+                                  className="text-dark mb-3"
                                   style={{ fontSize: '1.2rem' }}
                                 >
                                   NOC
@@ -971,12 +977,12 @@ const ResidentDetail = () => {
                                     handleImageClick(resident.NocFile)
                                   }
                                   onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff66')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff66')
                                   }
                                   onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff33')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff33')
                                   }
                                 />
                               </div>
@@ -992,8 +998,8 @@ const ResidentDetail = () => {
                                   transition: 'transform 0.2s ease-in-out',
                                 }}
                                 onMouseEnter={(e) =>
-                                  (e.currentTarget.style.transform =
-                                    'scale(1.03)')
+                                (e.currentTarget.style.transform =
+                                  'scale(1.03)')
                                 }
                                 onMouseLeave={(e) =>
                                   (e.currentTarget.style.transform = 'scale(1)')
@@ -1021,12 +1027,12 @@ const ResidentDetail = () => {
                                     handleImageClick(resident.CantFile)
                                   }
                                   onMouseEnter={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff66')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff66')
                                   }
                                   onMouseLeave={(e) =>
-                                    (e.currentTarget.style.borderColor =
-                                      '#ffffff33')
+                                  (e.currentTarget.style.borderColor =
+                                    '#ffffff33')
                                   }
                                 />
                               </div>
@@ -1037,11 +1043,12 @@ const ResidentDetail = () => {
                             !resident?.CantFile && (
                               <div className="text-center py-3">
                                 <h5
-                                  className="text-light"
                                   style={{
                                     fontSize: '1.3rem',
-                                    backgroundColor: '#33415C',
+                                    color: '#6b7280',
+                                    backgroundColor: '#f9fafb',
                                     borderRadius: '8px',
+                                    border: '1px solid #e5e7eb',
                                     padding: '15px',
                                     display: 'inline-block',
                                   }}
@@ -1058,20 +1065,20 @@ const ResidentDetail = () => {
                     {members.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5 text-light">Family Members</h2>
+                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Family Members</h2>
                           <div className="table-responsive">
-                            <table className="table table-dark table-bordered table-hover">
-                              <thead className="bg-light">
+                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
+                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
                                 <tr className="text-center">
-                                  <th scope="col">PHOTO</th>
-                                  <th scope="col">NAME</th>
-                                  <th scope="col">RELATION</th>
-                                  <th scope="col">MOBILE NUMBER</th>
-                                  <th scope="col">DOB</th>
-                                  <th scope="col">OCCUPATION</th>
-                                  <th scope="col">CNIC Number</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">ACTIONS</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>PHOTO</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>RELATION</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DOB</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC Number</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>ACTIONS</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1079,6 +1086,7 @@ const ResidentDetail = () => {
                                   <tr
                                     key={r._id}
                                     className="text-center align-middle"
+                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
                                   >
                                     <td>
                                       {r.photoUrl
@@ -1102,7 +1110,7 @@ const ResidentDetail = () => {
                                     </td>
                                     <td>
                                       <button
-                                        className="text-center btn btn-outline-primary m-1"
+                                        className="text-center btn btn-outline-danger m-1"
                                         onClick={deleteMember(r._id)}
                                       >
                                         Delete
@@ -1162,15 +1170,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="name"
                                   placeholder="Family Member Name"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <select
@@ -1178,44 +1185,43 @@ const ResidentDetail = () => {
                                   onChange={(e) =>
                                     handleRelativeChange(index, 'relation', e)
                                   }
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 >
                                   <option
                                     value=""
-                                    style={{ background: 'black' }}
+                                    style={{ background: 'white', color: '#111827' }}
                                   >
                                     Select Relation
                                   </option>
                                   <option
                                     value="Father"
-                                    style={{ background: 'black' }}
+                                    style={{ background: 'white', color: '#111827' }}
                                   >
                                     Father
                                   </option>
                                   <option
                                     value="Mother"
-                                    style={{ background: 'black' }}
+                                    style={{ background: 'white', color: '#111827' }}
                                   >
                                     Mother
                                   </option>
                                   <option
                                     value="Husband/Wife"
-                                    style={{ background: 'black' }}
+                                    style={{ background: 'white', color: '#111827' }}
                                   >
                                     Husband/Wife
                                   </option>
                                   <option
                                     value="Child"
-                                    style={{ background: 'black' }}
+                                    style={{ background: 'white', color: '#111827' }}
                                   >
                                     Child
                                   </option>
@@ -1228,15 +1234,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="cnic"
                                   placeholder="CNIC"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <input
@@ -1247,15 +1252,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="occupation"
                                   placeholder="Occupation"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                               </div>
@@ -1270,15 +1274,14 @@ const ResidentDetail = () => {
                                   type="tel"
                                   name="number"
                                   placeholder="Phone No"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <label htmlFor="date">Date Of Birth</label>
@@ -1290,27 +1293,25 @@ const ResidentDetail = () => {
                                   type="date"
                                   name="dob"
                                   placeholder="Date Of Birth"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <label
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 >
                                   {relative.photoUrl
@@ -1327,15 +1328,14 @@ const ResidentDetail = () => {
                                   />
                                 </label>
                                 <label
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 >
                                   {relative.cnicUrl
@@ -1371,20 +1371,20 @@ const ResidentDetail = () => {
                     {maids.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5 text-light">Servant Details</h2>
+                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Servant Details</h2>
                           <div className="table-responsive">
-                            <table className="table table-dark table-bordered table-hover">
-                              <thead className="bg-light">
+                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
+                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
                                 <tr className="text-center">
-                                  <th scope="col">NAME</th>
-                                  <th scope="col">DATE OF BIRTH</th>
-                                  <th scope="col">MOBILE NUMBER</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">ADDRESS</th>
-                                  <th scope="col">GUARDIAN'S NAME</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">CANT PASS</th>
-                                  <th scope="col">Action</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DATE OF BIRTH</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>ADDRESS</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>GUARDIAN'S NAME</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CANT PASS</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1392,6 +1392,7 @@ const ResidentDetail = () => {
                                   <tr
                                     key={r._id}
                                     className="text-center align-middle"
+                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
                                   >
                                     <td>{r.name || 'N/A'}</td>
                                     <td>
@@ -1415,7 +1416,7 @@ const ResidentDetail = () => {
                                     </td>
                                     <td>
                                       <button
-                                        className="text-center btn btn-outline-primary m-1"
+                                        className="text-center btn btn-outline-danger m-1"
                                         onClick={deleteServant(r._id)}
                                       >
                                         Delete
@@ -1440,17 +1441,27 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: '#263043',
+                          backgroundColor: 'white',
                           borderRadius: '12px',
+                          border: '1px solid #e5e7eb',
+                          padding: '2rem'
                         }}
                       >
-                        <h3 className="text-light">
+                        <h3 style={{ color: '#111827', fontWeight: 600 }}>
                           No Servant Details To Show
                         </h3>
                         <button
-                          className="btn btn-outline-success m-5 mt-2 w-25"
+                          className="btn m-5 mt-2 w-25"
                           onClick={() => {
                             setShowServant(true);
+                          }}
+                          style={{
+                            backgroundColor: '#03bb50',
+                            color: 'white',
+                            padding: '0.625rem 1.25rem',
+                            borderRadius: '0.5rem',
+                            fontWeight: 500,
+                            border: 'none'
                           }}
                         >
                           Add Servant
@@ -1471,7 +1482,7 @@ const ResidentDetail = () => {
                             }
                             type="text"
                             name="name"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             placeholder="Servant's Name"
                             style={inputStyle}
                           />
@@ -1484,7 +1495,7 @@ const ResidentDetail = () => {
                             type="date"
                             name="dob"
                             placeholder="Date Of Birth"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             style={inputStyle}
                           />
                           <br />
@@ -1496,7 +1507,7 @@ const ResidentDetail = () => {
                             type="text"
                             name="address"
                             placeholder="Address"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             style={inputStyle}
                           />
                           <br />
@@ -1508,7 +1519,7 @@ const ResidentDetail = () => {
                             type="text"
                             name="guardian"
                             placeholder="Guardian's Name"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             style={inputStyle}
                           />
                           <br />
@@ -1522,7 +1533,7 @@ const ResidentDetail = () => {
                             type="tel"
                             name="number"
                             placeholder="Phone Number"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             style={inputStyle}
                           />
                           <br />
@@ -1534,7 +1545,7 @@ const ResidentDetail = () => {
                             type="text"
                             name="cnic"
                             placeholder="CNIC Number"
-                            className="w-75 my-3 text-white py-2"
+                            className="w-75 my-3 py-2"
                             style={inputStyle}
                           />
                           <br />
@@ -1585,20 +1596,20 @@ const ResidentDetail = () => {
                   <Tab eventKey="vehicles" title="Vehicle Details">
                     {vehicle.length > 0 ? (
                       <div className="text-center">
-                        <h2 className="my-5 text-light">Vehicle Details</h2>
+                        <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Vehicle Details</h2>
                         <div className="table-responsive">
-                          <table className="table table-dark table-bordered table-hover">
-                            <thead className="bg-light">
+                          <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
+                            <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
                               <tr className="text-center">
-                                <th scope="col">TYPE</th>
-                                <th scope="col">MAKE</th>
-                                <th scope="col">MODEL</th>
-                                <th scope="col">MODEL YEAR</th>
-                                <th scope="col">COLOUR</th>
-                                <th scope="col">REGISTRATION NUMBER</th>
-                                <th scope="col">STICKER NUMBER</th>
-                                <th scope="col">DOCUMENT</th>
-                                <th scope="col">Action</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>TYPE</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MAKE</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MODEL</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MODEL YEAR</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>COLOUR</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>REGISTRATION NUMBER</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>STICKER NUMBER</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DOCUMENT</th>
+                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1606,6 +1617,7 @@ const ResidentDetail = () => {
                                 <tr
                                   key={r._id}
                                   className="text-center align-middle"
+                                  style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
                                 >
                                   <td>{r.type || 'N/A'}</td>
                                   <td>{r.make || 'N/A'}</td>
@@ -1647,17 +1659,27 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: '#263043',
+                          backgroundColor: 'white',
                           borderRadius: '12px',
+                          border: '1px solid #e5e7eb',
+                          padding: '2rem'
                         }}
                       >
-                        <h3 className="text-light">
+                        <h3 style={{ color: '#111827', fontWeight: 600 }}>
                           No Vehicle Details To Show
                         </h3>
                         <button
-                          className="btn btn-outline-success m-5 mt-2 w-25"
+                          className="btn m-5 mt-2 w-25"
                           onClick={() => {
                             setShowVehicle(true);
+                          }}
+                          style={{
+                            backgroundColor: '#03bb50',
+                            color: 'white',
+                            padding: '0.625rem 1.25rem',
+                            borderRadius: '0.5rem',
+                            fontWeight: 500,
+                            border: 'none'
                           }}
                         >
                           Add Vehicle
@@ -1682,15 +1704,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="type"
                                   placeholder="Vehicle Type | Car or Motorcycle"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <input
@@ -1701,15 +1722,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="colour"
                                   placeholder="Colour"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
 
@@ -1721,15 +1741,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="make"
                                   placeholder="Vehicle Make"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <input
@@ -1740,15 +1759,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="model"
                                   placeholder="Vehicle Model Name"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                               </div>
@@ -1763,15 +1781,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="year"
                                   placeholder="Vehicle Year"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <input
@@ -1782,15 +1799,14 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="stickerNumber"
                                   placeholder="Sticker Number"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <input
@@ -1801,27 +1817,25 @@ const ResidentDetail = () => {
                                   type="text"
                                   name="registrationNumber"
                                   placeholder="Vehicle Registration Number"
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 />
                                 <label
-                                  className="w-75 my-3 text-white py-2"
+                                  className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'transparent',
-                                    border: 'none',
-                                    borderBottom: '1px solid white',
+                                    background: 'white',
+                                    border: '1px solid #d1d5db',
                                     borderRadius: '12px',
                                     textIndent: '12px',
-                                    boxShadow:
-                                      'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+                                    color: '#111827',
+                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
                                   }}
                                 >
                                   {vehicle.paperDocument
@@ -1855,28 +1869,27 @@ const ResidentDetail = () => {
                   </Tab>
                   <Tab
                     eventKey="tenants"
-                    title={`${
-                      resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                    } Details`}
+                    title={`${resident.residentType === 'owner' ? 'Tenants' : 'Owner'
+                      } Details`}
                   >
                     {resident.residentType === 'owner' && tanents.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5 text-light">Tanents Details</h2>
+                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Tenants Details</h2>
                           <div className="table-responsive">
-                            <table className="table table-dark table-bordered table-hover">
-                              <thead className="bg-light">
+                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
+                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
                                 <tr className="text-center">
-                                  <th scope="col">NAME</th>
-                                  <th scope="col">EMAIL</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">House Number</th>
-                                  <th scope="col">NOC HOLDER</th>
-                                  <th scope="col">OCCUPATION</th>
-                                  <th scope="col">MOBILE NUMBER</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">Photo</th>
-                                  <th scope="col">Action</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>EMAIL</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>House Number</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NOC HOLDER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Photo</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1922,21 +1935,21 @@ const ResidentDetail = () => {
                     ) : resident.residentType === 'tenant' ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5 text-light">Owner Details</h2>
+                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Owner Details</h2>
                           <div className="table-responsive">
-                            <table className="table table-dark table-bordered table-hover">
-                              <thead className="bg-light">
+                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
+                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
                                 <tr className="text-center">
-                                  <th scope="col">NAME</th>
-                                  <th scope="col">EMAIL</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">House Number</th>
-                                  <th scope="col">NOC HOLDER</th>
-                                  <th scope="col">OCCUPATION</th>
-                                  <th scope="col">MOBILE NUMBER</th>
-                                  <th scope="col">CNIC</th>
-                                  <th scope="col">Photo</th>
-                                  <th scope="col">Action</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>EMAIL</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>House Number</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NOC HOLDER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Photo</th>
+                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1944,6 +1957,7 @@ const ResidentDetail = () => {
                                   <tr
                                     key={t._id}
                                     className="text-center align-middle"
+                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
                                   >
                                     <td>{t?.FullName || 'N/A'}</td>
                                     <td>{t.Email || 'N/A'}</td>
@@ -1983,11 +1997,13 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: '#263043',
+                          backgroundColor: 'white',
                           borderRadius: '12px',
+                          border: '1px solid #e5e7eb',
+                          padding: '2rem'
                         }}
                       >
-                        <h3 className="text-light">No Details To Show</h3>
+                        <h3 style={{ color: '#111827', fontWeight: 600 }}>No Details To Show</h3>
                       </div>
                     )}
                   </Tab>
@@ -2020,12 +2036,12 @@ const ResidentDetail = () => {
 
 // Styling object (same as before)
 const inputStyle = {
-  background: 'transparent',
-  border: 'none',
-  borderBottom: '1px solid white',
+  background: 'white',
+  border: '1px solid #d1d5db',
   borderRadius: '12px',
   textIndent: '12px',
-  boxShadow: 'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px',
+  color: '#111827',
+  boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
 };
 
 export default ResidentDetail;

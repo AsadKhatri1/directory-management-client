@@ -3,16 +3,59 @@
 @tailwind utilities;
 
 :root {
-  --primary-color: #03bb50;
-  --primary-hover: #029e43;
-  --secondary-color: #f3f4f6;
-  --text-color: #1f2937;
-  --border-color: #e5e7eb;
+  /* Primary Colors - Brand Green */
+  --primary-50: #f0fdf4;
+  --primary-100: #dcfce7;
+  --primary-500: #03bb50;
+  --primary-600: #029e43;
+  --primary-700: #027a35;
+
+  /* Neutral Colors */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Semantic Colors */
+  --background: #ffffff;
+  --surface: #f9fafb;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --error: #ef4444;
+  --success: #03bb50;
+  --warning: #f59e0b;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  color: var(--text-color);
+  color: var(--text-primary);
+  background-color: var(--surface);
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide scrollbar for Webkit browsers */
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Form Styles */
@@ -21,19 +64,35 @@ body {
 }
 
 .form-group label {
-  @apply block text-sm font-medium text-gray-700 mb-1;
+  @apply block text-sm font-medium mb-1;
+  color: var(--gray-700);
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500;
+  @apply w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2;
+  border-color: var(--gray-300);
+  background-color: white;
+  color: var(--text-primary);
+}
+
+.form-input:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(3, 187, 80, 0.1);
 }
 
 .file-input-wrapper {
-  @apply relative border border-gray-300 rounded-md px-3 py-2 cursor-pointer hover:bg-gray-50;
+  @apply relative border rounded-md px-3 py-2 cursor-pointer;
+  border-color: var(--gray-300);
+  background-color: white;
+}
+
+.file-input-wrapper:hover {
+  background-color: var(--gray-50);
 }
 
 .file-input-wrapper span {
-  @apply block truncate text-gray-500;
+  @apply block truncate;
+  color: var(--gray-500);
 }
 
 .file-input {
@@ -42,15 +101,36 @@ body {
 
 /* Button Styles */
 .btn-primary {
-  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500;
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2;
+  background-color: var(--primary-500);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-600);
+}
+
+.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(3, 187, 80, 0.2);
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500;
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2;
+  background-color: var(--gray-100);
+  color: var(--primary-700);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-200);
 }
 
 .btn-outline {
-  @apply inline-flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500;
+  @apply inline-flex items-center justify-center px-4 py-2 border rounded-md shadow-sm text-sm font-medium bg-white focus:outline-none focus:ring-2 focus:ring-offset-2;
+  border-color: var(--gray-300);
+  color: var(--gray-700);
+}
+
+.btn-outline:hover {
+  background-color: var(--gray-50);
 }
 
 /* Stepper Styles */
@@ -63,25 +143,53 @@ body {
 }
 
 .step-indicator {
-  @apply flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 border-gray-300 text-gray-500 font-medium cursor-pointer transition-all;
+  @apply flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 font-medium cursor-pointer transition-all;
+  border-color: var(--gray-300);
+  color: var(--gray-500);
 }
 
 .step-indicator.active {
-  @apply border-green-500 bg-green-500 text-white;
+  border-color: var(--primary-500);
+  background-color: var(--primary-500);
+  color: white;
 }
 
 .step-indicator.completed {
-  @apply border-green-500 bg-green-500 text-white;
+  border-color: var(--primary-500);
+  background-color: var(--primary-500);
+  color: white;
 }
 
 .step-connector {
-  @apply absolute top-4 left-0 right-0 h-0.5 bg-gray-200 -translate-y-1/2 z-0;
+  @apply absolute top-4 left-0 right-0 h-0.5 -translate-y-1/2 z-0;
+  background-color: var(--gray-200);
 }
 
 .step-connector-progress {
-  @apply absolute top-0 left-0 h-full bg-green-500 transition-all;
+  @apply absolute top-0 left-0 h-full transition-all;
+  background-color: var(--primary-500);
 }
 
 .step-content {
   @apply mt-8;
+}
+
+/* Custom Tab Styles for ResidentDetail */
+.nav-pills .nav-link {
+  color: var(--gray-600);
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-pills .nav-link:hover {
+  background-color: var(--gray-100);
+  color: var(--primary-600);
+}
+
+.nav-pills .nav-link.active {
+  background-color: var(--primary-600) !important;
+  color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }

@@ -69,12 +69,22 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
     }
   };
 
+  const inputStyle = {
+    background: "white",
+    color: "#111827",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    padding: "0.75rem",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  };
+
   return (
-    <div className="p-4 bg-dark text-light rounded">
+    <div className="p-4 bg-white rounded border shadow-sm">
       <div className="mb-3">
-        <label className="form-label">House Number</label>
+        <label className="form-label fw-bold text-dark">House Number</label>
         <input
-          className="form-control bg-secondary text-light"
+          className="form-control"
+          style={inputStyle}
           placeholder="House Number"
           value={newViolation.HouseNo}
           onChange={(e) =>
@@ -84,9 +94,10 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Resident Name (optional)</label>
+        <label className="form-label fw-bold text-dark">Resident Name (optional)</label>
         <input
-          className="form-control bg-secondary text-light"
+          className="form-control"
+          style={inputStyle}
           placeholder="Resident Name"
           value={newViolation.Resident}
           onChange={(e) =>
@@ -96,9 +107,10 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Title</label>
+        <label className="form-label fw-bold text-dark">Title</label>
         <input
-          className="form-control bg-secondary text-light"
+          className="form-control"
+          style={inputStyle}
           placeholder="Title"
           value={newViolation.Title}
           onChange={(e) =>
@@ -108,9 +120,10 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
       </div>
 
       <div className="mb-3">
-        <label className="form-label">Description</label>
+        <label className="form-label fw-bold text-dark">Description</label>
         <textarea
-          className="form-control bg-secondary text-light"
+          className="form-control"
+          style={inputStyle}
           placeholder="Description"
           rows="3"
           value={newViolation.Description}
@@ -122,13 +135,13 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
 
       {/* File Upload */}
       <div className="mb-3">
-        <label className="form-label">Upload Image</label>
-        <label className="btn btn-outline-light w-100">
+        <label className="form-label fw-bold text-dark">Upload Image</label>
+        <label className="btn btn-outline-success w-100 py-3" style={{ borderRadius: '8px' }}>
           {newViolation.imageUrl
             ? 'Image Uploaded'
             : uploading
-            ? 'Uploading...'
-            : 'Choose File'}
+              ? 'Uploading...'
+              : 'Choose File'}
           <input
             type="file"
             accept="image/*"
@@ -137,20 +150,25 @@ const CreateViolationForm = ({ baseUrl, onSuccess, onCancel }) => {
           />
         </label>
         {newViolation.imageUrl && (
-          <div className="mt-2 text-success small">Image ready to save ✅</div>
+          <div className="mt-2 text-success small fw-bold">Image ready to save ✅</div>
         )}
       </div>
 
       <div className="d-flex justify-content-end mt-4">
         <button
-          className="btn btn-success me-2"
+          className="btn btn-success me-2 px-4 py-2 fw-bold"
+          style={{ borderRadius: '8px' }}
           onClick={handleAddViolation}
           disabled={uploading}
         >
           Save Violation
         </button>
         {onCancel && (
-          <button className="btn btn-outline-light" onClick={onCancel}>
+          <button
+            className="btn btn-outline-secondary px-4 py-2 fw-bold"
+            style={{ borderRadius: '8px' }}
+            onClick={onCancel}
+          >
             Cancel
           </button>
         )}

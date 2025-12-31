@@ -55,38 +55,41 @@ const ExpenseReport = () => {
     <div>
       <div className="container ">
         <div ref={reportRef}>
-          <h1>Expense Report</h1>
+          <h1 style={{ color: '#111827', fontWeight: 700 }}>Expense Report</h1>
           <table
             style={{
               width: "100%",
               borderCollapse: "collapse",
               marginTop: "20px",
-              color: "white",
+              color: "#374151",
+              backgroundColor: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: "0.5rem"
             }}
           >
-            <thead>
+            <thead style={{ backgroundColor: '#f9fafb' }}>
               <tr>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <th style={{ border: "1px solid #e5e7eb", padding: "12px", color: "#111827", fontWeight: 600 }}>
                   Title
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <th style={{ border: "1px solid #e5e7eb", padding: "12px", color: "#111827", fontWeight: 600 }}>
                   Amount
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <th style={{ border: "1px solid #e5e7eb", padding: "12px", color: "#111827", fontWeight: 600 }}>
                   Type
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <th style={{ border: "1px solid #e5e7eb", padding: "12px", color: "#111827", fontWeight: 600 }}>
                   Account
                 </th>
-                <th style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <th style={{ border: "1px solid #e5e7eb", padding: "12px", color: "#111827", fontWeight: 600 }}>
                   Date
                 </th>
               </tr>
             </thead>
             <tbody>
               {currentExpenses.map((expense) => (
-                <tr key={expense._id}>
-                  <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                <tr key={expense._id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ border: "1px solid #e5e7eb", padding: "12px" }}>
                     {expense.Title}
                   </td>
                   <td style={{ border: "1px solid #ddd", padding: "8px" }}>
@@ -111,17 +114,33 @@ const ExpenseReport = () => {
         <div className="row">
           <div className="col-md-6">
             <button
-              className="btn btn-primary my-4"
+              className="btn my-4"
               onClick={() => navigate("/dashboard/expense")}
+              style={{
+                backgroundColor: '#f3f4f6',
+                color: '#374151',
+                padding: '0.625rem 1.25rem',
+                borderRadius: '0.5rem',
+                fontWeight: 500,
+                border: '1px solid #d1d5db'
+              }}
             >
               <FaChevronCircleLeft /> Back
             </button>
           </div>
           <div className="col-md-6">
             <button
-              className="btn btn-success my-4"
+              className="btn my-4"
               onClick={downloadPDF}
-              style={{ marginBottom: "20px" }}
+              style={{
+                marginBottom: "20px",
+                backgroundColor: '#03bb50',
+                color: 'white',
+                padding: '0.625rem 1.25rem',
+                borderRadius: '0.5rem',
+                fontWeight: 500,
+                border: 'none'
+              }}
             >
               <IoMdDownload /> Download
             </button>

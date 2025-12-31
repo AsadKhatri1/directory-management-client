@@ -12,6 +12,15 @@ const AdminForm = () => {
 
   const navigate = useNavigate();
 
+  const inputStyle = {
+    background: "white",
+    color: "#111827",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    padding: "0.75rem",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -48,15 +57,8 @@ const AdminForm = () => {
           name="FullName"
           id="FullName"
           placeholder="Full Name"
-          className="w-75 my-3 text-white py-2"
-          style={{
-            background: "transparent",
-            border: "none",
-            borderBottom: "1px solid white",
-            borderRadius: "12px",
-            textIndent: "12px",
-            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-          }}
+          className="w-75 my-3 py-2"
+          style={inputStyle}
         />
         <br />
         <input
@@ -66,15 +68,8 @@ const AdminForm = () => {
           name="Email"
           id="Email"
           placeholder="Email"
-          className="w-75 my-3 text-white py-2"
-          style={{
-            background: "transparent",
-            border: "none",
-            borderBottom: "1px solid white",
-            borderRadius: "12px",
-            textIndent: "12px",
-            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-          }}
+          className="w-75 my-3 py-2"
+          style={inputStyle}
         />{" "}
         <br />
         <input
@@ -84,15 +79,8 @@ const AdminForm = () => {
           name="Phone"
           id="Phone"
           placeholder="Phone"
-          className="w-75 my-3 text-white py-2"
-          style={{
-            background: "transparent",
-            border: "none",
-            borderBottom: "1px solid white",
-            borderRadius: "12px",
-            textIndent: "12px",
-            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-          }}
+          className="w-75 my-3 py-2"
+          style={inputStyle}
         />
         <br />
         <input
@@ -102,15 +90,8 @@ const AdminForm = () => {
           name="Password"
           id="Password"
           placeholder="Password"
-          className="w-75 my-3 text-white py-2"
-          style={{
-            background: "transparent",
-            border: "none",
-            borderBottom: "1px solid white",
-            borderRadius: "12px",
-            textIndent: "12px",
-            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-          }}
+          className="w-75 my-3 py-2"
+          style={inputStyle}
         />
         <br />
         <button

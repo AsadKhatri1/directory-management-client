@@ -30,14 +30,16 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           <Link
             to="/dashboard"
             className="text-center"
-            style={{ textDecoration: 'none', color: '#9e9ea4' }}
+            style={{ textDecoration: 'none', color: '#111827' }}
           >
             <img
               src={logo}
               className="icon-header"
               style={{ height: '200px', width: '160px' }}
-            />{' '}
-            Directory Management
+            />
+            <div style={{ fontWeight: 600, fontSize: '18px', marginTop: '10px' }}>
+              Directory Management
+            </div>
           </Link>
         </div>
         <span className="icon close-icon" onClick={openSideBar}>
@@ -46,9 +48,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
       </div>
       <ul className="sidebar-list">
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard">
             <MdDashboard className="mx-2 pb-1" />
@@ -57,9 +58,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
         </li>
 
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard/residents' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard/residents' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard/residents">
             <FaHouseUser className="mx-2 pb-1" />
@@ -68,9 +68,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
         </li>
 
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard/newResident' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard/newResident' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard/newResident">
             <BsFillHouseAddFill className="mx-2 pb-1" />
@@ -78,9 +77,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           </Link>
         </li>
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard/expense' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard/expense' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard/expense">
             <FaMoneyBillWave className="mx-2 pb-1" />
@@ -88,9 +86,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           </Link>
         </li>
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard/addAdmin' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard/addAdmin' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard/addAdmin">
             <RiAdminFill className="mx-2 pb-1" />
@@ -98,9 +95,8 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           </Link>
         </li>
         <li
-          className={`sidebar-item ${
-            location.pathname === '/dashboard/violations' ? 'active' : ''
-          }`}
+          className={`sidebar-item ${location.pathname === '/dashboard/violations' ? 'active' : ''
+            }`}
         >
           <Link to="/dashboard/violations">
             <BsFileBreakFill className="mx-2 pb-1" />
@@ -108,7 +104,18 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
           </Link>
         </li>
 
-        <li className="sidebar-item bg-danger text-white mt-3" onClick={logout}>
+        <li
+          className="sidebar-item mt-3"
+          onClick={logout}
+          style={{
+            backgroundColor: '#fee2e2',
+            color: '#991b1b',
+            borderRadius: '8px',
+            margin: '1rem',
+            padding: '12px 20px',
+            cursor: 'pointer'
+          }}
+        >
           <TbLogout2 className="mx-2 pb-1" />
           Logout
         </li>

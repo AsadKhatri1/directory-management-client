@@ -86,6 +86,15 @@ const ResidentUpdateForm = () => {
     }
   };
 
+  const inputStyle = {
+    background: "white",
+    color: "#111827",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    padding: "0.75rem",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoader(true);
@@ -169,15 +178,7 @@ const ResidentUpdateForm = () => {
                 accept="image/*"
                 onChange={(e) => setPhoto(e.target.files[0])}
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -199,15 +200,7 @@ const ResidentUpdateForm = () => {
                 accept="image/*, .pdf"
                 onChange={(e) => setCnicFile(e.target.files[0])}
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -229,15 +222,7 @@ const ResidentUpdateForm = () => {
                 accept="image/*, .pdf"
                 onChange={(e) => setNocFile(e.target.files[0])}
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -255,15 +240,7 @@ const ResidentUpdateForm = () => {
                 id="FullName"
                 name="FullName"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -281,15 +258,7 @@ const ResidentUpdateForm = () => {
                 id="Email"
                 name="Email"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -307,15 +276,7 @@ const ResidentUpdateForm = () => {
                 id="Profession"
                 name="Profession"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -333,15 +294,7 @@ const ResidentUpdateForm = () => {
                 id="Qualification"
                 name="Qualification"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
           </div>
@@ -360,15 +313,7 @@ const ResidentUpdateForm = () => {
                 id="residentType"
                 name="residentType"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               >
                 <option value="" style={{ color: "black" }}>
                   Select Resident Type
@@ -397,15 +342,7 @@ const ResidentUpdateForm = () => {
                 name="Phone"
                 minLength="11"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -423,15 +360,7 @@ const ResidentUpdateForm = () => {
                 id="HouseNumber"
                 name="HouseNumber"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -446,15 +375,7 @@ const ResidentUpdateForm = () => {
                 id="CNIC"
                 name="CNIC"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -469,15 +390,7 @@ const ResidentUpdateForm = () => {
                 id="date"
                 name="date"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -495,15 +408,7 @@ const ResidentUpdateForm = () => {
                 id="officeTel"
                 name="officeTel"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -521,13 +426,7 @@ const ResidentUpdateForm = () => {
                 name="businessAddress"
                 className="w-100 py-2"
                 style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                  ...inputStyle,
                   minHeight: "80px",
                 }}
               />
@@ -547,15 +446,7 @@ const ResidentUpdateForm = () => {
                 id="nocHolder"
                 name="nocHolder"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -573,15 +464,7 @@ const ResidentUpdateForm = () => {
                 id="nocIssue"
                 name="nocIssue"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
 
@@ -599,15 +482,7 @@ const ResidentUpdateForm = () => {
                 id="nocNo"
                 name="nocNo"
                 className="w-100 py-2"
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: "1px solid white",
-                  borderRadius: "4px",
-                  color: "white",
-                  textIndent: "8px",
-                  boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-                }}
+                style={inputStyle}
               />
             </div>
           </div>

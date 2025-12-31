@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import axios from "axios";
 import moment from "moment";
+
 const Home = () => {
   const backendURL = "https://directory-management-g8gf.onrender.com";
   // getting masjid & rec balance
@@ -47,50 +48,7 @@ const Home = () => {
   const [residents, setResidents] = useState([]);
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  // const data = [
-  //   {
-  //     name: "Page A",
-  //     uv: 4000,
-  //     pv: 2400,
-  //     amt: 2400,
-  //   },
-  //   {
-  //     name: "Page B",
-  //     uv: 3000,
-  //     pv: 1398,
-  //     amt: 2210,
-  //   },
-  //   {
-  //     name: "Page C",
-  //     uv: 2000,
-  //     pv: 9800,
-  //     amt: 2290,
-  //   },
-  //   {
-  //     name: "Page D",
-  //     uv: 2780,
-  //     pv: 3908,
-  //     amt: 2000,
-  //   },
-  //   {
-  //     name: "Page E",
-  //     uv: 1890,
-  //     pv: 4800,
-  //     amt: 2181,
-  //   },
-  //   {
-  //     name: "Page F",
-  //     uv: 2390,
-  //     pv: 3800,
-  //     amt: 2500,
-  //   },
-  //   {
-  //     name: "Page G",
-  //     uv: 3490,
-  //     pv: 4300,
-  //     amt: 2100,
-  //   },
-  // ];
+
   //   calling residents to know total number
   const allResidents = async () => {
     const res = await axios.get(`${backendURL}/api/v1/resident/getResidents`);
@@ -156,7 +114,9 @@ const Home = () => {
       expenses: totalExpenses,
     };
   }).reverse(); // Reverse to show from oldest to newest
+
   console.log(expenses);
+
   return (
     <main className="main-container">
       <div className="main-title">
@@ -164,18 +124,12 @@ const Home = () => {
       </div>
 
       <div className="main-cards">
-        <div
-          className="cards"
-          style={{
-            boxShadow:
-              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-          }}
-        >
+        <div className="cards">
           <div className="card-inner">
-            <h6 className="opacity-50">REC Account Balance</h6>
+            <h6>REC Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
+          <h3 className="my-2 card-number">
             {!recBalance ? (
               <Audio
                 height="50"
@@ -192,18 +146,12 @@ const Home = () => {
           </h3>
         </div>
 
-        <div
-          className="cards"
-          style={{
-            boxShadow:
-              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-          }}
-        >
+        <div className="cards">
           <div className="card-inner">
-            <h6 className="opacity-50">Masjid Account Balance</h6>
+            <h6>Masjid Account Balance</h6>
             <IoIosWallet className="card-icon" />
           </div>
-          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
+          <h3 className="my-2 card-number">
             {!masjidBalance ? (
               <Audio
                 height="50"
@@ -219,18 +167,13 @@ const Home = () => {
             )}
           </h3>
         </div>
-        <div
-          className="cards"
-          style={{
-            boxShadow:
-              "rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px",
-          }}
-        >
+
+        <div className="cards">
           <div className="card-inner">
-            <h6 className=" opacity-50">Residents</h6>
+            <h6>Residents</h6>
             <RiAdminFill className="card-icon" />
           </div>
-          <h3 className="my-2 card-number" style={{ color: "#03bb50" }}>
+          <h3 className="my-2 card-number">
             {residents.length < 1 ? (
               <Audio
                 height="50"
@@ -263,13 +206,23 @@ const Home = () => {
                 bottom: 5,
               }}
             >
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="income" fill="#03bb50" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="name" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Bar dataKey="income" fill="#03bb50" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <h3 className="text-center">INCOME CHART</h3>
+          <h3 className="text-center mt-3" style={{ color: '#111827', fontSize: '1.125rem', fontWeight: 600 }}>
+            INCOME CHART
+          </h3>
         </div>
         <div className="charts col-md-6">
           <ResponsiveContainer width="100%" height={300}>
@@ -282,13 +235,23 @@ const Home = () => {
                 bottom: 5,
               }}
             >
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="expenses" fill="#ef5350" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <XAxis dataKey="name" stroke="#6b7280" />
+              <YAxis stroke="#6b7280" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                }}
+              />
+              <Bar dataKey="expenses" fill="#ef5350" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <h3 className="text-center">EXPENSE CHART</h3>
+          <h3 className="text-center mt-3" style={{ color: '#111827', fontSize: '1.125rem', fontWeight: 600 }}>
+            EXPENSE CHART
+          </h3>
         </div>
       </div>
       <div className="row"></div>

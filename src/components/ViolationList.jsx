@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Audio } from 'react-loader-spinner';
 import CreateViolationForm from './CreateViolationForm';
 
 const ViolationList = () => {
@@ -10,9 +11,11 @@ const ViolationList = () => {
   const [violations, setViolations] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
   const [searchTerm, setSearchTerm] = useState(''); // ✅ added
+  const [loading, setLoading] = useState(false); // ✅ added loader state
 
   const getViolations = async () => {
     try {
+      setLoading(true); // ✅ start loading
       let url = `${baseUrl}/violation/list`;
       if (statusFilter) url += `?status=${statusFilter}`;
       const res = await axios.get(url);
@@ -20,6 +23,8 @@ const ViolationList = () => {
     } catch (error) {
       console.error('Error fetching violations:', error);
       toast.error('Failed to fetch violations');
+    } finally {
+      setLoading(false); // ✅ stop loading
     }
   };
 
@@ -121,215 +126,273 @@ const ViolationList = () => {
   });
 
   return (
-    <main className="main-container text-center">
-      {/* Top Controls */}
-      <div className="header-left d-flex mb-4 justify-content-between align-items-center">
-        <form className="mx-2 rounded w-50">
-          <input
-            placeholder="Search for violations"
-            type="text"
-            value={searchTerm} // ✅ controlled input
-            onChange={(e) => setSearchTerm(e.target.value)} // ✅ update search
-            className="input mx-2 py-2 w-100"
-            style={{ border: '2px solid #009843' }}
-          />
-        </form>
+    <main className="main-container">
+      <div className="container-fluid px-4">
+        <h1 className="mb-4 mt-3 text-center" style={{ color: '#111827', fontWeight: 700 }}>Violation Table</h1>
 
-        <button
-          className="btn btn-success mx-3"
-          onClick={() => setShowModal(true)}
-        >
-          Add New Violation
-        </button>
-      </div>
-
-      <h1 className="mx-5 mt-3">VIOLATIONS</h1>
-
-      <div className="d-flex">
-        <select
-          className="form-select mx-2 ms-auto"
-          style={{ width: '150px' }}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="">All Statuses</option>
-          <option value="new">New</option>
-          <option value="open">Open</option>
-          <option value="resolved">Resolved</option>
-        </select>
-      </div>
-
-      {/* Violations Table */}
-      <div
-        className="main-table w-100 table-responsive mt-3"
-        style={{
-          backgroundColor: '#263043',
-          borderRadius: '12px',
-          boxShadow:
-            'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
-        }}
-      >
-        <table className="table table-dark table-hover rounded table-striped">
-          <thead className="bg-light">
-            <tr className="text-center align-middle">
-              <th style={{ color: '#03bb50' }}>House No.</th>
-              <th style={{ color: '#03bb50' }}>Resident</th>
-              <th style={{ color: '#03bb50' }}>Title</th>
-              <th style={{ color: '#03bb50' }}>Description</th>
-              <th style={{ color: '#03bb50' }}>Status</th>
-              <th style={{ color: '#03bb50' }}>Image</th>
-              <th style={{ color: '#03bb50' }}>Date</th>
-              <th style={{ color: '#03bb50' }}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredViolations.map((v) => (
-              <tr key={v._id} className="text-center align-middle">
-                <td>{v.HouseNo}</td>
-                <td>{v.Resident || <i className="text-muted">N/A</i>}</td>
-                <td>{v.Title}</td>
-                <td>{v.Description}</td>
-                <td>
-                  <select
-                    className="form-select form-select-sm bg-dark"
-                    style={{
-                      color: v.Status === 'resolved' ? 'limegreen' : 'red',
-                    }}
-                    value={v.Status}
-                    onChange={async (e) => {
-                      const newStatus = e.target.value;
-                      try {
-                        const res = await axios.put(
-                          `${baseUrl}/violation/${v._id}`,
-                          { Status: newStatus }
-                        );
-                        if (res.data.success) {
-                          toast.success('Status updated');
-                          await getViolations();
-                        } else {
-                          toast.error('Failed to update status');
-                        }
-                      } catch (error) {
-                        toast.error('Error updating status');
-                        console.error(error);
-                      }
-                    }}
-                  >
-                    <option value="new">new</option>
-                    <option value="open">open</option>
-                    <option value="resolved">resolved</option>
-                  </select>
-                </td>
-                <td>
-                  <img
-                    src={v.imageUrl}
-                    alt={v.Title}
-                    className="rounded"
-                    width="60"
-                    height="60"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => setPreviewImage(v.imageUrl)}
-                  />
-                </td>
-                <td>
-                  {new Date(v.createdAt)
-                    .toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: '2-digit',
-                    })
-                    .replace(',', '')}
-                </td>
-                <td>
-                  <button
-                    className="btn btn-outline-danger"
-                    onClick={() => {
-                      if (confirm('Are you sure you want to delete?')) {
-                        handleDelete(v._id);
-                      }
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {filteredViolations.length === 0 && (
-              <tr>
-                <td colSpan="8" className="text-center">
-                  No matching violations found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Add Violation Modal */}
-      {showModal && (
-        <div
-          className="modal show d-block"
-          tabIndex="-1"
-          role="dialog"
-          style={{ background: 'rgba(0,0,0,0.7)' }}
-        >
-          <div
-            className="modal-dialog modal-dialog-centered modal-lg"
-            role="document"
+        <div className="d-flex justify-content-end mb-4">
+          <button
+            className="btn btn-success"
+            onClick={() => setShowModal(true)}
+            style={{
+              color: 'white',
+              padding: '0.625rem 1.25rem',
+              borderRadius: '0.5rem',
+              fontWeight: 500,
+              border: 'none'
+            }}
           >
-            <div className="modal-content bg-dark text-light border-secondary">
-              {/* Header */}
-              <div className="modal-header border-secondary">
-                <h5 className="modal-title">Add New Violation</h5>
-                <button
-                  type="button"
-                  className="btn-close btn-close-white"
-                  onClick={() => setShowModal(false)}
-                ></button>
-              </div>
-
-              {/* Body: our CreateViolationForm */}
-              <div className="modal-body">
-                <CreateViolationForm
-                  baseUrl={baseUrl}
-                  onSuccess={async () => {
-                    await getViolations();
-                    setShowModal(false);
-                  }}
-                  onCancel={() => setShowModal(false)}
-                />
-              </div>
-            </div>
-          </div>
+            + Add New Violation
+          </button>
         </div>
-      )}
 
-      {/* Image Preview Modal */}
-      {previewImage && (
+        {/* Unified Filter Bar */}
         <div
-          className="modal show d-block"
-          tabIndex="-1"
-          role="dialog"
-          style={{ background: 'rgba(0,0,0,0.9)' }}
-          onClick={() => setPreviewImage(null)}
+          className="mb-4 p-4"
+          style={{
+            backgroundColor: 'white',
+            borderRadius: '16px',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          }}
         >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content bg-transparent border-0 text-center">
-              <img
-                src={previewImage}
-                alt="Preview"
-                className="img-fluid rounded shadow"
+          <div className="row g-3 align-items-end">
+            <div className="col-md-8">
+              <label className="form-label fw-semibold" style={{ color: '#374151' }}>Search Violations</label>
+              <input
+                placeholder="Search by House No or Resident..."
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-control"
+                style={{
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.5rem',
+                  padding: '0.75rem',
+                  fontSize: '0.9375rem'
+                }}
               />
-              <button
-                className="btn btn-light mt-3"
-                onClick={() => setPreviewImage(null)}
+            </div>
+            <div className="col-md-4">
+              <label className="form-label fw-semibold" style={{ color: '#374151' }}>Status</label>
+              <select
+                className="form-select"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                style={{
+                  border: '1px solid #d1d5db',
+                  borderRadius: '0.5rem',
+                  padding: '0.75rem',
+                  fontSize: '0.9375rem'
+                }}
               >
-                Close
-              </button>
+                <option value="">All Statuses</option>
+                <option value="new">New</option>
+                <option value="open">Open</option>
+                <option value="resolved">Resolved</option>
+              </select>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Violations Table */}
+        <div
+          className="main-table w-100 table-responsive mt-3"
+          style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            border: '1px solid #e5e7eb',
+            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <table className="table table-hover rounded" style={{ backgroundColor: 'white' }}>
+            <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+              <tr className="text-center align-middle">
+                <th style={{ color: '#111827', fontWeight: 600 }}>House No.</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Resident</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Title</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Description</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Status</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Image</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Date</th>
+                <th style={{ color: '#111827', fontWeight: 600 }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-5">
+                    <Audio
+                      height="60"
+                      width="50"
+                      radius="9"
+                      color="#03bb50"
+                      ariaLabel="loading"
+                      wrapperStyle={{}}
+                      wrapperClass=""
+                    />
+                  </td>
+                </tr>
+              ) : filteredViolations.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="text-center">
+                    No matching violations found
+                  </td>
+                </tr>
+              ) : (
+                filteredViolations.map((v) => (
+                  <tr key={v._id} className="text-center align-middle" style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}>
+                    <td>{v.HouseNo}</td>
+                    <td>{v.Resident || <i className="text-muted">N/A</i>}</td>
+                    <td>{v.Title}</td>
+                    <td>{v.Description}</td>
+                    <td>
+                      <select
+                        className="form-select form-select-sm"
+                        style={{
+                          color: v.Status === 'resolved' ? '#03bb50' : '#ef4444',
+                          fontWeight: 600,
+                          border: '1px solid #d1d5db'
+                        }}
+                        value={v.Status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          try {
+                            const res = await axios.put(
+                              `${baseUrl}/violation/${v._id}`,
+                              { Status: newStatus }
+                            );
+                            if (res.data.success) {
+                              toast.success('Status updated');
+                              await getViolations();
+                            } else {
+                              toast.error('Failed to update status');
+                            }
+                          } catch (error) {
+                            toast.error('Error updating status');
+                            console.error(error);
+                          }
+                        }}
+                      >
+                        <option value="new">new</option>
+                        <option value="open">open</option>
+                        <option value="resolved">resolved</option>
+                      </select>
+                    </td>
+                    <td>
+                      <img
+                        src={v.imageUrl}
+                        alt={v.Title}
+                        className="rounded"
+                        width="60"
+                        height="60"
+                        style={{ cursor: 'pointer' }}
+                        onClick={() => setPreviewImage(v.imageUrl)}
+                      />
+                    </td>
+                    <td>
+                      {new Date(v.createdAt)
+                        .toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: '2-digit',
+                        })
+                        .replace(',', '')}
+                    </td>
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => {
+                          if (confirm('Are you sure you want to delete?')) {
+                            handleDelete(v._id);
+                          }
+                        }}
+                        style={{
+                          backgroundColor: '#fee2e2',
+                          color: '#991b1b',
+                          border: '1px solid #fecaca',
+                          padding: '0.5rem 1rem',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.875rem',
+                          fontWeight: 500
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Add Violation Modal */}
+        {showModal && (
+          <div
+            className="modal show d-block"
+            tabIndex="-1"
+            role="dialog"
+            style={{ background: 'rgba(0,0,0,0.7)' }}
+          >
+            <div
+              className="modal-dialog modal-dialog-centered modal-lg"
+              role="document"
+            >
+              <div className="modal-content bg-white text-dark border">
+                {/* Header */}
+                <div className="modal-header" style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <h5 className="modal-title" style={{ color: '#111827', fontWeight: 600 }}>Add New Violation</h5>
+                  <button
+                    type="button"
+                    className="btn-close btn-close-white"
+                    onClick={() => setShowModal(false)}
+                  ></button>
+                </div>
+
+                {/* Body: our CreateViolationForm */}
+                <div className="modal-body">
+                  <CreateViolationForm
+                    baseUrl={baseUrl}
+                    onSuccess={async () => {
+                      await getViolations();
+                      setShowModal(false);
+                    }}
+                    onCancel={() => setShowModal(false)}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Image Preview Modal */}
+        {previewImage && (
+          <div
+            className="modal show d-block"
+            tabIndex="-1"
+            role="dialog"
+            style={{ background: 'rgba(0,0,0,0.9)' }}
+            onClick={() => setPreviewImage(null)}
+          >
+            <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content bg-transparent border-0 text-center">
+                <img
+                  src={previewImage}
+                  alt="Preview"
+                  className="img-fluid rounded shadow"
+                />
+                <button
+                  className="btn btn-light mt-3"
+                  onClick={() => setPreviewImage(null)}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </main>
   );
 };
