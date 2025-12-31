@@ -1,30 +1,30 @@
-import axios from 'axios';
-import { useEffect, useState, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { Audio } from 'react-loader-spinner';
-import { ToastContainer } from 'react-bootstrap';
-import moment from 'moment';
-import DatePicker from 'react-datepicker';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import axios from "axios";
+import { useEffect, useState, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Audio } from "react-loader-spinner";
+import { ToastContainer } from "react-bootstrap";
+import moment from "moment";
+import DatePicker from "react-datepicker";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 import 'react-datepicker/dist/react-datepicker.css';
 import { FaEdit, FaTrash, FaInfoCircle } from "react-icons/fa";
 
 const ResidentTable = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
-  const token = localStorage.getItem('token');
+  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const token = localStorage.getItem("token");
   const navigate = useNavigate();
   const [residents, setResidents] = useState([]);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [selectedDates, setSelectedDates] = useState({});
   const [showUnpaidOnly, setShowUnpaidOnly] = useState(false);
   const [showTenantsOnly, setShowTenantsOnly] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [residentId, setResidentId] = useState('');
+  const [residentId, setResidentId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [houseSearch, setHouseSearch] = useState('');
+  const [houseSearch, setHouseSearch] = useState("");
   const [activeDatePickerId, setActiveDatePickerId] = useState(null);
 
   const allResidents = async () => {
@@ -44,7 +44,7 @@ const ResidentTable = () => {
         setSelectedDates(
           res.data.residents.reduce((acc, resident) => {
             acc[resident._id] = {
-              start: moment().subtract(1, 'months').toDate(),
+              start: moment().subtract(1, "months").toDate(),
               end: moment().toDate(),
             };
             return acc;
@@ -52,7 +52,7 @@ const ResidentTable = () => {
         );
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error fetching residents');
+      toast.error(err.response?.data?.message || "Error fetching residents");
     } finally {
       setLoading(false);
     }
@@ -77,10 +77,10 @@ const ResidentTable = () => {
         toast.success(res.data.message);
         allResidents();
       } else {
-        toast.error(res?.data?.message || 'Failed to delete resident');
+        toast.error(res?.data?.message || "Failed to delete resident");
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Error deleting resident');
+      toast.error(err.response?.data?.message || "Error deleting resident");
     } finally {
       setLoading(false);
     }
@@ -103,29 +103,29 @@ const ResidentTable = () => {
 
       // Ensure start date is not after end date
       if (startDate.isAfter(endDate)) {
-        toast.warn('Start date cannot be after end date');
+        toast.warn("Start date cannot be after end date");
         setLoading(false);
         return;
       }
 
       // Generate array of months between start and end dates
-      const current = startDate.clone().startOf('month');
-      while (current.isSameOrBefore(endDate, 'month')) {
-        months.push(current.format('YYYY-MM'));
-        current.add(1, 'month');
+      const current = startDate.clone().startOf("month");
+      while (current.isSameOrBefore(endDate, "month")) {
+        months.push(current.format("YYYY-MM"));
+        current.add(1, "month");
       }
     }
 
     const numberOfMonths = months.length;
 
     if (numberOfMonths === 0) {
-      toast.warn('Please select valid start and end dates');
+      toast.warn("Please select valid start and end dates");
       setLoading(false);
       return;
     }
 
-    localStorage.setItem('PaymentMode', paymentMode);
-    localStorage.setItem('NumberOfMonths', JSON.stringify(months));
+    localStorage.setItem("PaymentMode", paymentMode);
+    localStorage.setItem("NumberOfMonths", JSON.stringify(months));
 
     try {
       const response = await axios.post(
@@ -138,45 +138,46 @@ const ResidentTable = () => {
         }
       );
       if (response.data.success) {
-        localStorage.setItem('amount', JSON.stringify(response.data.totalFee));
+        localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
         localStorage.setItem(
-          'resident',
+          "resident",
           JSON.stringify(response.data.resident)
         );
-        localStorage.setItem('months', JSON.stringify(months));
+        localStorage.setItem("months", JSON.stringify(months));
         setIsOpen(false);
-        navigate('/dashboard/resident/invoice');
+        navigate("/dashboard/resident/invoice");
       } else {
-        toast.error(response.data.message || 'Failed to generate fee slip');
+        toast.error(response.data.message || "Failed to generate fee slip");
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error generating fee slip');
+      toast.error(error.response?.data?.message || "Error generating fee slip");
     } finally {
       setLoading(false);
     }
   };
   const exportToExcel = () => {
     if (!filteredResidents.length) {
-      toast.warn('No resident data to export');
+      toast.warn("No resident data to export");
       return;
     }
 
     // Prepare data for export
     const exportData = filteredResidents.map((r, index) => ({
-      'S.No': index + 1,
-      'Full Name': r.FullName || 'N/A',
-      Email: r.Email || 'N/A',
-      Phone: r.Phone || 'N/A',
-      'House Number': r.HouseNumber || 'N/A',
-      CNIC: r.CNIC || 'N/A',
-      'Resident Type': r.residentType || 'N/A',
-      'Payment Status': r.paid ? 'Paid' : 'Unpaid',
+      "S.No": index + 1,
+      "Full Name": r.FullName || "N/A",
+      Email: r.Email || "N/A",
+      Phone: r.Phone || "N/A",
+      "House Number": r.HouseNumber || "N/A",
+      CNIC: r.CNIC || "N/A",
+      "Resident Type": r.residentType || "N/A",
+      "NOC Number": r?.NOCNo || "N/A",
+      "Payment Status": r.paid ? "Paid" : "Unpaid",
     }));
 
     // Create worksheet and workbook
     const worksheet = XLSX.utils.json_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Residents');
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Residents");
 
     // Apply column widths (optional, for readability)
     const colWidths = [
@@ -187,37 +188,38 @@ const ResidentTable = () => {
       { wch: 15 }, // House Number
       { wch: 20 }, // CNIC
       { wch: 12 }, // Resident Type
+      { wch: 12 }, // Resident Type
       { wch: 12 }, // Payment Status
     ];
-    worksheet['!cols'] = colWidths;
+    worksheet["!cols"] = colWidths;
 
     // Generate and save Excel file
     const excelBuffer = XLSX.write(workbook, {
-      bookType: 'xlsx',
-      type: 'array',
+      bookType: "xlsx",
+      type: "array",
     });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(blob, `Residents_${moment().format('YYYY-MM-DD_HH-mm')}.xlsx`);
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, `Residents_${moment().format("YYYY-MM-DD_HH-mm")}.xlsx`);
   };
 
   const filteredResidents = useMemo(() => {
     if (showTenantsOnly) {
       return residents.filter(
-        (item) => (item.residentType || '').toLowerCase() === 'tenant'
+        (item) => (item.residentType || "").toLowerCase() === "tenant"
       );
     }
     return residents.filter((item) => {
       const houseMatch =
-        houseSearch.trim() === '' ||
-        (item.HouseNumber || '')
+        houseSearch.trim() === "" ||
+        (item.HouseNumber || "")
           .toLowerCase()
           .includes(houseSearch.toLowerCase());
       const generalMatch =
-        search.trim() === '' ||
-        (item.FullName || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.Email || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.Phone || '').toLowerCase().includes(search.toLowerCase()) ||
-        (item.CNIC || '').toLowerCase().includes(search.toLowerCase());
+        search.trim() === "" ||
+        (item.FullName || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Email || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.Phone || "").toLowerCase().includes(search.toLowerCase()) ||
+        (item.CNIC || "").toLowerCase().includes(search.toLowerCase());
       const matchesUnpaid = !showUnpaidOnly || !item.paid;
       return houseMatch && generalMatch && matchesUnpaid;
     });
@@ -613,7 +615,7 @@ const ResidentTable = () => {
                     ? `${moment(selectedDates[residentId].start).format(
                       'MMMM YYYY'
                     )} - ${moment(selectedDates[residentId].end).format(
-                      'MMMM YYYY'
+                      "MMMM YYYY"
                     )}`
                     : 'None selected'}
                 </strong>
@@ -624,7 +626,7 @@ const ResidentTable = () => {
                     selectedDates[residentId]?.end
                     ? moment(selectedDates[residentId].end).diff(
                       moment(selectedDates[residentId].start),
-                      'months'
+                      "months"
                     ) + 1
                     : 0}
                 </strong>
