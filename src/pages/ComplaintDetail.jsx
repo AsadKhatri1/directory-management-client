@@ -20,7 +20,7 @@ const ComplaintDetail = () => {
     const [status, setStatus] = useState("");
     const [adminNotes, setAdminNotes] = useState("");
 
-    const backendURL = "http://localhost:4000/api/v1";
+    const backendURL = "https://directory-management-g8gf.onrender.com/api/v1";
     const token = localStorage.getItem("token");
 
     const sideBarToggle = () => {

@@ -19,7 +19,7 @@ const SubmitComplaint = () => {
     const [uploading, setUploading] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+    const baseUrl = "https://directory-management-g8gf.onrender.com/api/v1";
 
     const categories = [
         'Noise Complaint',

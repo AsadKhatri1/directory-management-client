@@ -7,7 +7,7 @@ import moment from "moment";
 import Badge from "./ui/Badge";
 
 const ComplaintTable = () => {
-    const backendURL = "http://localhost:4000/api/v1"; // Using the pattern from other components or env
+    const backendURL = "https://directory-management-g8gf.onrender.com/api/v1"; // Using the pattern from other components or env
     const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
