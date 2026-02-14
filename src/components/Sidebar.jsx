@@ -103,6 +103,15 @@ const Sidebar = ({ sideBarToggle, openSideBar }) => {
             Violations
           </Link>
         </li>
+        <li
+          className={`sidebar-item ${location.pathname.startsWith('/dashboard/complaints') ? 'active' : ''
+            }`}
+        >
+          <Link to="/dashboard/complaints">
+            <GoFileDirectoryFill className="mx-2 pb-1" />
+            Complaints
+          </Link>
+        </li>
 
         <li
           className="sidebar-item mt-3"

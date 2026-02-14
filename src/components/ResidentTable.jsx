@@ -232,7 +232,7 @@ const ResidentTable = () => {
   return (
     <main className="main-container">
       <div className="container-fluid px-4">
-        <h1 className="mb-4 mt-3 text-center" style={{ color: '#111827', fontWeight: 700 }}>Resident Table</h1>
+        <h1 className="mb-4 mt-3 text-center" style={{ color: '#000000ff', fontWeight: 700 }}>Resident Table</h1>
 
         <div
           className="mb-4 p-4"

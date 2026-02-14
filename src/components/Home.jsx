@@ -119,8 +119,8 @@ const Home = () => {
 
   return (
     <main className="main-container">
-      <div className="main-title">
-        <h1>Dashboard</h1>
+      <div className="main-title text-center d-flex justify-content-center align-items-center">
+        <h1 className="mb-4 mt-3 text-center" style={{ color: '#000000ff', fontWeight: 700 }}>Dashboard</h1>
       </div>
 
       <div className="main-cards">

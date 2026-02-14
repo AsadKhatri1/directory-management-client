@@ -15,6 +15,9 @@ import ResidentUpdate from './pages/ResidentUpdate.jsx';
 import PrivateRoute from './privateroute/PrivateRoute.jsx';
 import Violation from './pages/Violation.jsx';
 import CreateViolation from './pages/CreateViolation.jsx';
+import SubmitComplaint from './pages/SubmitComplaint.jsx';
+import AdminComplaints from './pages/AdminComplaints.jsx';
+import ComplaintDetail from './pages/ComplaintDetail.jsx';
 
 function App() {
   return (
@@ -110,7 +113,24 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path="/dashboard/complaints"
+          element={
+            <PrivateRoute>
+              <AdminComplaints />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dashboard/complaints/:id"
+          element={
+            <PrivateRoute>
+              <ComplaintDetail />
+            </PrivateRoute>
+          }
+        />
         <Route path="/violations" element={<CreateViolation />} />
+        <Route path="/submit-complaint" element={<SubmitComplaint />} />
       </Routes>
     </Router>
   );
