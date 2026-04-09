@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-import 'react-datepicker/dist/react-datepicker.css';
+import "react-datepicker/dist/react-datepicker.css";
 import { FaEdit, FaTrash, FaInfoCircle } from "react-icons/fa";
 
 const ResidentTable = () => {
@@ -36,7 +36,7 @@ const ResidentTable = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (res?.data?.success) {
         setResidents(res.data.residents);
@@ -48,7 +48,7 @@ const ResidentTable = () => {
               end: moment().toDate(),
             };
             return acc;
-          }, {})
+          }, {}),
         );
       }
     } catch (err) {
@@ -71,7 +71,7 @@ const ResidentTable = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (res.data.success) {
         toast.success(res.data.message);
@@ -135,13 +135,13 @@ const ResidentTable = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       if (response.data.success) {
         localStorage.setItem("amount", JSON.stringify(response.data.totalFee));
         localStorage.setItem(
           "resident",
-          JSON.stringify(response.data.resident)
+          JSON.stringify(response.data.resident),
         );
         localStorage.setItem("months", JSON.stringify(months));
         setIsOpen(false);
@@ -169,6 +169,7 @@ const ResidentTable = () => {
       Phone: r.Phone || "N/A",
       "House Number": r.HouseNumber || "N/A",
       CNIC: r.CNIC || "N/A",
+      Occupation: r.Profession || r.occupation || "N/A",
       "Resident Type": r.residentType || "N/A",
       "NOC Number": r?.NOCNo || "N/A",
       "Payment Status": r.paid ? "Paid" : "Unpaid",
@@ -187,6 +188,7 @@ const ResidentTable = () => {
       { wch: 15 }, // Phone
       { wch: 15 }, // House Number
       { wch: 20 }, // CNIC
+      { wch: 20 }, // Occupation
       { wch: 12 }, // Resident Type
       { wch: 12 }, // Resident Type
       { wch: 12 }, // Payment Status
@@ -205,7 +207,7 @@ const ResidentTable = () => {
   const filteredResidents = useMemo(() => {
     if (showTenantsOnly) {
       return residents.filter(
-        (item) => (item.residentType || "").toLowerCase() === "tenant"
+        (item) => (item.residentType || "").toLowerCase() === "tenant",
       );
     }
     return residents.filter((item) => {
@@ -232,35 +234,50 @@ const ResidentTable = () => {
   return (
     <main className="main-container">
       <div className="container-fluid px-4">
-        <h1 className="mb-4 mt-3 text-center" style={{ color: '#000000ff', fontWeight: 700 }}>Resident Table</h1>
+        <h1
+          className="mb-4 mt-3 text-center"
+          style={{ color: "#000000ff", fontWeight: 700 }}
+        >
+          Resident Table
+        </h1>
 
         <div
           className="mb-4 p-4"
           style={{
-            backgroundColor: 'white',
-            borderRadius: '16px',
-            border: '1px solid #e5e7eb',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            backgroundColor: "white",
+            borderRadius: "16px",
+            border: "1px solid #e5e7eb",
+            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
           }}
         >
           <div className="row g-3 align-items-end">
             <div className="col-md-4">
-              <label className="form-label fw-semibold" style={{ color: '#374151' }}>Search Residents</label>
+              <label
+                className="form-label fw-semibold"
+                style={{ color: "#374151" }}
+              >
+                Search Residents
+              </label>
               <input
                 placeholder="Name, Email, Phone, CNIC..."
                 type="text"
                 className="form-control"
                 onChange={(e) => setSearch(e.target.value)}
                 style={{
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem',
-                  fontSize: '0.9375rem'
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.5rem",
+                  padding: "0.75rem",
+                  fontSize: "0.9375rem",
                 }}
               />
             </div>
             <div className="col-md-3">
-              <label className="form-label fw-semibold" style={{ color: '#374151' }}>House Number</label>
+              <label
+                className="form-label fw-semibold"
+                style={{ color: "#374151" }}
+              >
+                House Number
+              </label>
               <input
                 value={houseSearch}
                 placeholder="Search by House #"
@@ -268,36 +285,57 @@ const ResidentTable = () => {
                 className="form-control"
                 onChange={(e) => setHouseSearch(e.target.value)}
                 style={{
-                  border: '1px solid #d1d5db',
-                  borderRadius: '0.5rem',
-                  padding: '0.75rem',
-                  fontSize: '0.9375rem'
+                  border: "1px solid #d1d5db",
+                  borderRadius: "0.5rem",
+                  padding: "0.75rem",
+                  fontSize: "0.9375rem",
                 }}
               />
             </div>
             <div className="col-md-5 d-flex align-items-center justify-content-between">
               <div className="d-flex gap-4">
-                <label className="d-flex align-items-center gap-2 cursor-pointer" style={{ color: '#374151', cursor: 'pointer' }}>
+                <label
+                  className="d-flex align-items-center gap-2 cursor-pointer"
+                  style={{ color: "#374151", cursor: "pointer" }}
+                >
                   <input
                     type="checkbox"
                     checked={showUnpaidOnly}
                     onChange={(e) => setShowUnpaidOnly(e.target.checked)}
-                    style={{ accentColor: '#03bb50', width: '1.2rem', height: '1.2rem' }}
+                    style={{
+                      accentColor: "#03bb50",
+                      width: "1.2rem",
+                      height: "1.2rem",
+                    }}
                   />
                   <span className="fw-medium">Unpaid Only</span>
                 </label>
-                <label className="d-flex align-items-center gap-2 cursor-pointer" style={{ color: '#374151', cursor: 'pointer' }}>
+                <label
+                  className="d-flex align-items-center gap-2 cursor-pointer"
+                  style={{ color: "#374151", cursor: "pointer" }}
+                >
                   <input
                     type="checkbox"
                     checked={showTenantsOnly}
                     onChange={(e) => setShowTenantsOnly(e.target.checked)}
-                    style={{ accentColor: '#03bb50', width: '1.2rem', height: '1.2rem' }}
+                    style={{
+                      accentColor: "#03bb50",
+                      width: "1.2rem",
+                      height: "1.2rem",
+                    }}
                   />
                   <span className="fw-medium">Tenants Only</span>
                 </label>
               </div>
               <div className="text-end">
-                <span className="badge bg-success-subtle text-success px-3 py-2 rounded-pill" style={{ fontSize: '0.9rem', backgroundColor: '#dcfce7', color: '#166534' }}>
+                <span
+                  className="badge bg-success-subtle text-success px-3 py-2 rounded-pill"
+                  style={{
+                    fontSize: "0.9rem",
+                    backgroundColor: "#dcfce7",
+                    color: "#166534",
+                  }}
+                >
                   Total: {filteredResidents.length}
                 </span>
               </div>
@@ -309,81 +347,89 @@ const ResidentTable = () => {
             className="btn"
             onClick={exportToExcel}
             style={{
-              backgroundColor: '#03bb50',
-              color: 'white',
-              padding: '0.625rem 1.25rem',
-              borderRadius: '0.5rem',
+              backgroundColor: "#03bb50",
+              color: "white",
+              padding: "0.625rem 1.25rem",
+              borderRadius: "0.5rem",
               fontWeight: 500,
-              border: 'none'
+              border: "none",
             }}
           >
             Export to Excel
           </button>
         </div>
         <div className="main-table w-100 table-responsive mt-2">
-          <table className="table table-hover rounded" style={{ backgroundColor: 'white' }}>
-            <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+          <table
+            className="table table-hover rounded"
+            style={{ backgroundColor: "white" }}
+          >
+            <thead
+              style={{
+                backgroundColor: "#f9fafb",
+                borderBottom: "2px solid #e5e7eb",
+              }}
+            >
               <tr className="text-center align-middle">
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Full Name
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Email
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Phone
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   House Number
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   CNIC
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Type
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Payment Status
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Payment Slip
                 </th>
                 <th
                   scope="col"
                   className="py-3 fs-6"
-                  style={{ color: '#111827', fontWeight: 600 }}
+                  style={{ color: "#111827", fontWeight: 600 }}
                 >
                   Action
                 </th>
@@ -415,76 +461,88 @@ const ResidentTable = () => {
                     key={r._id}
                     className="text-center align-middle"
                     style={{
-                      cursor: 'pointer',
-                      borderBottom: '1px solid #e5e7eb',
-                      color: '#374151'
+                      cursor: "pointer",
+                      borderBottom: "1px solid #e5e7eb",
+                      color: "#374151",
                     }}
                   >
-                    <td style={{ padding: '1rem' }}>{r.FullName || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{r.Email || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{r.Phone || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{r.HouseNumber || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{r.CNIC || 'N/A'}</td>
-                    <td style={{ padding: '1rem' }}>{r.residentType || 'N/A'}</td>
-                    <td style={{ color: r.paid ? '#03bb50' : '#ef4444', fontWeight: 600, padding: '1rem' }}>
-                      {r.paid ? 'Paid' : 'Unpaid'}
+                    <td style={{ padding: "1rem" }}>{r.FullName || "N/A"}</td>
+                    <td style={{ padding: "1rem" }}>{r.Email || "N/A"}</td>
+                    <td style={{ padding: "1rem" }}>{r.Phone || "N/A"}</td>
+                    <td style={{ padding: "1rem" }}>
+                      {r.HouseNumber || "N/A"}
                     </td>
-                    <td style={{ padding: '1rem' }}>
+                    <td style={{ padding: "1rem" }}>{r.CNIC || "N/A"}</td>
+                    <td style={{ padding: "1rem" }}>
+                      {r.residentType || "N/A"}
+                    </td>
+                    <td
+                      style={{
+                        color: r.paid ? "#03bb50" : "#ef4444",
+                        fontWeight: 600,
+                        padding: "1rem",
+                      }}
+                    >
+                      {r.paid ? "Paid" : "Unpaid"}
+                    </td>
+                    <td style={{ padding: "1rem" }}>
                       <button
                         className="btn m-1"
                         onClick={() => Slippopup(r._id)}
                         disabled={r.paid}
                         style={{
-                          backgroundColor: r.paid ? '#e5e7eb' : '#03bb50',
-                          color: r.paid ? '#9ca3af' : 'white',
-                          border: 'none',
-                          padding: '0.5rem 1rem',
-                          borderRadius: '0.375rem',
-                          fontSize: '0.875rem',
-                          fontWeight: 500
+                          backgroundColor: r.paid ? "#e5e7eb" : "#03bb50",
+                          color: r.paid ? "#9ca3af" : "white",
+                          border: "none",
+                          padding: "0.5rem 1rem",
+                          borderRadius: "0.375rem",
+                          fontSize: "0.875rem",
+                          fontWeight: 500,
                         }}
                       >
                         Generate
                       </button>
                     </td>
-                    <td style={{ padding: '1rem' }}>
+                    <td style={{ padding: "1rem" }}>
                       <div className="d-flex flex-nowrap">
                         <button
                           className="btn m-1"
                           onClick={() => {
-                            if (confirm('Are you sure you want to delete?')) {
+                            if (confirm("Are you sure you want to delete?")) {
                               handleDelete(r._id);
                             }
                           }}
                           title="Delete"
                           style={{
-                            backgroundColor: '#fee2e2',
-                            color: '#991b1b',
-                            border: '1px solid #fecaca',
-                            padding: '0.5rem',
-                            borderRadius: '0.375rem',
-                            fontSize: '1rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            backgroundColor: "#fee2e2",
+                            color: "#991b1b",
+                            border: "1px solid #fecaca",
+                            padding: "0.5rem",
+                            borderRadius: "0.375rem",
+                            fontSize: "1rem",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
                           <FaTrash />
                         </button>
                         <button
                           className="btn m-1"
-                          onClick={() => navigate(`/dashboard/resident/${r._id}`)}
+                          onClick={() =>
+                            navigate(`/dashboard/resident/${r._id}`)
+                          }
                           title="Details"
                           style={{
-                            backgroundColor: '#dbeafe',
-                            color: '#1e40af',
-                            border: '1px solid #bfdbfe',
-                            padding: '0.5rem',
-                            borderRadius: '0.375rem',
-                            fontSize: '1rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            backgroundColor: "#dbeafe",
+                            color: "#1e40af",
+                            border: "1px solid #bfdbfe",
+                            padding: "0.5rem",
+                            borderRadius: "0.375rem",
+                            fontSize: "1rem",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
                           <FaInfoCircle />
@@ -496,15 +554,15 @@ const ResidentTable = () => {
                           }
                           title="Edit"
                           style={{
-                            backgroundColor: '#f3f4f6',
-                            color: '#374151',
-                            border: '1px solid #d1d5db',
-                            padding: '0.5rem',
-                            borderRadius: '0.375rem',
-                            fontSize: '1rem',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
+                            backgroundColor: "#f3f4f6",
+                            color: "#374151",
+                            border: "1px solid #d1d5db",
+                            padding: "0.5rem",
+                            borderRadius: "0.375rem",
+                            fontSize: "1rem",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
                           }}
                         >
                           <FaEdit />
@@ -518,7 +576,10 @@ const ResidentTable = () => {
         </div>
         {isOpen && (
           <div className="popup-overlay">
-            <div className="popup-content bg-white p-4 rounded shadow text-dark" style={{ minWidth: '400px' }}>
+            <div
+              className="popup-content bg-white p-4 rounded shadow text-dark"
+              style={{ minWidth: "400px" }}
+            >
               {loading && (
                 <div className="d-flex justify-content-center my-3">
                   <Audio
@@ -532,9 +593,26 @@ const ResidentTable = () => {
                   />
                 </div>
               )}
-              <h4 style={{ color: '#111827', fontWeight: 600, marginBottom: '1.5rem' }}>Generate Fee Slip</h4>
+              <h4
+                style={{
+                  color: "#111827",
+                  fontWeight: 600,
+                  marginBottom: "1.5rem",
+                }}
+              >
+                Generate Fee Slip
+              </h4>
               <div className="mb-3">
-                <label className="form-label" style={{ color: '#374151', fontWeight: 500, fontSize: '0.875rem' }}>Start Month</label>
+                <label
+                  className="form-label"
+                  style={{
+                    color: "#374151",
+                    fontWeight: 500,
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Start Month
+                </label>
                 <DatePicker
                   selected={selectedDates[residentId]?.start || null}
                   onChange={(date) => {
@@ -546,7 +624,7 @@ const ResidentTable = () => {
                       newEnd &&
                       moment(newStart).isAfter(moment(newEnd))
                     ) {
-                      toast.warn('Start date cannot be after end date');
+                      toast.warn("Start date cannot be after end date");
                       return;
                     }
                     setSelectedDates({
@@ -557,15 +635,15 @@ const ResidentTable = () => {
                       },
                     });
                   }}
-                  minDate={new Date('2000-01-01')}
+                  minDate={new Date("2000-01-01")}
                   // Removed maxDate restriction to allow future dates
                   dateFormat="MMMM yyyy"
                   showMonthYearPicker
                   className="form-control"
                   style={{
-                    padding: '0.75rem',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '0.5rem'
+                    padding: "0.75rem",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "0.5rem",
                   }}
                   open={activeDatePickerId === `${residentId}-start`}
                   onFocus={() => setActiveDatePickerId(`${residentId}-start`)}
@@ -580,13 +658,13 @@ const ResidentTable = () => {
                     const newEnd = date;
                     const newStart =
                       selectedDates[residentId]?.start ||
-                      moment().subtract(1, 'months').toDate();
+                      moment().subtract(1, "months").toDate();
                     if (
                       newEnd &&
                       newStart &&
                       moment(newEnd).isBefore(moment(newStart))
                     ) {
-                      toast.warn('End date cannot be before start date');
+                      toast.warn("End date cannot be before start date");
                       return;
                     }
                     setSelectedDates({
@@ -597,7 +675,7 @@ const ResidentTable = () => {
                       },
                     });
                   }}
-                  minDate={new Date('2000-01-01')}
+                  minDate={new Date("2000-01-01")}
                   // Removed maxDate restriction to allow future dates
                   dateFormat="MMMM yyyy"
                   showMonthYearPicker
@@ -608,54 +686,54 @@ const ResidentTable = () => {
                 />
               </div>
               <p className="mb-3">
-                Selected period:{' '}
+                Selected period:{" "}
                 <strong>
                   {selectedDates[residentId]?.start &&
-                    selectedDates[residentId]?.end
+                  selectedDates[residentId]?.end
                     ? `${moment(selectedDates[residentId].start).format(
-                      'MMMM YYYY'
-                    )} - ${moment(selectedDates[residentId].end).format(
-                      "MMMM YYYY"
-                    )}`
-                    : 'None selected'}
+                        "MMMM YYYY",
+                      )} - ${moment(selectedDates[residentId].end).format(
+                        "MMMM YYYY",
+                      )}`
+                    : "None selected"}
                 </strong>
                 <br />
-                Total months:{' '}
+                Total months:{" "}
                 <strong>
                   {selectedDates[residentId]?.start &&
-                    selectedDates[residentId]?.end
+                  selectedDates[residentId]?.end
                     ? moment(selectedDates[residentId].end).diff(
-                      moment(selectedDates[residentId].start),
-                      "months"
-                    ) + 1
+                        moment(selectedDates[residentId].start),
+                        "months",
+                      ) + 1
                     : 0}
                 </strong>
               </p>
               <div className="d-flex justify-content-end">
                 <button
                   className="btn mx-2"
-                  onClick={() => generateFeeSlip(residentId, 'IBFT')}
+                  onClick={() => generateFeeSlip(residentId, "IBFT")}
                   style={{
-                    backgroundColor: '#03bb50',
-                    color: 'white',
-                    padding: '0.625rem 1.25rem',
-                    borderRadius: '0.5rem',
+                    backgroundColor: "#03bb50",
+                    color: "white",
+                    padding: "0.625rem 1.25rem",
+                    borderRadius: "0.5rem",
                     fontWeight: 500,
-                    border: 'none'
+                    border: "none",
                   }}
                 >
                   IBFT
                 </button>
                 <button
                   className="btn mx-2"
-                  onClick={() => generateFeeSlip(residentId, 'Cash')}
+                  onClick={() => generateFeeSlip(residentId, "Cash")}
                   style={{
-                    backgroundColor: '#03bb50',
-                    color: 'white',
-                    padding: '0.625rem 1.25rem',
-                    borderRadius: '0.5rem',
+                    backgroundColor: "#03bb50",
+                    color: "white",
+                    padding: "0.625rem 1.25rem",
+                    borderRadius: "0.5rem",
                     fontWeight: 500,
-                    border: 'none'
+                    border: "none",
                   }}
                 >
                   Cash
@@ -664,12 +742,12 @@ const ResidentTable = () => {
                   className="btn mx-2"
                   onClick={() => setIsOpen(false)}
                   style={{
-                    backgroundColor: '#f3f4f6',
-                    color: '#374151',
-                    padding: '0.625rem 1.25rem',
-                    borderRadius: '0.5rem',
+                    backgroundColor: "#f3f4f6",
+                    color: "#374151",
+                    padding: "0.625rem 1.25rem",
+                    borderRadius: "0.5rem",
                     fontWeight: 500,
-                    border: '1px solid #d1d5db'
+                    border: "1px solid #d1d5db",
                   }}
                 >
                   Cancel
