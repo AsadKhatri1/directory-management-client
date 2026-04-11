@@ -1,16 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { FaPlus } from 'react-icons/fa';
-import { Audio } from 'react-loader-spinner';
-import moment from 'moment';
-import axios from 'axios';
-import { Modal, Button, Tabs, Tab } from 'react-bootstrap';
+import React, { useContext, useEffect, useState } from "react";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
+import { Audio } from "react-loader-spinner";
+import moment from "moment";
+import axios from "axios";
+import { Modal, Button, Tabs, Tab } from "react-bootstrap";
 
 const ResidentDetail = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
+  const backendURL = "https://directory-management-g8gf.onrender.com";
   const [paid, setPaid] = useState(false);
   const params = useParams();
   const [resident, setResident] = useState([]);
@@ -25,28 +25,28 @@ const ResidentDetail = () => {
   const [showT, setShowT] = useState(false);
   const [showAmountInput, setShowAmountInput] = useState(false);
   const [feeAmount, setFeeAmount] = useState(0);
-  const [Ownership, setOwnership] = useState(resident?.residentType || '');
+  const [Ownership, setOwnership] = useState(resident?.residentType || "");
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
-  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [addMember, setAddMember] = useState(false);
   const { id } = useParams();
   const [showTanents, setShowTanents] = useState(false);
   const [showView, setShowView] = useState(true);
   const [loading, setLoading] = useState(true);
 
-  const [account, setAccount] = useState('');
-  console.log('resident', resident);
+  const [account, setAccount] = useState("");
+  console.log("resident", resident);
   const [relatives, setRelatives] = useState([
     {
-      name: '',
-      relation: '',
-      dob: '',
-      occupation: '',
-      cnic: '',
-      number: '',
-      photoUrl: '',
-      cnicUrl: '',
+      name: "",
+      relation: "",
+      dob: "",
+      occupation: "",
+      cnic: "",
+      number: "",
+      photoUrl: "",
+      cnicUrl: "",
     },
   ]);
 
@@ -59,11 +59,11 @@ const ResidentDetail = () => {
 
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'images_preset');
+    formData.append("file", file);
+    formData.append("upload_preset", "images_preset");
     const response = await fetch(
-      'https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload',
-      { method: 'POST', body: formData }
+      "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
+      { method: "POST", body: formData },
     );
     if (response.ok) {
       const data = await response.json();
@@ -84,8 +84,8 @@ const ResidentDetail = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -100,8 +100,8 @@ const ResidentDetail = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -112,34 +112,34 @@ const ResidentDetail = () => {
         relatives[relatives.length - 1],
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (response.data) {
-        toast.success('Family member added successfully');
+        toast.success("Family member added successfully");
         setRelatives([
           {
-            name: '',
-            relation: '',
-            dob: '',
-            occupation: '',
-            cnic: '',
-            number: '',
-            photoUrl: '',
-            cnicUrl: '',
+            name: "",
+            relation: "",
+            dob: "",
+            occupation: "",
+            cnic: "",
+            number: "",
+            photoUrl: "",
+            cnicUrl: "",
           },
         ]);
         setAddMember(false);
         setShowM(true);
         await getResident();
       } else {
-        toast.error(response.data.message || 'Failed to add family member');
+        toast.error(response.data.message || "Failed to add family member");
       }
     } catch (error) {
-      console.error('Error adding relative field:', error);
+      console.error("Error adding relative field:", error);
       toast.error(
-        error.response?.data?.message || 'Failed to add family member'
+        error.response?.data?.message || "Failed to add family member",
       );
     }
   };
@@ -150,58 +150,58 @@ const ResidentDetail = () => {
         `${backendURL}/api/v1/resident/${id}/family-members/${mid}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (response.data) {
-        toast.success('Family member deleted successfully');
+        toast.success("Family member deleted successfully");
         await getResident();
       } else {
-        toast.error('Failed to delete family member');
+        toast.error("Failed to delete family member");
       }
     } catch (error) {
-      console.error('Error deleting family member:', error);
+      console.error("Error deleting family member:", error);
       toast.error(
-        error.response?.data?.message || 'Failed to delete family member'
+        error.response?.data?.message || "Failed to delete family member",
       );
     }
   };
   const [ownerResident, setOwnerResident] = useState([
     {
-      FullName: '',
-      Email: '',
-      CNIC: '',
-      HouseNumber: '',
-      NOCHolder: '',
-      Phone: '',
-      Profession: '',
+      FullName: "",
+      Email: "",
+      CNIC: "",
+      HouseNumber: "",
+      NOCHolder: "",
+      Phone: "",
+      Profession: "",
     },
   ]);
   const [maids, setMaids] = useState([
     {
-      name: '',
-      dob: '',
-      address: '',
-      guardian: '',
-      number: '',
-      cnic: '',
-      cnicUrl: '',
-      cantPassUrl: '',
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
     },
   ]);
 
   const [showServant, setShowServant] = useState(false);
   const [maid, setMaid] = useState([
     {
-      name: '',
-      dob: '',
-      address: '',
-      guardian: '',
-      number: '',
-      cnic: '',
-      cnicUrl: '',
-      cantPassUrl: '',
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
     },
   ]);
 
@@ -222,8 +222,8 @@ const ResidentDetail = () => {
         cnicUrl: uploadedUrl,
       }));
     } catch (error) {
-      console.error('Error uploading CNIC:', error);
-      alert('Error uploading CNIC. Please try again.');
+      console.error("Error uploading CNIC:", error);
+      alert("Error uploading CNIC. Please try again.");
     }
   };
 
@@ -238,8 +238,8 @@ const ResidentDetail = () => {
         cantPassUrl: uploadedUrl,
       }));
     } catch (error) {
-      console.error('Error uploading Cant Pass:', error);
-      alert('Error uploading Cant Pass. Please try again.');
+      console.error("Error uploading Cant Pass:", error);
+      alert("Error uploading Cant Pass. Please try again.");
     }
   };
 
@@ -250,35 +250,35 @@ const ResidentDetail = () => {
         maid,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.data) {
-        toast.success('Servant added successfully');
+        toast.success("Servant added successfully");
 
         // Reset only if needed
         setMaid({
-          name: '',
-          dob: '',
-          address: '',
-          guardian: '',
-          number: '',
-          cnic: '',
-          cnicUrl: '',
-          cantPassUrl: '',
+          name: "",
+          dob: "",
+          address: "",
+          guardian: "",
+          number: "",
+          cnic: "",
+          cnicUrl: "",
+          cantPassUrl: "",
         });
         getResident();
         setShowS(true);
         setShowServant(false);
       } else {
-        toast.error('Failed to add Servant member');
+        toast.error("Failed to add Servant member");
       }
     } catch (error) {
-      console.error('Error adding Servant field:', error);
+      console.error("Error adding Servant field:", error);
       toast.error(
-        error.response?.data?.message || 'Failed to add Servant member'
+        error.response?.data?.message || "Failed to add Servant member",
       );
     }
   };
@@ -289,21 +289,21 @@ const ResidentDetail = () => {
         `${backendURL}/api/v1/resident/${id}/maids/${sid}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.data) {
-        toast.success('Servant deleted successfully');
+        toast.success("Servant deleted successfully");
         getResident();
       } else {
-        toast.error('Failed to delete Servant member');
+        toast.error("Failed to delete Servant member");
       }
     } catch (error) {
-      console.error('Error deleting Servant member:', error);
+      console.error("Error deleting Servant member:", error);
       toast.error(
-        error.response?.data?.message || 'Failed to delete Servant member'
+        error.response?.data?.message || "Failed to delete Servant member",
       );
     }
   };
@@ -315,14 +315,14 @@ const ResidentDetail = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setSelectedImageUrl('');
+    setSelectedImageUrl("");
   };
 
   const renderImage = (url) => (
     <img
       src={url}
       alt="Document"
-      style={{ width: '50px', height: '50px', cursor: 'pointer' }}
+      style={{ width: "50px", height: "50px", cursor: "pointer" }}
       onClick={() => handleImageClick(url)}
     />
   );
@@ -334,9 +334,9 @@ const ResidentDetail = () => {
         `${backendURL}/api/v1/resident/getResident/${params.id}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (data.success) {
         setResident(data?.resident || {});
@@ -345,11 +345,11 @@ const ResidentDetail = () => {
         setMaids(data?.resident?.maids || []);
         setTanents(data?.resident?.tanents || []);
       } else {
-        toast.error(data.message || 'Failed to fetch resident data');
+        toast.error(data.message || "Failed to fetch resident data");
       }
     } catch (err) {
       toast.error(
-        err.response?.data?.message || 'Error fetching resident data'
+        err.response?.data?.message || "Error fetching resident data",
       );
     } finally {
       setLoading(false);
@@ -359,14 +359,14 @@ const ResidentDetail = () => {
   const [showVehicle, setShowVehicle] = useState(false);
   const [vehicles, setVehicles] = useState([
     {
-      type: '',
-      make: '',
-      model: '',
-      year: '',
-      colour: '',
-      stickerNumber: '',
-      registrationNumber: '',
-      paperDocument: '',
+      type: "",
+      make: "",
+      model: "",
+      year: "",
+      colour: "",
+      stickerNumber: "",
+      registrationNumber: "",
+      paperDocument: "",
     },
   ]);
 
@@ -392,8 +392,8 @@ const ResidentDetail = () => {
         return updatedVehicles;
       });
     } catch (error) {
-      console.error('Error uploading document:', error);
-      alert('Error uploading document. Please try again.');
+      console.error("Error uploading document:", error);
+      alert("Error uploading document. Please try again.");
     }
   };
 
@@ -411,33 +411,33 @@ const ResidentDetail = () => {
         vehicleToAdd,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response) {
-        toast.success('Vehicle added successfully');
+        toast.success("Vehicle added successfully");
         setVehicles({
-          type: '',
-          make: '',
-          model: '',
-          year: '',
-          colour: '',
-          stickerNumber: '',
-          registrationNumber: '',
-          paperDocument: '',
+          type: "",
+          make: "",
+          model: "",
+          year: "",
+          colour: "",
+          stickerNumber: "",
+          registrationNumber: "",
+          paperDocument: "",
         });
         getResident();
         setShowV(true);
         setShowVehicle(false);
       } else {
-        toast.error('Failed to add Vehicle member');
+        toast.error("Failed to add Vehicle member");
       }
     } catch (error) {
-      console.error('Error adding Vehicle field:', error);
+      console.error("Error adding Vehicle field:", error);
       toast.error(
-        error.response?.data?.message || 'Failed to add Vehicle member'
+        error.response?.data?.message || "Failed to add Vehicle member",
       );
     }
   };
@@ -448,19 +448,19 @@ const ResidentDetail = () => {
         `${backendURL}/api/v1/resident/${id}/vehicles/${vid}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (response.data) {
-        toast.success('Vehicle Deleted Successfully');
+        toast.success("Vehicle Deleted Successfully");
         getResident();
       } else {
-        toast.error('Failed to delete Vehicle');
+        toast.error("Failed to delete Vehicle");
       }
     } catch (error) {
-      console.error('Error deleting Vehicle:', error);
-      toast.error(error.response?.data?.message || 'Failed to delete Vehicle');
+      console.error("Error deleting Vehicle:", error);
+      toast.error(error.response?.data?.message || "Failed to delete Vehicle");
     }
   };
 
@@ -473,9 +473,9 @@ const ResidentDetail = () => {
   };
 
   const birthDate =
-    resident.DOB && moment(resident?.DOB).format('MMMM Do, YYYY');
+    resident.DOB && moment(resident?.DOB).format("MMMM Do, YYYY");
   const nocdate =
-    resident.NOCIssue && moment(resident?.NOCIssue).format('MMMM Do, YYYY');
+    resident.NOCIssue && moment(resident?.NOCIssue).format("MMMM Do, YYYY");
 
   const updateHandler = async (e) => {
     e.preventDefault();
@@ -485,43 +485,43 @@ const ResidentDetail = () => {
       if (feeAmount) {
         const feeAmountNumber = parseFloat(feeAmount);
         if (isNaN(feeAmountNumber)) {
-          toast.error('Please enter a valid amount');
+          toast.error("Please enter a valid amount");
           return;
         }
         const resIn = await axios.post(
           `${backendURL}/api/v1/income/addIncome`,
           {
-            ResidentName: resident.FullName ? resident.FullName : 'Unknown',
+            ResidentName: resident.FullName ? resident.FullName : "Unknown",
             HouseNo: resident.HouseNumber,
             Amount: feeAmountNumber,
             Ownership: Ownership,
             account: account,
-            Type: 'membership',
-          }
+            Type: "membership",
+          },
         );
         console.log(resIn);
 
         if (resIn.success) {
-          toast.success('Income added');
+          toast.success("Income added");
         }
         const recAmount = feeAmountNumber / 2;
         const masjidAmount = feeAmountNumber / 2;
         const re1 = await axios.get(
-          `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`
+          `${backendURL}/api/v1/acc/getBalance/667fcfaf4a76b7ceb03176d9`,
         );
         const finalRecBalance = JSON.parse(re1.data.acc.Balance) + recAmount;
         await axios.put(
           `${backendURL}/api/v1/acc/updateBalance/667fcfaf4a76b7ceb03176d9`,
-          { Balance: finalRecBalance }
+          { Balance: finalRecBalance },
         );
         const re = await axios.get(
-          `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`
+          `${backendURL}/api/v1/acc/getBalance/667fcfe14a76b7ceb03176da`,
         );
         const finalMasjidBalance =
           JSON.parse(re.data.acc.Balance) + masjidAmount;
         await axios.put(
           `${backendURL}/api/v1/acc/updateBalance/667fcfe14a76b7ceb03176da`,
-          { Balance: finalMasjidBalance }
+          { Balance: finalMasjidBalance },
         );
       }
       const numberOfMonths = parseInt(monthsInput);
@@ -530,9 +530,9 @@ const ResidentDetail = () => {
         { paid, numberOfMonths },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       if (data.success) {
         toast.success(data.message);
@@ -542,7 +542,7 @@ const ResidentDetail = () => {
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.message || 'An error occurred');
+      toast.error(err.response?.message || "An error occurred");
     }
   };
 
@@ -557,9 +557,9 @@ const ResidentDetail = () => {
         `${backendURL}/api/v1/resident/getResident/${resident.HouseNumber}/${resident.residentType}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       setOwnerResident(response.data.residents);
     } catch (error) {
@@ -593,18 +593,20 @@ const ResidentDetail = () => {
       ></Sidebar>
       <div className="main-container mb-4">
         <div className="text-center">
-          <h1 className="mb-5" style={{ color: '#111827', fontWeight: 700 }}>RESIDENT DETAILS</h1>
+          <h1 className="mb-5" style={{ color: "#111827", fontWeight: 700 }}>
+            RESIDENT DETAILS
+          </h1>
           <div className="d-flex justify-content-center mb-4">
             <button
               className="btn w-15"
               onClick={handlePaymentClick}
               style={{
-                backgroundColor: '#03bb50',
-                color: 'white',
-                padding: '0.625rem 1.25rem',
-                borderRadius: '0.5rem',
+                backgroundColor: "#03bb50",
+                color: "white",
+                padding: "0.625rem 1.25rem",
+                borderRadius: "0.5rem",
                 fontWeight: 500,
-                border: 'none'
+                border: "none",
               }}
             >
               Update Payment Status
@@ -717,7 +719,7 @@ const ResidentDetail = () => {
             {loading ? (
               <div
                 className="d-flex align-items-center justify-content-center"
-                style={{ minHeight: '60vh' }}
+                style={{ minHeight: "60vh" }}
               >
                 <Audio
                   height="100"
@@ -745,127 +747,221 @@ const ResidentDetail = () => {
                         src={resident?.Photo}
                         alt="image"
                         style={{
-                          borderRadius: '100%',
-                          height: '200px',
-                          width: '200px',
+                          borderRadius: "100%",
+                          height: "200px",
+                          width: "200px",
                         }}
                       />
                       <h1 className="my-3">{resident?.FullName}</h1>
                       <div
                         className="row my-4 py-4 mx-3"
                         style={{
-                          backgroundColor: 'white',
-                          borderRadius: '16px',
-                          border: '1px solid #e5e7eb',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                          transition: 'transform 0.2s ease-in-out',
+                          backgroundColor: "white",
+                          borderRadius: "16px",
+                          border: "1px solid #e5e7eb",
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+                          transition: "transform 0.2s ease-in-out",
                         }}
                         onMouseEnter={(e) =>
-                          (e.currentTarget.style.transform = 'scale(1.01)')
+                          (e.currentTarget.style.transform = "scale(1.01)")
                         }
                         onMouseLeave={(e) =>
-                          (e.currentTarget.style.transform = 'scale(1)')
+                          (e.currentTarget.style.transform = "scale(1)")
                         }
                       >
                         <div className="col-md-6 px-4">
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>Email:</span>{' '}
-                              {resident?.Email || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                Email:
+                              </span>{" "}
+                              {resident?.Email || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>Phone #:</span>{' '}
-                              {resident?.Phone || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                Phone #:
+                              </span>{" "}
+                              {resident?.Phone || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>House #:</span>{' '}
-                              {resident?.HouseNumber || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                House #:
+                              </span>{" "}
+                              {resident?.HouseNumber || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>DOB:</span>{' '}
-                              {birthDate || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                Property Type:
+                              </span>{" "}
+                              {resident?.propertyType || "house"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>CNIC #:</span>{' '}
-                              {resident?.CNIC || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                DOB:
+                              </span>{" "}
+                              {birthDate || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>NOC #:</span>{' '}
-                              {resident?.NOCNo || 'N/A'}
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                CNIC #:
+                              </span>{" "}
+                              {resident?.CNIC || "N/A"}
+                            </h5>
+                          </div>
+                          <div className="mb-3">
+                            <h5
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
+                            >
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
+                                NOC #:
+                              </span>{" "}
+                              {resident?.NOCNo || "N/A"}
                             </h5>
                           </div>
                         </div>
                         <div className="col-md-6 px-4">
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
                                 Profession:
-                              </span>{' '}
-                              {resident?.Profession || 'N/A'}
+                              </span>{" "}
+                              {resident?.Profession || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
                                 Qualification:
-                              </span>{' '}
-                              {resident?.Qualification || 'N/A'}
+                              </span>{" "}
+                              {resident?.Qualification || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
                                 Business Address:
-                              </span>{' '}
-                              {resident?.bAddress || 'N/A'}
+                              </span>{" "}
+                              {resident?.bAddress || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
                                 NOC Holder:
-                              </span>{' '}
-                              {resident?.NOCHolder || 'N/A'}
+                              </span>{" "}
+                              {resident?.NOCHolder || "N/A"}
                             </h5>
                           </div>
                           <div className="mb-3">
                             <h5
-                              style={{ fontSize: '1.2rem', fontWeight: '500', color: '#111827' }}
+                              style={{
+                                fontSize: "1.2rem",
+                                fontWeight: "500",
+                                color: "#111827",
+                              }}
                             >
-                              <span style={{ color: '#6b7280', fontWeight: 600 }}>
+                              <span
+                                style={{ color: "#6b7280", fontWeight: 600 }}
+                              >
                                 NOC Issue Date:
-                              </span>{' '}
-                              {nocdate || 'N/A'}
+                              </span>{" "}
+                              {nocdate || "N/A"}
                             </h5>
                           </div>
                         </div>
@@ -873,15 +969,19 @@ const ResidentDetail = () => {
                       <div
                         className="my-4 py-4 mx-3 px-4"
                         style={{
-                          backgroundColor: 'white',
-                          borderRadius: '16px',
-                          border: '1px solid #e5e7eb',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                          backgroundColor: "white",
+                          borderRadius: "16px",
+                          border: "1px solid #e5e7eb",
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                         }}
                       >
                         <h2
                           className="text-center mb-4"
-                          style={{ fontSize: '1.8rem', fontWeight: '700', color: '#111827' }}
+                          style={{
+                            fontSize: "1.8rem",
+                            fontWeight: "700",
+                            color: "#111827",
+                          }}
                         >
                           Uploaded Files
                         </h2>
@@ -891,22 +991,22 @@ const ResidentDetail = () => {
                               <div
                                 className="p-3"
                                 style={{
-                                  backgroundColor: '#f9fafb',
-                                  borderRadius: '12px',
-                                  border: '1px solid #4b4b4bff',
-                                  transition: 'transform 0.2s ease-in-out',
+                                  backgroundColor: "#f9fafb",
+                                  borderRadius: "12px",
+                                  border: "1px solid #4b4b4bff",
+                                  transition: "transform 0.2s ease-in-out",
                                 }}
                                 onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.03)")
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = 'scale(1)')
+                                  (e.currentTarget.style.transform = "scale(1)")
                                 }
                               >
                                 <h5
                                   className="text-dark mb-3"
-                                  style={{ fontSize: '1.2rem' }}
+                                  style={{ fontSize: "1.2rem" }}
                                 >
                                   CNIC
                                 </h5>
@@ -914,24 +1014,24 @@ const ResidentDetail = () => {
                                   src={resident.CnicFile}
                                   alt="CNIC Document"
                                   style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    borderRadius: '8px',
-                                    border: '2px solid #ffffff33',
-                                    cursor: 'pointer',
-                                    transition: 'border-color 0.2s',
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                    border: "2px solid #ffffff33",
+                                    cursor: "pointer",
+                                    transition: "border-color 0.2s",
                                   }}
                                   onClick={() =>
                                     handleImageClick(resident.CnicFile)
                                   }
                                   onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff66")
                                   }
                                   onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff33")
                                   }
                                 />
                               </div>
@@ -943,21 +1043,21 @@ const ResidentDetail = () => {
                                 className="p-3"
                                 style={{
                                   backgroundColor: "#f9fafb",
-                                  borderRadius: '12px',
-                                  border: '1px solid #4b4b4bff',
-                                  transition: 'transform 0.2s ease-in-out',
+                                  borderRadius: "12px",
+                                  border: "1px solid #4b4b4bff",
+                                  transition: "transform 0.2s ease-in-out",
                                 }}
                                 onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.03)")
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = 'scale(1)')
+                                  (e.currentTarget.style.transform = "scale(1)")
                                 }
                               >
                                 <h5
                                   className="text-dark mb-3"
-                                  style={{ fontSize: '1.2rem' }}
+                                  style={{ fontSize: "1.2rem" }}
                                 >
                                   NOC
                                 </h5>
@@ -965,24 +1065,24 @@ const ResidentDetail = () => {
                                   src={resident.NocFile}
                                   alt="NOC Document"
                                   style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    borderRadius: '8px',
-                                    border: '2px solid #ffffff33',
-                                    cursor: 'pointer',
-                                    transition: 'border-color 0.2s',
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                    border: "2px solid #ffffff33",
+                                    cursor: "pointer",
+                                    transition: "border-color 0.2s",
                                   }}
                                   onClick={() =>
                                     handleImageClick(resident.NocFile)
                                   }
                                   onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff66")
                                   }
                                   onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff33")
                                   }
                                 />
                               </div>
@@ -993,21 +1093,21 @@ const ResidentDetail = () => {
                               <div
                                 className="p-3"
                                 style={{
-                                  backgroundColor: '#33415C',
-                                  borderRadius: '12px',
-                                  transition: 'transform 0.2s ease-in-out',
+                                  backgroundColor: "#33415C",
+                                  borderRadius: "12px",
+                                  transition: "transform 0.2s ease-in-out",
                                 }}
                                 onMouseEnter={(e) =>
-                                (e.currentTarget.style.transform =
-                                  'scale(1.03)')
+                                  (e.currentTarget.style.transform =
+                                    "scale(1.03)")
                                 }
                                 onMouseLeave={(e) =>
-                                  (e.currentTarget.style.transform = 'scale(1)')
+                                  (e.currentTarget.style.transform = "scale(1)")
                                 }
                               >
                                 <h5
                                   className="text-light mb-3"
-                                  style={{ fontSize: '1.2rem' }}
+                                  style={{ fontSize: "1.2rem" }}
                                 >
                                   Cant Pass
                                 </h5>
@@ -1015,24 +1115,24 @@ const ResidentDetail = () => {
                                   src={resident.CantFile}
                                   alt="Cant Pass Document"
                                   style={{
-                                    width: '100px',
-                                    height: '100px',
-                                    objectFit: 'cover',
-                                    borderRadius: '8px',
-                                    border: '2px solid #ffffff33',
-                                    cursor: 'pointer',
-                                    transition: 'border-color 0.2s',
+                                    width: "100px",
+                                    height: "100px",
+                                    objectFit: "cover",
+                                    borderRadius: "8px",
+                                    border: "2px solid #ffffff33",
+                                    cursor: "pointer",
+                                    transition: "border-color 0.2s",
                                   }}
                                   onClick={() =>
                                     handleImageClick(resident.CantFile)
                                   }
                                   onMouseEnter={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff66')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff66")
                                   }
                                   onMouseLeave={(e) =>
-                                  (e.currentTarget.style.borderColor =
-                                    '#ffffff33')
+                                    (e.currentTarget.style.borderColor =
+                                      "#ffffff33")
                                   }
                                 />
                               </div>
@@ -1044,13 +1144,13 @@ const ResidentDetail = () => {
                               <div className="text-center py-3">
                                 <h5
                                   style={{
-                                    fontSize: '1.3rem',
-                                    color: '#6b7280',
-                                    backgroundColor: '#f9fafb',
-                                    borderRadius: '8px',
-                                    border: '1px solid #e5e7eb',
-                                    padding: '15px',
-                                    display: 'inline-block',
+                                    fontSize: "1.3rem",
+                                    color: "#6b7280",
+                                    backgroundColor: "#f9fafb",
+                                    borderRadius: "8px",
+                                    border: "1px solid #e5e7eb",
+                                    padding: "15px",
+                                    display: "inline-block",
                                   }}
                                 >
                                   No Uploaded Files Available
@@ -1065,20 +1165,108 @@ const ResidentDetail = () => {
                     {members.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Family Members</h2>
+                          <h2
+                            className="my-5"
+                            style={{ color: "#111827", fontWeight: 700 }}
+                          >
+                            Family Members
+                          </h2>
                           <div className="table-responsive">
-                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
-                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                            <table
+                              className="table table-hover"
+                              style={{
+                                backgroundColor: "white",
+                                border: "1px solid #e5e7eb",
+                              }}
+                            >
+                              <thead
+                                style={{
+                                  backgroundColor: "#f9fafb",
+                                  borderBottom: "2px solid #e5e7eb",
+                                }}
+                              >
                                 <tr className="text-center">
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>PHOTO</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>RELATION</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DOB</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC Number</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>ACTIONS</th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    PHOTO
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NAME
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    RELATION
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    MOBILE NUMBER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    DOB
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    OCCUPATION
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC Number
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    ACTIONS
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1086,27 +1274,30 @@ const ResidentDetail = () => {
                                   <tr
                                     key={r._id}
                                     className="text-center align-middle"
-                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
+                                    style={{
+                                      borderBottom: "1px solid #e5e7eb",
+                                      color: "#374151",
+                                    }}
                                   >
                                     <td>
                                       {r.photoUrl
                                         ? renderImage(r.photoUrl)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
-                                    <td>{r.name || 'N/A'}</td>
-                                    <td>{r.relation || 'N/A'}</td>
-                                    <td>{r.number || 'N/A'}</td>
+                                    <td>{r.name || "N/A"}</td>
+                                    <td>{r.relation || "N/A"}</td>
+                                    <td>{r.number || "N/A"}</td>
                                     <td>
                                       {r.dob
-                                        ? moment(r.dob).format('MMMM Do, YYYY')
-                                        : 'N/A'}
+                                        ? moment(r.dob).format("MMMM Do, YYYY")
+                                        : "N/A"}
                                     </td>
-                                    <td>{r.occupation || 'N/A'}</td>
-                                    <td>{r.cnic || 'N/A'}</td>
+                                    <td>{r.occupation || "N/A"}</td>
+                                    <td>{r.cnic || "N/A"}</td>
                                     <td>
                                       {r.cnicUrl
                                         ? renderImage(r.cnicUrl)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
                                     <td>
                                       <button
@@ -1135,8 +1326,8 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: '#263043',
-                          borderRadius: '12px',
+                          backgroundColor: "#263043",
+                          borderRadius: "12px",
                         }}
                       >
                         <h3 className="text-light">
@@ -1165,63 +1356,80 @@ const ResidentDetail = () => {
                                 <input
                                   value={relative.name}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'name', e)
+                                    handleRelativeChange(index, "name", e)
                                   }
                                   type="text"
                                   name="name"
                                   placeholder="Family Member Name"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <select
                                   value={relative.relation}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'relation', e)
+                                    handleRelativeChange(index, "relation", e)
                                   }
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 >
                                   <option
                                     value=""
-                                    style={{ background: 'white', color: '#111827' }}
+                                    style={{
+                                      background: "white",
+                                      color: "#111827",
+                                    }}
                                   >
                                     Select Relation
                                   </option>
                                   <option
                                     value="Father"
-                                    style={{ background: 'white', color: '#111827' }}
+                                    style={{
+                                      background: "white",
+                                      color: "#111827",
+                                    }}
                                   >
                                     Father
                                   </option>
                                   <option
                                     value="Mother"
-                                    style={{ background: 'white', color: '#111827' }}
+                                    style={{
+                                      background: "white",
+                                      color: "#111827",
+                                    }}
                                   >
                                     Mother
                                   </option>
                                   <option
                                     value="Husband/Wife"
-                                    style={{ background: 'white', color: '#111827' }}
+                                    style={{
+                                      background: "white",
+                                      color: "#111827",
+                                    }}
                                   >
                                     Husband/Wife
                                   </option>
                                   <option
                                     value="Child"
-                                    style={{ background: 'white', color: '#111827' }}
+                                    style={{
+                                      background: "white",
+                                      color: "#111827",
+                                    }}
                                   >
                                     Child
                                   </option>
@@ -1229,37 +1437,39 @@ const ResidentDetail = () => {
                                 <input
                                   value={relative.cnic}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'cnic', e)
+                                    handleRelativeChange(index, "cnic", e)
                                   }
                                   type="text"
                                   name="cnic"
                                   placeholder="CNIC"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <input
                                   value={relative.occupation}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'occupation', e)
+                                    handleRelativeChange(index, "occupation", e)
                                   }
                                   type="text"
                                   name="occupation"
                                   placeholder="Occupation"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                               </div>
@@ -1269,54 +1479,57 @@ const ResidentDetail = () => {
                                 <input
                                   value={relative.number}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'number', e)
+                                    handleRelativeChange(index, "number", e)
                                   }
                                   type="tel"
                                   name="number"
                                   placeholder="Phone No"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <label htmlFor="date">Date Of Birth</label>
                                 <input
                                   value={relative.dob}
                                   onChange={(e) =>
-                                    handleRelativeChange(index, 'dob', e)
+                                    handleRelativeChange(index, "dob", e)
                                   }
                                   type="date"
                                   name="dob"
                                   placeholder="Date Of Birth"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <label
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 >
                                   {relative.photoUrl
                                     ? relative.photoUrl.name
-                                    : 'Upload Photo'}
+                                    : "Upload Photo"}
                                   <input
                                     type="file"
                                     name="nocFile"
@@ -1330,17 +1543,18 @@ const ResidentDetail = () => {
                                 <label
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 >
                                   {relative.cnicUrl
                                     ? relative.cnicUrl.name
-                                    : 'Upload CNIC'}
+                                    : "Upload CNIC"}
                                   <input
                                     type="file"
                                     name="nocFile"
@@ -1371,20 +1585,108 @@ const ResidentDetail = () => {
                     {maids.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Servant Details</h2>
+                          <h2
+                            className="my-5"
+                            style={{ color: "#111827", fontWeight: 700 }}
+                          >
+                            Servant Details
+                          </h2>
                           <div className="table-responsive">
-                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
-                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                            <table
+                              className="table table-hover"
+                              style={{
+                                backgroundColor: "white",
+                                border: "1px solid #e5e7eb",
+                              }}
+                            >
+                              <thead
+                                style={{
+                                  backgroundColor: "#f9fafb",
+                                  borderBottom: "2px solid #e5e7eb",
+                                }}
+                              >
                                 <tr className="text-center">
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DATE OF BIRTH</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>ADDRESS</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>GUARDIAN'S NAME</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CANT PASS</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NAME
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    DATE OF BIRTH
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    MOBILE NUMBER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    ADDRESS
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    GUARDIAN'S NAME
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CANT PASS
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Action
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1392,27 +1694,30 @@ const ResidentDetail = () => {
                                   <tr
                                     key={r._id}
                                     className="text-center align-middle"
-                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
+                                    style={{
+                                      borderBottom: "1px solid #e5e7eb",
+                                      color: "#374151",
+                                    }}
                                   >
-                                    <td>{r.name || 'N/A'}</td>
+                                    <td>{r.name || "N/A"}</td>
                                     <td>
                                       {r.dob
-                                        ? moment(r.dob).format('MMMM Do, YYYY')
-                                        : 'N/A'}
+                                        ? moment(r.dob).format("MMMM Do, YYYY")
+                                        : "N/A"}
                                     </td>
-                                    <td>{r.number || 'N/A'}</td>
-                                    <td>{r.cnic || 'N/A'}</td>
-                                    <td>{r.address || 'N/A'}</td>
-                                    <td>{r.guardian || 'N/A'}</td>
+                                    <td>{r.number || "N/A"}</td>
+                                    <td>{r.cnic || "N/A"}</td>
+                                    <td>{r.address || "N/A"}</td>
+                                    <td>{r.guardian || "N/A"}</td>
                                     <td>
                                       {r.cnicUrl
                                         ? renderImage(r.cnicUrl)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
                                     <td>
                                       {r.cantPassUrl
                                         ? renderImage(r.cantPassUrl)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
                                     <td>
                                       <button
@@ -1441,13 +1746,13 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: 'white',
-                          borderRadius: '12px',
-                          border: '1px solid #e5e7eb',
-                          padding: '2rem'
+                          backgroundColor: "white",
+                          borderRadius: "12px",
+                          border: "1px solid #e5e7eb",
+                          padding: "2rem",
                         }}
                       >
-                        <h3 style={{ color: '#111827', fontWeight: 600 }}>
+                        <h3 style={{ color: "#111827", fontWeight: 600 }}>
                           No Servant Details To Show
                         </h3>
                         <button
@@ -1456,12 +1761,12 @@ const ResidentDetail = () => {
                             setShowServant(true);
                           }}
                           style={{
-                            backgroundColor: '#03bb50',
-                            color: 'white',
-                            padding: '0.625rem 1.25rem',
-                            borderRadius: '0.5rem',
+                            backgroundColor: "#03bb50",
+                            color: "white",
+                            padding: "0.625rem 1.25rem",
+                            borderRadius: "0.5rem",
                             fontWeight: 500,
-                            border: 'none'
+                            border: "none",
                           }}
                         >
                           Add Servant
@@ -1478,7 +1783,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.name}
                             onChange={(e) =>
-                              handleMaidChange('name', e.target.value)
+                              handleMaidChange("name", e.target.value)
                             }
                             type="text"
                             name="name"
@@ -1490,7 +1795,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.dob}
                             onChange={(e) =>
-                              handleMaidChange('dob', e.target.value)
+                              handleMaidChange("dob", e.target.value)
                             }
                             type="date"
                             name="dob"
@@ -1502,7 +1807,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.address}
                             onChange={(e) =>
-                              handleMaidChange('address', e.target.value)
+                              handleMaidChange("address", e.target.value)
                             }
                             type="text"
                             name="address"
@@ -1514,7 +1819,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.guardian}
                             onChange={(e) =>
-                              handleMaidChange('guardian', e.target.value)
+                              handleMaidChange("guardian", e.target.value)
                             }
                             type="text"
                             name="guardian"
@@ -1528,7 +1833,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.number}
                             onChange={(e) =>
-                              handleMaidChange('number', e.target.value)
+                              handleMaidChange("number", e.target.value)
                             }
                             type="tel"
                             name="number"
@@ -1540,7 +1845,7 @@ const ResidentDetail = () => {
                           <input
                             value={maid.cnic}
                             onChange={(e) =>
-                              handleMaidChange('cnic', e.target.value)
+                              handleMaidChange("cnic", e.target.value)
                             }
                             type="text"
                             name="cnic"
@@ -1554,7 +1859,7 @@ const ResidentDetail = () => {
                             className="w-75 my-3 text-white py-2"
                             style={inputStyle}
                           >
-                            {maid.cnicUrl ? 'CNIC Uploaded' : 'Upload CNIC'}
+                            {maid.cnicUrl ? "CNIC Uploaded" : "Upload CNIC"}
                             <input
                               type="file"
                               name="cnicFile"
@@ -1568,8 +1873,8 @@ const ResidentDetail = () => {
                             style={inputStyle}
                           >
                             {maid.cantPassUrl
-                              ? 'Cant Pass Uploaded'
-                              : 'Upload Cant Pass'}
+                              ? "Cant Pass Uploaded"
+                              : "Upload Cant Pass"}
                             <input
                               type="file"
                               name="cantPassFile"
@@ -1596,20 +1901,81 @@ const ResidentDetail = () => {
                   <Tab eventKey="vehicles" title="Vehicle Details">
                     {vehicle.length > 0 ? (
                       <div className="text-center">
-                        <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Vehicle Details</h2>
+                        <h2
+                          className="my-5"
+                          style={{ color: "#111827", fontWeight: 700 }}
+                        >
+                          Vehicle Details
+                        </h2>
                         <div className="table-responsive">
-                          <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
-                            <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                          <table
+                            className="table table-hover"
+                            style={{
+                              backgroundColor: "white",
+                              border: "1px solid #e5e7eb",
+                            }}
+                          >
+                            <thead
+                              style={{
+                                backgroundColor: "#f9fafb",
+                                borderBottom: "2px solid #e5e7eb",
+                              }}
+                            >
                               <tr className="text-center">
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>TYPE</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MAKE</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MODEL</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MODEL YEAR</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>COLOUR</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>REGISTRATION NUMBER</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>STICKER NUMBER</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>DOCUMENT</th>
-                                <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  TYPE
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  MAKE
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  MODEL
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  MODEL YEAR
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  COLOUR
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  REGISTRATION NUMBER
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  STICKER NUMBER
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  DOCUMENT
+                                </th>
+                                <th
+                                  scope="col"
+                                  style={{ color: "#111827", fontWeight: 600 }}
+                                >
+                                  Action
+                                </th>
                               </tr>
                             </thead>
                             <tbody>
@@ -1617,19 +1983,22 @@ const ResidentDetail = () => {
                                 <tr
                                   key={r._id}
                                   className="text-center align-middle"
-                                  style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
+                                  style={{
+                                    borderBottom: "1px solid #e5e7eb",
+                                    color: "#374151",
+                                  }}
                                 >
-                                  <td>{r.type || 'N/A'}</td>
-                                  <td>{r.make || 'N/A'}</td>
-                                  <td>{r.model || 'N/A'}</td>
-                                  <td>{r.year || 'N/A'}</td>
-                                  <td>{r.colour || 'N/A'}</td>
-                                  <td>{r.registrationNumber || 'N/A'}</td>
-                                  <td>{r.stickerNumber || 'N/A'}</td>
+                                  <td>{r.type || "N/A"}</td>
+                                  <td>{r.make || "N/A"}</td>
+                                  <td>{r.model || "N/A"}</td>
+                                  <td>{r.year || "N/A"}</td>
+                                  <td>{r.colour || "N/A"}</td>
+                                  <td>{r.registrationNumber || "N/A"}</td>
+                                  <td>{r.stickerNumber || "N/A"}</td>
                                   <td>
                                     {r.paperDocument
                                       ? renderImage(r.paperDocument)
-                                      : 'N/A'}
+                                      : "N/A"}
                                   </td>
                                   <td>
                                     <button
@@ -1659,13 +2028,13 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: 'white',
-                          borderRadius: '12px',
-                          border: '1px solid #e5e7eb',
-                          padding: '2rem'
+                          backgroundColor: "white",
+                          borderRadius: "12px",
+                          border: "1px solid #e5e7eb",
+                          padding: "2rem",
                         }}
                       >
-                        <h3 style={{ color: '#111827', fontWeight: 600 }}>
+                        <h3 style={{ color: "#111827", fontWeight: 600 }}>
                           No Vehicle Details To Show
                         </h3>
                         <button
@@ -1674,12 +2043,12 @@ const ResidentDetail = () => {
                             setShowVehicle(true);
                           }}
                           style={{
-                            backgroundColor: '#03bb50',
-                            color: 'white',
-                            padding: '0.625rem 1.25rem',
-                            borderRadius: '0.5rem',
+                            backgroundColor: "#03bb50",
+                            color: "white",
+                            padding: "0.625rem 1.25rem",
+                            borderRadius: "0.5rem",
                             fontWeight: 500,
-                            border: 'none'
+                            border: "none",
                           }}
                         >
                           Add Vehicle
@@ -1706,12 +2075,13 @@ const ResidentDetail = () => {
                                   placeholder="Vehicle Type | Car or Motorcycle"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <input
@@ -1724,12 +2094,13 @@ const ResidentDetail = () => {
                                   placeholder="Colour"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
 
@@ -1743,12 +2114,13 @@ const ResidentDetail = () => {
                                   placeholder="Vehicle Make"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <input
@@ -1761,12 +2133,13 @@ const ResidentDetail = () => {
                                   placeholder="Vehicle Model Name"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                               </div>
@@ -1783,12 +2156,13 @@ const ResidentDetail = () => {
                                   placeholder="Vehicle Year"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <input
@@ -1801,12 +2175,13 @@ const ResidentDetail = () => {
                                   placeholder="Sticker Number"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <input
@@ -1819,28 +2194,30 @@ const ResidentDetail = () => {
                                   placeholder="Vehicle Registration Number"
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 />
                                 <label
                                   className="w-75 my-3 py-2"
                                   style={{
-                                    background: 'white',
-                                    border: '1px solid #d1d5db',
-                                    borderRadius: '12px',
-                                    textIndent: '12px',
-                                    color: '#111827',
-                                    boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+                                    background: "white",
+                                    border: "1px solid #d1d5db",
+                                    borderRadius: "12px",
+                                    textIndent: "12px",
+                                    color: "#111827",
+                                    boxShadow:
+                                      "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
                                   }}
                                 >
                                   {vehicle.paperDocument
                                     ? vehicle.paperDocument.name
-                                    : 'Upload Document'}
+                                    : "Upload Document"}
                                   <input
                                     type="file"
                                     name="nocFile"
@@ -1869,27 +2246,124 @@ const ResidentDetail = () => {
                   </Tab>
                   <Tab
                     eventKey="tenants"
-                    title={`${resident.residentType === 'owner' ? 'Tenants' : 'Owner'
-                      } Details`}
+                    title={`${
+                      resident.residentType === "owner" ? "Tenants" : "Owner"
+                    } Details`}
                   >
-                    {resident.residentType === 'owner' && tanents.length > 0 ? (
+                    {resident.residentType === "owner" && tanents.length > 0 ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Tenants Details</h2>
+                          <h2
+                            className="my-5"
+                            style={{ color: "#111827", fontWeight: 700 }}
+                          >
+                            Tenants Details
+                          </h2>
                           <div className="table-responsive">
-                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
-                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                            <table
+                              className="table table-hover"
+                              style={{
+                                backgroundColor: "white",
+                                border: "1px solid #e5e7eb",
+                              }}
+                            >
+                              <thead
+                                style={{
+                                  backgroundColor: "#f9fafb",
+                                  borderBottom: "2px solid #e5e7eb",
+                                }}
+                              >
                                 <tr className="text-center">
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>EMAIL</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>House Number</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NOC HOLDER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Photo</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NAME
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    EMAIL
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    House Number
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NOC HOLDER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    OCCUPATION
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    MOBILE NUMBER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Photo
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Action
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1898,27 +2372,27 @@ const ResidentDetail = () => {
                                     key={t._id}
                                     className="text-center align-middle"
                                   >
-                                    <td>{t?.FullName || 'N/A'}</td>
-                                    <td>{t.Email || 'N/A'}</td>
-                                    <td>{t.CNIC || 'N/A'}</td>
-                                    <td>{t.HouseNumber || 'N/A'}</td>
-                                    <td>{t.NOCHolder || 'N/A'}</td>
-                                    <td>{t.Profession || 'N/A'}</td>
-                                    <td>{t.Phone || 'N/A'}</td>
+                                    <td>{t?.FullName || "N/A"}</td>
+                                    <td>{t.Email || "N/A"}</td>
+                                    <td>{t.CNIC || "N/A"}</td>
+                                    <td>{t.HouseNumber || "N/A"}</td>
+                                    <td>{t.NOCHolder || "N/A"}</td>
+                                    <td>{t.Profession || "N/A"}</td>
+                                    <td>{t.Phone || "N/A"}</td>
                                     <td>
                                       {t.CnicFile
                                         ? renderImage(t.CnicFile)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
                                     <td>
-                                      {t.Photo ? renderImage(t.Photo) : 'N/A'}
+                                      {t.Photo ? renderImage(t.Photo) : "N/A"}
                                     </td>
                                     <td>
                                       <button
                                         className="btn btn-outline-primary m-1"
                                         onClick={() => {
                                           navigate(
-                                            `/dashboard/resident/${t._id}`
+                                            `/dashboard/resident/${t._id}`,
                                           );
                                         }}
                                       >
@@ -1932,24 +2406,120 @@ const ResidentDetail = () => {
                           </div>
                         </div>
                       </div>
-                    ) : resident.residentType === 'tenant' ? (
+                    ) : resident.residentType === "tenant" ? (
                       <div className="text-center">
                         <div className="my-5">
-                          <h2 className="my-5" style={{ color: '#111827', fontWeight: 700 }}>Owner Details</h2>
+                          <h2
+                            className="my-5"
+                            style={{ color: "#111827", fontWeight: 700 }}
+                          >
+                            Owner Details
+                          </h2>
                           <div className="table-responsive">
-                            <table className="table table-hover" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
-                              <thead style={{ backgroundColor: '#f9fafb', borderBottom: '2px solid #e5e7eb' }}>
+                            <table
+                              className="table table-hover"
+                              style={{
+                                backgroundColor: "white",
+                                border: "1px solid #e5e7eb",
+                              }}
+                            >
+                              <thead
+                                style={{
+                                  backgroundColor: "#f9fafb",
+                                  borderBottom: "2px solid #e5e7eb",
+                                }}
+                              >
                                 <tr className="text-center">
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NAME</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>EMAIL</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>House Number</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>NOC HOLDER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>OCCUPATION</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>MOBILE NUMBER</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>CNIC</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Photo</th>
-                                  <th scope="col" style={{ color: '#111827', fontWeight: 600 }}>Action</th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NAME
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    EMAIL
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    House Number
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    NOC HOLDER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    OCCUPATION
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    MOBILE NUMBER
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    CNIC
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Photo
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    style={{
+                                      color: "#111827",
+                                      fontWeight: 600,
+                                    }}
+                                  >
+                                    Action
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -1957,29 +2527,32 @@ const ResidentDetail = () => {
                                   <tr
                                     key={t._id}
                                     className="text-center align-middle"
-                                    style={{ borderBottom: '1px solid #e5e7eb', color: '#374151' }}
+                                    style={{
+                                      borderBottom: "1px solid #e5e7eb",
+                                      color: "#374151",
+                                    }}
                                   >
-                                    <td>{t?.FullName || 'N/A'}</td>
-                                    <td>{t.Email || 'N/A'}</td>
-                                    <td>{t.CNIC || 'N/A'}</td>
-                                    <td>{t.HouseNumber || 'N/A'}</td>
-                                    <td>{t.NOCHolder || 'N/A'}</td>
-                                    <td>{t.Profession || 'N/A'}</td>
-                                    <td>{t.Phone || 'N/A'}</td>
+                                    <td>{t?.FullName || "N/A"}</td>
+                                    <td>{t.Email || "N/A"}</td>
+                                    <td>{t.CNIC || "N/A"}</td>
+                                    <td>{t.HouseNumber || "N/A"}</td>
+                                    <td>{t.NOCHolder || "N/A"}</td>
+                                    <td>{t.Profession || "N/A"}</td>
+                                    <td>{t.Phone || "N/A"}</td>
                                     <td>
                                       {t.CnicFile
                                         ? renderImage(t.CnicFile)
-                                        : 'N/A'}
+                                        : "N/A"}
                                     </td>
                                     <td>
-                                      {t.Photo ? renderImage(t.Photo) : 'N/A'}
+                                      {t.Photo ? renderImage(t.Photo) : "N/A"}
                                     </td>
                                     <td>
                                       <button
                                         className="btn btn-outline-primary m-1"
                                         onClick={() => {
                                           navigate(
-                                            `/dashboard/resident/${t._id}`
+                                            `/dashboard/resident/${t._id}`,
                                           );
                                         }}
                                       >
@@ -1997,13 +2570,15 @@ const ResidentDetail = () => {
                       <div
                         className="text-center py-3 pt-4"
                         style={{
-                          backgroundColor: 'white',
-                          borderRadius: '12px',
-                          border: '1px solid #e5e7eb',
-                          padding: '2rem'
+                          backgroundColor: "white",
+                          borderRadius: "12px",
+                          border: "1px solid #e5e7eb",
+                          padding: "2rem",
                         }}
                       >
-                        <h3 style={{ color: '#111827', fontWeight: 600 }}>No Details To Show</h3>
+                        <h3 style={{ color: "#111827", fontWeight: 600 }}>
+                          No Details To Show
+                        </h3>
                       </div>
                     )}
                   </Tab>
@@ -2021,7 +2596,7 @@ const ResidentDetail = () => {
           <img
             src={selectedImageUrl}
             alt="Document"
-            style={{ width: '100%' }}
+            style={{ width: "100%" }}
           />
         </Modal.Body>
         <Modal.Footer>
@@ -2036,12 +2611,12 @@ const ResidentDetail = () => {
 
 // Styling object (same as before)
 const inputStyle = {
-  background: 'white',
-  border: '1px solid #d1d5db',
-  borderRadius: '12px',
-  textIndent: '12px',
-  color: '#111827',
-  boxShadow: 'rgba(99, 99, 99, 0.1) 0px 2px 8px 0px',
+  background: "white",
+  border: "1px solid #d1d5db",
+  borderRadius: "12px",
+  textIndent: "12px",
+  color: "#111827",
+  boxShadow: "rgba(99, 99, 99, 0.1) 0px 2px 8px 0px",
 };
 
 export default ResidentDetail;

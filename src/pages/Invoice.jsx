@@ -150,11 +150,18 @@ const Invoice = () => {
         </div>
         <div className="col-6">
           <p style={{ margin: "3px 0", fontSize: "13px" }}>
-            <strong>Payment Mode:</strong> {paymentMode || "N/A"}
+            <strong>Property Type:</strong> {resident?.propertyType || "house"}
           </p>
         </div>
       </div>
 
+      <div className="row text-center" style={{ marginBottom: "8px" }}>
+        <div className="col-12">
+          <p style={{ margin: "3px 0", fontSize: "13px" }}>
+            <strong>Payment Mode:</strong> {paymentMode || "N/A"}
+          </p>
+        </div>
+      </div>
 
       <div className="text-center" style={{ margin: "8px 0" }}>
         <p style={{ fontSize: "1.2rem", fontWeight: "bold", margin: 0 }}>

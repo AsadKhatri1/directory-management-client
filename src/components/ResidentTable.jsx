@@ -171,6 +171,7 @@ const ResidentTable = () => {
       CNIC: r.CNIC || "N/A",
       Occupation: r.Profession || r.occupation || "N/A",
       "Resident Type": r.residentType || "N/A",
+      "Property Type": r.propertyType || "house",
       "NOC Number": r?.NOCNo || "N/A",
       "Payment Status": r.paid ? "Paid" : "Unpaid",
     }));
@@ -190,6 +191,7 @@ const ResidentTable = () => {
       { wch: 20 }, // CNIC
       { wch: 20 }, // Occupation
       { wch: 12 }, // Resident Type
+      { wch: 12 }, // Property Type
       { wch: 12 }, // Resident Type
       { wch: 12 }, // Payment Status
     ];
@@ -417,6 +419,13 @@ const ResidentTable = () => {
                   className="py-3 fs-6"
                   style={{ color: "#111827", fontWeight: 600 }}
                 >
+                  Property Type
+                </th>
+                <th
+                  scope="col"
+                  className="py-3 fs-6"
+                  style={{ color: "#111827", fontWeight: 600 }}
+                >
                   Payment Status
                 </th>
                 <th
@@ -438,7 +447,7 @@ const ResidentTable = () => {
             {loading && (
               <tbody>
                 <tr>
-                  <td colSpan={9} className="text-center">
+                  <td colSpan={10} className="text-center">
                     <div className="d-flex justify-content-center my-3">
                       <Audio
                         height="60"
@@ -475,6 +484,9 @@ const ResidentTable = () => {
                     <td style={{ padding: "1rem" }}>{r.CNIC || "N/A"}</td>
                     <td style={{ padding: "1rem" }}>
                       {r.residentType || "N/A"}
+                    </td>
+                    <td style={{ padding: "1rem" }}>
+                      {r.propertyType || "house"}
                     </td>
                     <td
                       style={{

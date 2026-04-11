@@ -23,6 +23,7 @@ const ResidentUpdateForm = () => {
   const [cnicFile, setCnicFile] = useState("");
   const [nocFile, setNocFile] = useState("");
   const [residentType, setResidentType] = useState(""); // Added residentType state
+  const [propertyType, setPropertyType] = useState("house");
   const [loader, setLoader] = useState(false);
 
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const ResidentUpdateForm = () => {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          }
+          },
         );
         const resident = response.data.resident;
         setFullName(resident.FullName || "");
@@ -57,6 +58,7 @@ const ResidentUpdateForm = () => {
         setCnicFile(resident.CnicFile || "");
         setNocFile(resident.NocFile || "");
         setResidentType(resident.residentType || "");
+        setPropertyType(resident.propertyType || "house");
         console.log("noc isssue:", resident?.NOCIssue);
       } catch (error) {
         toast.error("Failed to load resident data");
@@ -75,7 +77,7 @@ const ResidentUpdateForm = () => {
       {
         method: "POST",
         body: formData,
-      }
+      },
     );
 
     if (response.ok) {
@@ -135,12 +137,13 @@ const ResidentUpdateForm = () => {
           CnicFile: cnicUrl,
           NocFile: nocUrl,
           residentType,
+          propertyType,
         },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       if (response.data.success) {
@@ -323,6 +326,33 @@ const ResidentUpdateForm = () => {
                 </option>
                 <option value="owner" style={{ color: "black" }}>
                   Owner
+                </option>
+              </select>
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="propertyType"
+                className="d-block text-start mb-2 fw-bold"
+              >
+                Property Type
+              </label>
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                id="propertyType"
+                name="propertyType"
+                className="w-100 py-2"
+                style={inputStyle}
+              >
+                <option value="house" style={{ color: "black" }}>
+                  House
+                </option>
+                <option value="flat" style={{ color: "black" }}>
+                  Flat
+                </option>
+                <option value="shop" style={{ color: "black" }}>
+                  Shop
                 </option>
               </select>
             </div>

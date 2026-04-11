@@ -1,58 +1,59 @@
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { FaPlus } from 'react-icons/fa';
-import { MdKeyboardDoubleArrowDown } from 'react-icons/md';
-import { Audio } from 'react-loader-spinner';
+import axios from "axios";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
+import { MdKeyboardDoubleArrowDown } from "react-icons/md";
+import { Audio } from "react-loader-spinner";
 // Configure Cloudinary with your credentials
 
 const ResidentForm = () => {
-  const backendURL = 'https://directory-management-g8gf.onrender.com';
-  const [FullName, setFullName] = useState('');
-  const [Email, setEmail] = useState('');
-  const [Phone, setPhone] = useState('');
-  const [HouseNumber, setHouseNumber] = useState('');
-  const [Profession, setProfession] = useState('');
-  const [officeTel, setOfficeTel] = useState('');
-  const [Qualification, setQualification] = useState('');
-  const [bAddress, setBAddress] = useState('');
-  const [NOCHolder, setNOCHolder] = useState('');
-  const [NOCIssue, setNOCIssue] = useState('');
-  const [NOCNo, setNOCNo] = useState('');
-  const [DOB, setDOB] = useState('');
-  const [CNIC, setCNIC] = useState('');
-  const [Photo, setPhoto] = useState('');
-  const [cnicFile, setCnicFile] = useState('');
-  const [nocFile, setNocFile] = useState('');
-  const [cantPass, setCantPass] = useState('');
-  const [policeV, setPoliceV] = useState('');
-  const [lisence, setLisence] = useState('');
+  const backendURL = "https://directory-management-g8gf.onrender.com";
+  const [FullName, setFullName] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Phone, setPhone] = useState("");
+  const [HouseNumber, setHouseNumber] = useState("");
+  const [Profession, setProfession] = useState("");
+  const [officeTel, setOfficeTel] = useState("");
+  const [Qualification, setQualification] = useState("");
+  const [bAddress, setBAddress] = useState("");
+  const [NOCHolder, setNOCHolder] = useState("");
+  const [NOCIssue, setNOCIssue] = useState("");
+  const [NOCNo, setNOCNo] = useState("");
+  const [DOB, setDOB] = useState("");
+  const [CNIC, setCNIC] = useState("");
+  const [Photo, setPhoto] = useState("");
+  const [cnicFile, setCnicFile] = useState("");
+  const [nocFile, setNocFile] = useState("");
+  const [cantPass, setCantPass] = useState("");
+  const [policeV, setPoliceV] = useState("");
+  const [lisence, setLisence] = useState("");
   const [loader, setLoader] = useState(false);
-  const [residentType, setResidentType] = useState('');
+  const [residentType, setResidentType] = useState("");
+  const [propertyType, setPropertyType] = useState("house");
 
   const [vehicles, setVehicles] = useState([
     {
-      type: '',
-      make: '',
-      model: '',
-      year: '',
-      colour: '',
-      stickerNumber: '',
-      registrationNumber: '',
-      paperDocument: '',
+      type: "",
+      make: "",
+      model: "",
+      year: "",
+      colour: "",
+      stickerNumber: "",
+      registrationNumber: "",
+      paperDocument: "",
     },
   ]);
   const [maids, setMaids] = useState([
     {
-      name: '',
-      dob: '',
-      address: '',
-      guardian: '',
-      number: '',
-      cnic: '',
-      cnicUrl: '',
-      cantPassUrl: '',
+      name: "",
+      dob: "",
+      address: "",
+      guardian: "",
+      number: "",
+      cnic: "",
+      cnicUrl: "",
+      cantPassUrl: "",
     },
   ]);
 
@@ -69,13 +70,13 @@ const ResidentForm = () => {
   // upload single files to cloudinary
   const uploadFileToCloudinary = async (file) => {
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', 'images_preset');
+    formData.append("file", file);
+    formData.append("upload_preset", "images_preset");
 
     const response = await fetch(
-      'https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload',
+      "https://api.cloudinary.com/v1_1/dgfwpnjkw/image/upload",
       {
-        method: 'POST',
+        method: "POST",
         body: formData,
       },
     );
@@ -90,12 +91,12 @@ const ResidentForm = () => {
 
   //--------------------- function for submitting form ----------------------
   const inputStyle = {
-    background: 'white',
-    color: '#111827',
-    border: '1px solid #d1d5db',
-    borderRadius: '8px',
-    padding: '0.75rem',
-    boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    background: "white",
+    color: "#111827",
+    border: "1px solid #d1d5db",
+    borderRadius: "8px",
+    padding: "0.75rem",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
   };
 
   const submitHandler = async (e) => {
@@ -164,25 +165,27 @@ const ResidentForm = () => {
           VerificationFile: polUrl,
           LisenceFile: lUrl,
           residentType,
+          propertyType,
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include 'Bearer' prefix for most token types
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include 'Bearer' prefix for most token types
           },
         },
       );
       if (response.data.success) {
         console.log(response.data);
         toast.success(response.data.message);
-        setCNIC('');
-        setEmail('');
-        setFullName('');
-        setHouseNumber('');
-        setProfession('');
-        setQualification('');
-        setPhone('');
-        setResidentType('');
-        navigate('/dashboard/residents');
+        setCNIC("");
+        setEmail("");
+        setFullName("");
+        setHouseNumber("");
+        setProfession("");
+        setQualification("");
+        setPhone("");
+        setResidentType("");
+        setPropertyType("house");
+        navigate("/dashboard/residents");
       }
     } catch (err) {
       toast.error(err?.response?.data.message);
@@ -212,8 +215,8 @@ const ResidentForm = () => {
         return updatedVehicles;
       });
     } catch (error) {
-      console.error('Error uploading document:', error);
-      alert('Error uploading document. Please try again.'); // Inform the user
+      console.error("Error uploading document:", error);
+      alert("Error uploading document. Please try again."); // Inform the user
     }
   };
 
@@ -239,8 +242,8 @@ const ResidentForm = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleRelativeCnicUpload = async (index, event) => {
@@ -264,8 +267,8 @@ const ResidentForm = () => {
         return updatedRelatives;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   // uploading tanent cnic and photo
@@ -290,8 +293,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleTanentCnicUpload = async (index, event) => {
@@ -315,8 +318,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleTanentNocUpload = async (index, event) => {
@@ -340,8 +343,8 @@ const ResidentForm = () => {
         return updatedTanents;
       });
     } catch (error) {
-      console.error('Error uploading relative photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading relative photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -366,8 +369,8 @@ const ResidentForm = () => {
         return updatedMaids;
       });
     } catch (error) {
-      console.error('Error uploading maid photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
   const handleMaidCnicUpload = async (index, event) => {
@@ -391,8 +394,8 @@ const ResidentForm = () => {
         return updatedMaids;
       });
     } catch (error) {
-      console.error('Error uploading maid photo:', error);
-      alert('Error uploading photo. Please try again.');
+      console.error("Error uploading maid photo:", error);
+      alert("Error uploading photo. Please try again.");
     }
   };
 
@@ -406,28 +409,28 @@ const ResidentForm = () => {
     setVehicles([
       ...vehicles,
       {
-        type: '',
-        make: '',
-        model: '',
-        year: '',
-        colour: '',
-        stickerNumber: '',
-        registrationNumber: '',
-        paperDocument: '',
+        type: "",
+        make: "",
+        model: "",
+        year: "",
+        colour: "",
+        stickerNumber: "",
+        registrationNumber: "",
+        paperDocument: "",
       },
     ]);
   };
   // family members
   const [relatives, setRelatives] = useState([
     {
-      name: '',
-      relation: '',
-      dob: '',
-      occupation: '',
-      cnic: '', // Existing CNIC property
-      number: '',
-      photoUrl: '', // New property for photo URL
-      cnicUrl: '', // New property for CNIC URL (assuming it's an uploaded document)
+      name: "",
+      relation: "",
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
     },
   ]);
 
@@ -441,14 +444,14 @@ const ResidentForm = () => {
     setRelatives([
       ...relatives,
       {
-        name: '',
-        relation: '',
-        dob: '',
-        occupation: '',
-        cnic: '',
-        number: '',
-        photoUrl: '',
-        cnicUrl: '',
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
       },
     ]);
   };
@@ -465,14 +468,14 @@ const ResidentForm = () => {
     setMaids([
       ...maids,
       {
-        name: '',
-        dob: '',
-        address: '',
-        guardian: '',
-        number: '',
-        cnic: '',
-        cnicUrl: '',
-        cantPassUrl: '',
+        name: "",
+        dob: "",
+        address: "",
+        guardian: "",
+        number: "",
+        cnic: "",
+        cnicUrl: "",
+        cantPassUrl: "",
       },
     ]);
   };
@@ -481,17 +484,17 @@ const ResidentForm = () => {
 
   const [tanents, setTanents] = useState([
     {
-      name: '',
+      name: "",
 
-      dob: '',
-      occupation: '',
-      cnic: '', // Existing CNIC property
-      nocIssue: '',
-      nocNo: '',
-      number: '',
-      photoUrl: '', // New property for photo URL
-      cnicUrl: '', // New property for CNIC URL (assuming it's an uploaded document)
-      nocUrl: '',
+      dob: "",
+      occupation: "",
+      cnic: "", // Existing CNIC property
+      nocIssue: "",
+      nocNo: "",
+      number: "",
+      photoUrl: "", // New property for photo URL
+      cnicUrl: "", // New property for CNIC URL (assuming it's an uploaded document)
+      nocUrl: "",
     },
   ]);
 
@@ -505,17 +508,17 @@ const ResidentForm = () => {
     setTanents([
       ...tanents,
       {
-        name: '',
-        relation: '',
-        dob: '',
-        occupation: '',
-        cnic: '',
-        nocIssue: '',
-        nocNo: '',
-        number: '',
-        photoUrl: '',
-        cnicUrl: '',
-        nocUrl: '',
+        name: "",
+        relation: "",
+        dob: "",
+        occupation: "",
+        cnic: "",
+        nocIssue: "",
+        nocNo: "",
+        number: "",
+        photoUrl: "",
+        cnicUrl: "",
+        nocUrl: "",
       },
     ]);
   };
@@ -525,12 +528,12 @@ const ResidentForm = () => {
       <h1 className="my-3 fw-bold">Add A New Resident</h1>
       {showForm && (
         <div className="d-flex w-100 align-items-center justify-content-end px-5">
-          {' '}
+          {" "}
           <span
             style={{
-              fontSize: '24px',
-              cursor: 'pointer',
-              color: 'red',
+              fontSize: "24px",
+              cursor: "pointer",
+              color: "red",
             }}
             onClick={() => setShowForm(false)}
           >
@@ -545,7 +548,7 @@ const ResidentForm = () => {
           <div className="row">
             <div className="col-md-6">
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {Photo ? Photo.name : 'Upload image'}
+                {Photo ? Photo.name : "Upload image"}
                 <input
                   type="file"
                   name="photo"
@@ -555,7 +558,7 @@ const ResidentForm = () => {
                 />
               </label>
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {cnicFile ? cnicFile.name : 'Upload CNIC'}
+                {cnicFile ? cnicFile.name : "Upload CNIC"}
                 <input
                   type="file"
                   name="cnicFile"
@@ -565,7 +568,7 @@ const ResidentForm = () => {
                 />
               </label>
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {nocFile ? nocFile.name : 'Upload NOC '}
+                {nocFile ? nocFile.name : "Upload NOC "}
                 <input
                   type="file"
                   name="nocFile"
@@ -575,7 +578,7 @@ const ResidentForm = () => {
                 />
               </label>
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {cantPass ? cantPass.name : 'Upload Cant Pass'}
+                {cantPass ? cantPass.name : "Upload Cant Pass"}
                 <input
                   type="file"
                   name="nocFile"
@@ -585,7 +588,7 @@ const ResidentForm = () => {
                 />
               </label>
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {policeV ? policeV.name : 'Upload Police Verification'}
+                {policeV ? policeV.name : "Upload Police Verification"}
                 <input
                   type="file"
                   name="nocFile"
@@ -595,7 +598,7 @@ const ResidentForm = () => {
                 />
               </label>
               <label className="w-75 my-3 py-2" style={inputStyle}>
-                {lisence ? lisence.name : 'Upload Driving Lisence'}
+                {lisence ? lisence.name : "Upload Driving Lisence"}
                 <input
                   type="file"
                   name="nocFile"
@@ -660,7 +663,7 @@ const ResidentForm = () => {
                 placeholder="Phone Number"
                 className="w-75 my-3 py-2"
                 style={inputStyle}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={HouseNumber}
@@ -686,8 +689,19 @@ const ResidentForm = () => {
                 </option>
                 <option value="owner">Owner</option>
                 <option value="tenant">Tenant</option>
-                <option value="shop">Shop</option>
+              </select>
+              <br />
+              <select
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+                name="propertyType"
+                id="propertyType"
+                className="w-75 my-3 py-2"
+                style={inputStyle}
+              >
+                <option value="house">House</option>
                 <option value="flat">Flat</option>
+                <option value="shop">Shop</option>
               </select>
               <br />
               <input
@@ -711,7 +725,7 @@ const ResidentForm = () => {
                 placeholder="Date Of Birth"
                 className="w-75 my-3 py-2"
                 style={inputStyle}
-              />{' '}
+              />{" "}
               <input
                 value={officeTel}
                 onChange={(e) => setOfficeTel(e.target.value)}
@@ -732,7 +746,7 @@ const ResidentForm = () => {
                 placeholder="Business/Office Address"
                 className="w-75 my-3 py-2"
                 style={inputStyle}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={NOCHolder}
@@ -743,7 +757,7 @@ const ResidentForm = () => {
                 placeholder="NOC Holder's Name"
                 className="w-75 my-3 py-2"
                 style={inputStyle}
-              />{' '}
+              />{" "}
               <br />
               <label htmlFor="nocIssue mt-2">Date Of NOC Issuance</label>
               <input
@@ -755,7 +769,7 @@ const ResidentForm = () => {
                 placeholder="NOC Issueance Date"
                 className="w-75 my-3 py-2"
                 style={inputStyle}
-              />{' '}
+              />{" "}
               <br />
               <input
                 value={NOCNo}
@@ -776,9 +790,9 @@ const ResidentForm = () => {
               onClick={() => setShowForm(true)}
               // className="col-md-2 cards my-2"
               style={{
-                fontSize: '34px',
-                cursor: 'pointer',
-                color: 'green',
+                fontSize: "34px",
+                cursor: "pointer",
+                color: "green",
               }}
             />
           </div>
@@ -795,11 +809,11 @@ const ResidentForm = () => {
                 setShowVehicle(false));
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showFam ? 'Hide Family Member Form' : 'Add Family Members'}
+            {showFam ? "Hide Family Member Form" : "Add Family Members"}
           </div>
           <div
             className="col-md-2 cards"
@@ -811,11 +825,11 @@ const ResidentForm = () => {
                 setShowVehicle(false));
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showServant ? 'Hide Servant Form' : 'Add Servant'}
+            {showServant ? "Hide Servant Form" : "Add Servant"}
           </div>
           <div
             className="col-md-2 cards"
@@ -827,11 +841,11 @@ const ResidentForm = () => {
                 setShowVehicle(!showVehicle));
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showVehicle ? 'Hide Vehicle Form' : 'Add Vehicle'}
+            {showVehicle ? "Hide Vehicle Form" : "Add Vehicle"}
           </div>
           <div
             className="col-md-2 cards"
@@ -843,11 +857,11 @@ const ResidentForm = () => {
                 setShowVehicle(false));
             }}
             style={{
-              boxShadow: '0px 1px 7px #03bb50',
-              cursor: 'pointer',
+              boxShadow: "0px 1px 7px #03bb50",
+              cursor: "pointer",
             }}
           >
-            {showTanent ? 'Hide Tanent Form' : 'Add Tanent'}
+            {showTanent ? "Hide Tanent Form" : "Add Tanent"}
           </div>
         </div>
 
@@ -862,7 +876,7 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={relative.name}
-                      onChange={(e) => handleRelativeChange(index, 'name', e)}
+                      onChange={(e) => handleRelativeChange(index, "name", e)}
                       type="text"
                       name="name"
                       placeholder="Faily Member Name"
@@ -872,7 +886,7 @@ const ResidentForm = () => {
                     <select
                       value={relative.relation}
                       onChange={(e) =>
-                        handleRelativeChange(index, 'relation', e)
+                        handleRelativeChange(index, "relation", e)
                       }
                       className="w-75 my-3 py-2"
                       style={inputStyle}
@@ -886,7 +900,7 @@ const ResidentForm = () => {
                     </select>
                     <input
                       value={relative.cnic}
-                      onChange={(e) => handleRelativeChange(index, 'cnic', e)}
+                      onChange={(e) => handleRelativeChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC"
@@ -896,7 +910,7 @@ const ResidentForm = () => {
                     <input
                       value={relative.occupation}
                       onChange={(e) =>
-                        handleRelativeChange(index, 'occupation', e)
+                        handleRelativeChange(index, "occupation", e)
                       }
                       type="text"
                       name="occupation"
@@ -910,7 +924,7 @@ const ResidentForm = () => {
                   <div>
                     <input
                       value={relative.number}
-                      onChange={(e) => handleRelativeChange(index, 'number', e)}
+                      onChange={(e) => handleRelativeChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone No"
@@ -922,7 +936,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={relative.dob}
-                      onChange={(e) => handleRelativeChange(index, 'dob', e)}
+                      onChange={(e) => handleRelativeChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
@@ -932,7 +946,7 @@ const ResidentForm = () => {
                     <label className="w-75 my-3 py-2" style={inputStyle}>
                       {relative.photoUrl
                         ? relative.photoUrl.name
-                        : 'Upload Photo'}
+                        : "Upload Photo"}
                       <input
                         type="file"
                         name="nocFile"
@@ -944,7 +958,7 @@ const ResidentForm = () => {
                       />
                     </label>
                     <label className="w-75 my-3 py-2" style={inputStyle}>
-                      {relative.cnicUrl ? relative.cnicUrl.name : 'Upload CNIC'}
+                      {relative.cnicUrl ? relative.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="nocFile"
@@ -982,7 +996,7 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={maid.name}
-                      onChange={(e) => handleMaidChange(index, 'name', e)}
+                      onChange={(e) => handleMaidChange(index, "name", e)}
                       type="text"
                       name="name"
                       className="w-75 my-3 py-2"
@@ -992,7 +1006,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={maid.dob}
-                      onChange={(e) => handleMaidChange(index, 'dob', e)}
+                      onChange={(e) => handleMaidChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
@@ -1002,7 +1016,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={maid.address}
-                      onChange={(e) => handleMaidChange(index, 'address', e)}
+                      onChange={(e) => handleMaidChange(index, "address", e)}
                       type="text"
                       name="address"
                       placeholder="Address"
@@ -1012,7 +1026,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={maid.guardian}
-                      onChange={(e) => handleMaidChange(index, 'guardian', e)}
+                      onChange={(e) => handleMaidChange(index, "guardian", e)}
                       type="text"
                       name="guardian"
                       placeholder="Guardian's Name"
@@ -1026,7 +1040,7 @@ const ResidentForm = () => {
                   <div>
                     <input
                       value={maid.number}
-                      onChange={(e) => handleMaidChange(index, 'number', e)}
+                      onChange={(e) => handleMaidChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone Number"
@@ -1036,7 +1050,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={maid.cnic}
-                      onChange={(e) => handleMaidChange(index, 'cnic', e)}
+                      onChange={(e) => handleMaidChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC Number"
@@ -1045,7 +1059,7 @@ const ResidentForm = () => {
                     />
                     <br />
                     <label className="w-75 my-3 py-2" style={inputStyle}>
-                      {maid.cnicUrl ? maid.cnicUrl.name : 'Upload CNIC'}
+                      {maid.cnicUrl ? maid.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="cnicFile"
@@ -1057,7 +1071,7 @@ const ResidentForm = () => {
                     <label className="w-75 my-3 py-2" style={inputStyle}>
                       {maid.cantPassUrl
                         ? maid.cantPassUrl.name
-                        : 'Upload Cant Pass'}
+                        : "Upload Cant Pass"}
                       <input
                         type="file"
                         name="cantPassFile"
@@ -1166,7 +1180,7 @@ const ResidentForm = () => {
                     <label className="w-75 my-3 py-2" style={inputStyle}>
                       {vehicle.paperDocument
                         ? vehicle.paperDocument.name
-                        : 'Upload Document'}
+                        : "Upload Document"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1204,7 +1218,7 @@ const ResidentForm = () => {
                   <div key={index}>
                     <input
                       value={tanent.name}
-                      onChange={(e) => handleTanentChange(index, 'name', e)}
+                      onChange={(e) => handleTanentChange(index, "name", e)}
                       type="text"
                       name="name"
                       placeholder="Tanent Name"
@@ -1213,7 +1227,7 @@ const ResidentForm = () => {
                     />
                     <input
                       value={tanent.cnic}
-                      onChange={(e) => handleTanentChange(index, 'cnic', e)}
+                      onChange={(e) => handleTanentChange(index, "cnic", e)}
                       type="text"
                       name="cnic"
                       placeholder="CNIC"
@@ -1223,7 +1237,7 @@ const ResidentForm = () => {
                     <input
                       value={tanent.occupation}
                       onChange={(e) =>
-                        handleTanentChange(index, 'occupation', e)
+                        handleTanentChange(index, "occupation", e)
                       }
                       type="text"
                       name="occupation"
@@ -1233,7 +1247,7 @@ const ResidentForm = () => {
                     />
                     <input
                       value={tanent.number}
-                      onChange={(e) => handleTanentChange(index, 'number', e)}
+                      onChange={(e) => handleTanentChange(index, "number", e)}
                       type="tel"
                       name="number"
                       placeholder="Phone No"
@@ -1245,7 +1259,7 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={tanent.dob}
-                      onChange={(e) => handleTanentChange(index, 'dob', e)}
+                      onChange={(e) => handleTanentChange(index, "dob", e)}
                       type="date"
                       name="dob"
                       placeholder="Date Of Birth"
@@ -1261,18 +1275,18 @@ const ResidentForm = () => {
                     <br />
                     <input
                       value={tanent.NOCIssue}
-                      onChange={(e) => handleTanentChange(index, 'nocIssue', e)}
+                      onChange={(e) => handleTanentChange(index, "nocIssue", e)}
                       type="date"
                       name="nocIssue"
                       id="nocIssue"
                       placeholder="NOC Issueance Date"
                       className="w-75 my-3 py-2"
                       style={inputStyle}
-                    />{' '}
+                    />{" "}
                     <br />
                     <input
                       value={tanent.nocNo}
-                      onChange={(e) => handleTanentChange(index, 'nocNo', e)}
+                      onChange={(e) => handleTanentChange(index, "nocNo", e)}
                       type="text"
                       name="nocNo"
                       id="nocno"
@@ -1281,7 +1295,7 @@ const ResidentForm = () => {
                       style={inputStyle}
                     />
                     <label className="w-75 my-3 py-2" style={inputStyle}>
-                      {tanent.photoUrl ? tanent.photoUrl.name : 'Upload Photo'}
+                      {tanent.photoUrl ? tanent.photoUrl.name : "Upload Photo"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1293,7 +1307,7 @@ const ResidentForm = () => {
                       />
                     </label>
                     <label className="w-75 my-3 py-2" style={inputStyle}>
-                      {tanent.cnicUrl ? tanent.cnicUrl.name : 'Upload CNIC'}
+                      {tanent.cnicUrl ? tanent.cnicUrl.name : "Upload CNIC"}
                       <input
                         type="file"
                         name="cnicFile"
@@ -1305,7 +1319,7 @@ const ResidentForm = () => {
                       />
                     </label>
                     <label className="w-75 my-3 py-2" style={inputStyle}>
-                      {tanent.nocUrl ? tanent.nocUrl.name : 'Upload NOC'}
+                      {tanent.nocUrl ? tanent.nocUrl.name : "Upload NOC"}
                       <input
                         type="file"
                         name="nocFile"
@@ -1351,7 +1365,7 @@ const ResidentForm = () => {
           <button
             type="submit"
             className="btn w-75 mt-1 fw-bold"
-            style={{ borderRadius: '12px', backgroundColor: '#03bb50' }}
+            style={{ borderRadius: "12px", backgroundColor: "#03bb50" }}
           >
             SUBMIT
           </button>
